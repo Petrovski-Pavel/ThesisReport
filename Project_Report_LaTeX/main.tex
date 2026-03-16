@@ -1,0 +1,165 @@
+\documentclass[11pt,a4paper]{report}
+
+% --- Mandatory layout constraints (HAN) ---
+\usepackage[a4paper,margin=2.5cm]{geometry} % >= 2.5cm margins :contentReference[oaicite:4]{index=4}
+\usepackage{setspace}
+\setstretch{1.2} % >= 1.2 line spacing :contentReference[oaicite:5]{index=5}
+
+% ---------- Fancy headers (Report) ----------
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\setlength{\headheight}{24pt}
+\addtolength{\topmargin}{-12pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+
+% Put chapter title in left header
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\fancyhead[L]{\nouppercase{\leftmark}}
+
+% Right header text
+\fancyhead[R]{Project Report}
+
+% Page number
+\fancyfoot[C]{\thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Red header rule
+\makeatletter
+\renewcommand{\headrule}{%
+  {\color{blue}\hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}%
+}
+\makeatother
+
+% Apply same header style on chapter-opening pages (plain style)
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyhead[L]{\nouppercase{\leftmark}}
+  \fancyhead[R]{Project Report}
+  \fancyfoot[C]{\thepage}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0pt}
+  \makeatletter
+  \renewcommand{\headrule}{%
+    {\color{blue}\hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}%
+  }
+  \makeatother
+}
+% -------------------------------------------
+
+% --- Common packages ---
+
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage[square,numbers]{natbib}
+\usepackage[hidelinks]{hyperref}
+
+\usepackage[acronym,nomain,nonumberlist,toc]{glossaries}
+\makeglossaries
+\input{content/acronyms}
+\setglossarystyle{list}
+
+
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{titlesec}
+% Make chapters look like: "1 Introduction" (no "CHAPTER 1")
+\titleformat{\chapter}[hang]
+  {\normalfont\Large\bfseries}
+  {\thechapter\quad}
+  {0pt}
+  {}
+\titlespacing*{\chapter}{0pt}{0pt}{1em}
+
+
+% --- Bibliography (BibTeX) ---
+\bibliographystyle{apalike}
+
+\begin{document}
+
+% ---------- Front matter (roman numbering) ----------
+\pagenumbering{roman}
+
+% Title page (adjust to match the template’s first pages)
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Large Master Engineering Systems\par}
+    \vspace{1cm}
+    {\LARGE\bfseries Major Project Report: Progress\par}
+    \vspace{1.5cm}
+    {\huge\bfseries Developing a Scalable Computer-Vision Pipeline for\\
+    Human--Interaction Element Detection in Hospital Environments\par}
+    \vspace{2cm}
+    {\Large Pavel Petrovski\par}
+    \vspace{0.5cm}
+    {\large HAN University of Applied Sciences\par}
+    \vfill
+    {\large Supervisors: Siddharth Ajaykumar, Jan Benders, Ben Pyman\par}
+    \vspace{0.5cm}
+    {\large \today\par}
+
+    \begin{center}
+    \includegraphics[width=6cm]{figures/HANlogo.png}
+
+    \vspace{0.5cm}
+    \textbf{Master Engineering Systems – Major Project}\\
+    Cyber-Physical Systems\\
+    HAN University of Applied Sciences\\
+    Arnhem
+\end{center}
+\end{titlepage}
+
+% Preface / Disclaimer / Summary (as in template)
+\input{content/preface}
+
+\chapter*{Disclaimer}
+\addcontentsline{toc}{chapter}{Disclaimer}
+\input{content/disclaimer}
+
+\chapter*{Summary}
+\addcontentsline{toc}{chapter}{Summary}
+\input{content/summary}
+
+\glsaddall[types=\acronymtype]
+\printglossary[
+  type=\acronymtype,
+  title={Acronyms and Abbreviations},
+  toctitle={Acronyms and Abbreviations}
+]
+\clearpage
+
+
+
+\tableofcontents
+\clearpage
+
+
+
+% ---------- Main matter (arabic numbering) ----------
+\pagenumbering{arabic}
+
+% Mandatory chapter structure (do not rename/remove) :contentReference[oaicite:7]{index=7}
+\input{content/ch1_introduction}
+\input{content/ch2_literature_review}
+\input{content/ch3_methodology}
+\input{content/ch4_results}
+\input{content/ch5_discussion}
+\input{content/ch6_conclusions}
+
+% ---------- References ----------
+\clearpage
+\bibliography{references}
+
+% ---------- Appendices ----------
+\appendix
+\input{appendices/appendix_ai}
+
+\end{document}

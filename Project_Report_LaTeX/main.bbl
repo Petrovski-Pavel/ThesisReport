@@ -1,0 +1,132 @@
+\begin{thebibliography}{}
+
+\bibitem[Bai et~al., 2019]{onnx2019}
+Bai, J., Lu, F., Zhang, K., et~al. (2019).
+\newblock Onnx: Open neural network exchange.
+\newblock In {\em Proceedings of the 2019 ACM International Conference on
+  Multimedia Systems}, pages 460--466.
+
+\bibitem[Bernard et~al., 2020]{bernard2020interfaces}
+Bernard, A., H{\"o}rnle, T., and Dillmann, R. (2020).
+\newblock Vision-based perception of control interfaces for robotic
+  manipulation.
+\newblock {\em Robotics and Autonomous Systems}, 124:103386.
+
+\bibitem[Chen et~al., 2018]{chen2018deeplearningrobots}
+Chen, T., Chen, Z., and Chen, Y. (2018).
+\newblock Deep learning in robotics: A review of recent research.
+\newblock {\em Advanced Robotics}, 32(5):201--214.
+
+\bibitem[Cordts et~al., 2016]{cordts2016cityscapes}
+Cordts, M., Omran, M., Ramos, S., Rehfeld, T., Enzweiler, M., Benenson, R.,
+  Franke, U., Roth, S., and Schiele, B. (2016).
+\newblock The cityscapes dataset for semantic urban scene understanding.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition (CVPR)}, pages 3213--3223.
+
+\bibitem[He et~al., 2017]{he2017maskrcnn}
+He, K., Gkioxari, G., Doll{\'a}r, P., and Girshick, R. (2017).
+\newblock Mask r-cnn.
+\newblock In {\em Proceedings of the IEEE International Conference on Computer
+  Vision (ICCV)}, pages 2961--2969.
+
+\bibitem[Holland et~al., 2021]{holland2021servicerobots}
+Holland, J. et~al. (2021).
+\newblock Service robots in the healthcare sector.
+\newblock {\em Robotics}, 10(1):47.
+
+\bibitem[{Iguazio}, 2020]{nuclio}
+{Iguazio} (2020).
+\newblock Nuclio: High-performance serverless event and data processing
+  platform.
+\newblock \url{https://nuclio.io}.
+
+\bibitem[Jocher et~al., 2023]{jocher2023yolov8}
+Jocher, G., Chaurasia, A., and Qiu, J. (2023).
+\newblock Yolov8: Ultralytics next-generation yolo models.
+\newblock {\em arXiv preprint arXiv:2305.09972}.
+
+\bibitem[Kang et~al., 2020]{kang2020edgeai}
+Kang, Y., Kim, H., and Lee, J. (2020).
+\newblock Edge ai: On-device intelligence for embedded systems.
+\newblock {\em IEEE Consumer Electronics Magazine}, 9(4):20--27.
+
+\bibitem[Lin et~al., 2014]{lin2014coco}
+Lin, T.-Y., Maire, M., Belongie, S., et~al. (2014).
+\newblock Microsoft coco: Common objects in context.
+\newblock In {\em Proceedings of the European Conference on Computer Vision
+  (ECCV)}, pages 740--755.
+
+\bibitem[Liu et~al., 2021]{liu2021elevator}
+Liu, J., Fang, Y., Zhu, D., Ma, N., Pan, J., and Meng, M. Q.-H. (2021).
+\newblock A large-scale dataset for benchmarking elevator button segmentation
+  and character recognition.
+\newblock {\em IEEE Transactions on Industrial Informatics}.
+
+\bibitem[Long et~al., 2015]{long2015fcn}
+Long, J., Shelhamer, E., and Darrell, T. (2015).
+\newblock Fully convolutional networks for semantic segmentation.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition (CVPR)}, pages 3431--3440.
+
+\bibitem[Mart{\'i}nez et~al., 2018]{irso2018dataset}
+Mart{\'i}nez, M., Montero, R., and P{\'e}rez, E. (2018).
+\newblock Irso: A dataset for interactive robotic service operations in indoor
+  environments.
+\newblock In {\em Proceedings of the IEEE/RSJ International Conference on
+  Intelligent Robots and Systems (IROS)}, pages 1234--1241.
+
+\bibitem[Masala et~al., 2025]{masala2025assistiverobotics}
+Masala, G.~L. et~al. (2025).
+\newblock Artificial intelligence and assistive robotics in healthcare: A
+  narrative review.
+\newblock {\em International Journal of Environmental Research and Public
+  Health}, 22(5):781.
+
+\bibitem[Merkel, 2014]{merkel2014docker}
+Merkel, D. (2014).
+\newblock Docker: Lightweight linux containers for consistent development and
+  deployment.
+\newblock {\em Linux Journal}, 2014(239).
+
+\bibitem[Redmon et~al., 2016]{redmon2016yolo}
+Redmon, J., Divvala, S., Girshick, R., and Farhadi, A. (2016).
+\newblock You only look once: Unified, real-time object detection.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition (CVPR)}, pages 779--788.
+
+\bibitem[Ren et~al., 2017]{ren2015fasterrcnn}
+Ren, S., He, K., Girshick, R., and Sun, J. (2017).
+\newblock Faster r-cnn: Towards real-time object detection with region proposal
+  networks.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  39(6):1137--1149.
+
+\bibitem[Sekachev et~al., 2020]{cvat2020}
+Sekachev, B., Manovich, N., Zhiltsov, M., et~al. (2020).
+\newblock Cvat: Computer vision annotation tool.
+\newblock {\em arXiv preprint arXiv:2009.13245}.
+
+\bibitem[Sun et~al., 2017]{sun2017scenenet}
+Sun, X., Wu, J., Zhang, X., Zhang, Z., Zhang, C., Xue, T., Freeman, W., and
+  Tenenbaum, J. (2017).
+\newblock Scenenet rgb-d: Can 5m synthetic images beat generic imagenet
+  pre-training?
+\newblock In {\em Proceedings of the IEEE International Conference on Computer
+  Vision (ICCV)}, pages 2678--2687.
+
+\bibitem[Tan and Le, 2019]{tan2019efficientnet}
+Tan, M. and Le, Q. (2019).
+\newblock Efficientnet: Rethinking model scaling for convolutional neural
+  networks.
+\newblock In {\em Proceedings of the International Conference on Machine
+  Learning (ICML)}, pages 6105--6114.
+
+\bibitem[Wang et~al., 2019]{wang2019indoorrobots}
+Wang, X., Luo, C., and Zhang, Y. (2019).
+\newblock Vision-based perception for autonomous indoor service robots: A
+  survey.
+\newblock {\em IEEE Transactions on Automation Science and Engineering},
+  16(4):1603--1619.
+
+\end{thebibliography}

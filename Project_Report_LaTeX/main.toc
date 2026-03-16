@@ -1,0 +1,37 @@
+\contentsline {chapter}{Preface}{i}{chapter*.1}%
+\contentsline {chapter}{Disclaimer}{ii}{chapter*.2}%
+\contentsline {chapter}{Summary}{iii}{chapter*.3}%
+\contentsline {chapter}{Acronyms and Abbreviations}{iv}{section*.4}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Background}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Problem Definition}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Project Objective}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Research Question(s)}{2}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Outline of the report}{2}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Literature Review}{4}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Perception of human--machine interaction elements}{4}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Formulating interaction-point perception as a vision problem}{4}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Public datasets and annotation strategies.}{6}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Model design principles, evaluation metrics, and semantic interpretation}{6}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Embedded deployment constraints in robotic perception}{7}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Scalability, robustness, and reproducibility.}{8}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Summary and identified research gap}{8}{section.2.7}%
+\contentsline {chapter}{\numberline {3}Methodology}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Overview of the proposed perception pipeline}{9}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Dataset selection and preparation}{10}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Annotation strategy and workflow}{10}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Dataset quality assessment.}{11}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Statistical quality metrics.}{11}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Model-assisted image assessment.}{12}{subsection.3.4.2}%
+\contentsline {paragraph}{Method.}{12}{subsection.3.4.2}%
+\contentsline {paragraph}{Inspection.}{12}{equation.3.3}%
+\contentsline {section}{\numberline {3.5}Model architectures and training strategy}{13}{section.3.5}%
+\contentsline {paragraph}{Mask R-CNN.}{14}{section.3.5}%
+\contentsline {paragraph}{YOLOv8-Seg.}{14}{equation.3.4}%
+\contentsline {section}{\numberline {3.6}Evaluation metrics and methodology}{14}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Intersection over Union}{15}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Precision, recall, and F1-score}{15}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Average Precision under the COCO protocol}{15}{subsection.3.6.3}%
+\contentsline {subsection}{\numberline {3.6.4}Mean IoU and runtime performance}{16}{subsection.3.6.4}%
+\contentsline {subsection}{\numberline {3.6.5}Evaluation protocol}{16}{subsection.3.6.5}%
+\contentsline {section}{\numberline {3.7}Embedded deployment and optimization}{16}{section.3.7}%
