@@ -40,8 +40,10 @@ with dataset selection and preparation.
 
 \section{Dataset selection and preparation}
 
-This project uses a dataset derived from the IRSO2018 collection, which contains
-images of elevator panels and buttons captured in realistic indoor environments.
+This project uses a dataset derived from an established elevator interaction-point dataset.
+The original split used for this thesis is the repository-specific
+\texttt{elevator\_split}, which is prepared in YOLO-compatible
+format for training instance-segmentation models.
 This section corresponds to the initial model-development step in
 Figure~\ref{fig:scalable_workflow}, detailing the dataset and its preparation
 before the first training cycle.
@@ -49,18 +51,33 @@ The origin and relevance of this dataset were discussed in \nameref{ch:literatur
 therefore, this section focuses on its structure and preparation for use in this
 project.
 
-The dataset consists of a total of 2000 images. Of these, 1400 images are assigned
-to the training set (\texttt{train\_set}) and 600 images to the test set
-(\texttt{test\_set}). Each subset follows the same directory structure, containing
-an \texttt{images} folder with the raw \gls{rgb} images and an \texttt{annotations} folder
-with the corresponding annotation files.
+The initial dataset used for the baseline YOLOv8-Seg model was split as follows (\texttt{elevator\_split}):
+\begin{itemize}
+    \item train: 1122 images
+    \item validation: 281 images
+    \item test: 602 images (held out for final evaluation only)
+\end{itemize}
 
-In the original dataset, annotations were provided as bounding boxes stored in \gls{xml}
-format. For the purposes of this project, the directory structure was preserved,
-but the annotation format was replaced with \gls{coco}-style JSON files to support
-instance-level segmentation. This ensures compatibility with modern instance
-segmentation frameworks while maintaining a clear separation between training and
-test data.
+This 1,400-image base subset (1122+281) was used to train the initial baseline model.
+The 602-image test split was never used for optimization or model selection.
+
+In later stages, the original dataset was extended with images collected in the target installation (HAN University).
+For ADC adaptation, these base images were extended with real-environment images and re-split as the mixed dataset (\texttt{elevator\_adc\_mix}):
+\begin{itemize}
+    \item train: 1154 images
+    \item validation: 288 images
+    \item test: 609 images
+\end{itemize}
+This mixed split was used for stage-wise tuning and the final ADC fine-tuning experiments.
+Each subset follows the same directory structure, containing an \texttt{images} folder with the raw \gls{rgb}
+images and an annotation folder with matching labels.
+
+In the original dataset, annotations are used in the project-specific YOLO-compatible
+instance-mask format. For the domain adaptation experiment, additional
+annotations from the target environment (ADC) were provided in \gls{coco}-style JSON and
+converted to YOLO-segmentation labels with a dedicated conversion script.
+This ensures compatibility with YOLO while maintaining a consistent train/val/test
+folder layout and class consistency.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.4\textwidth]
@@ -116,14 +133,13 @@ consistent labeling across both the training and test sets.
     \label{fig:example_annotated_image}
 \end{figure}
 
-\section{Dataset quality assessment.}
-\textbf{Note: This section is not done, and the text within it will most probably be changed drastically. However, I intent to keep structure and general idea the same.
-One subsection for model assisted image quality assessment, and one for statistical image quality metrics.}
+\section{Dataset quality assessment}
 
-A systematic dataset quality assessment was performed to verify whether image-level degradation could negatively affect model performance.
+A systematic dataset quality assessment was performed to check whether image-level
+quality issues could bias model learning.
 
 \subsection{Statistical quality metrics.}
-For every image, the following metrics were computed:
+For every training image, the following metrics were computed:
 \begin{itemize}
     \item \textbf{Sharpness}, estimated using the variance of the Laplacian:
     \begin{equation}
@@ -134,20 +150,8 @@ For every image, the following metrics were computed:
     \item \textbf{Edge density}, defined as the fraction of pixels with gradient magnitude above the 90th percentile.
 \end{itemize}
 
-% \paragraph{Results.}
-% Figure~\ref{fig:quality_distributions} shows the distributions of sharpness, entropy, and brightness.
-% The dataset exhibits predominantly well-exposed images with high information content and moderate sharpness.
-% No distinct group of severely degraded images was observed.
-
-% Figure~\ref{fig:quality_vs_performance} shows the relationship between image quality metrics and model performance.
-% No strong correlation was found between sharpness or entropy and segmentation quality.
-% False positives were primarily associated with low edge density, indicating visually ambiguous but valid scenes rather than image degradation.
-
-% \paragraph{Conclusion.}
-% The analysis indicates that dataset quality is high and does not constitute a limiting factor for model performance.
-% Quality-based dataset pruning was therefore not applied.
-
----
+The analysis did not reveal a severe low-quality subset that should be removed.
+Low-score images were often hard but valid samples, so no global quality-based pruning was applied.
 
 \subsection{Model-assisted image assessment.}
 
@@ -179,11 +183,9 @@ Manual inspection of the lowest-ranked samples revealed two categories:
     \item Negative images without buttons, occasionally producing false positives.
 \end{itemize}
 
-After retraining the model with excluded possibly "harmful" samples, it was observed that removing hard samples reduced recall and segmentation accuracy, while removing a small number of negative samples slightly improved precision.
-
-% \paragraph{Conclusion.}
-% Most samples identified as potentially harmful were informative hard examples that improved generalization.
-% The final model was therefore trained on the full dataset, excluding only a small number of negative images without annotated buttons.
+After manual inspection, removing hard but valid examples reduced recall. In contrast, excluding a small number
+of clear false-positive-only negatives had only marginal effect. The final training policy therefore used the full
+dataset with minimal exclusions.
 
 
 \section{Model architectures and training strategy}
@@ -194,6 +196,17 @@ high-accuracy reference model and as the backbone of the semi-automatic annotati
 workflow (Section~3.3), while \gls{yolo}v8-Seg is trained and evaluated as a
 deployment-oriented solution suitable for embedded hardware.
 
+\subsection*{Experimental hardware and software environment}
+
+All \gls{yolo} and OCR training experiments reported in this thesis were executed
+on the same workstation. The host system ran Ubuntu 22.04.5 LTS with Linux kernel
+6.8.0-90. The machine was equipped with an AMD Ryzen 9 9950X 16-core processor,
+176~GiB of system memory, and an NVIDIA GeForce RTX 4090 graphics card with
+24~GiB of \gls{vram}. The training software environment used Python 3.10.12 and
+PyTorch 2.5.1 compiled against CUDA 12.1. This configuration provided the
+computational platform for the baseline training, hyperparameter tuning, OCR
+fine-tuning, and the comparative evaluation runs discussed in Chapters~3 and~4.
+
 \subsection*{Common training strategy}
 
 All models are trained using a transfer learning approach. Networks are initialized
@@ -201,12 +214,14 @@ from pretrained checkpoints and fine-tuned on the project-specific dataset, rath
 than being trained from scratch. This strategy improves convergence speed and
 generalization performance, particularly given the moderate dataset size.
 
-The dataset is split into training and validation subsets using an 80/20 ratio with
-a fixed random seed (42) to ensure reproducibility. Standard data augmentation
-techniques are applied during training to improve robustness to viewpoint and
-lighting variations. These include random horizontal flipping with probability
-$p=0.5$ and color jitter with brightness, contrast, and saturation factors set to
-0.1.
+The final mixed dataset used for adaptation fine-tuning follows a fixed random split (seed 123)
+with train/validation/test separation for model selection and reporting.
+Standard augmentation is applied during training (HSV jitter, geometric perturbations,
+and horizontal flip with $p=0.5$) to improve robustness to viewpoint and lighting
+variations.
+
+For the initial baseline training phase, training used only the available train split and
+the test split was held out for final validation.
 
 \subsection*{Mask R-CNN training}
 
@@ -230,13 +245,95 @@ progressively improved annotation quality and reduced manual correction effort.
 \subsection*{YOLOv8-Seg training}
 
 \gls{yolo}v8-Seg is trained using the Ultralytics framework with the pretrained
-\texttt{yolov8s-seg.pt} checkpoint. Training is performed for 50 epochs with a batch
-size of 8 and an input resolution of $640 \times 640$ pixels. The default Ultralytics hyperparameters are used for the training.
-Early stopping patience is set to 10 epochs based on validation loss. 3 epochs for learning rate warmup, gradually increasing the learning rate from a low value to the initial learning rate to stabilize training early on
+\texttt{yolov8s-seg.pt} checkpoint. The initial baseline configuration was trained
+for 100 epochs with an input resolution of $640 \times 640$, dynamic batch sizing
+(\texttt{batch=-1}), seed 123, warmup over 5 epochs, and early stopping patience
+of 10 epochs. The augmentation policy followed the standard Ultralytics recipe used
+throughout this study, including HSV perturbation, small geometric transformations,
+horizontal flipping, and mosaic augmentation.
 
-Unlike \gls{maskrcnn}, \gls{yolo}v8-Seg is not retrained iteratively during annotation. Instead,
-it is trained on the finalized annotated dataset and evaluated as a candidate model
-for real-time deployment on embedded hardware.
+Although this baseline produced strong results, its training settings were selected
+empirically. A structured hyperparameter tuning procedure was therefore conducted
+to determine whether performance could be improved in a more systematic and
+reproducible way. All tuning runs were logged and tracked in \gls{wandb}, which was
+used to store the hyperparameter configurations, training curves, and validation
+metrics of individual experiments.
+
+The three stages of the hyperparameter tuning procedure are summarized in
+Table~\ref{tab:yolo_hparam_tuning}. The table is intended to provide a compact
+overview of the explored search spaces and stopping criteria, while the
+accompanying text explains the rationale behind each stage.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Three-stage hyperparameter tuning procedure for \gls{yolo}v8-Seg.}
+    \label{tab:yolo_hparam_tuning}
+    \small
+    \begin{tabular}{p{0.12\textwidth} p{0.27\textwidth} p{0.22\textwidth} p{0.17\textwidth} p{0.12\textwidth}}
+        \toprule
+        Stage & Purpose & Tuned or varied settings & Training setup & Selection rule \\
+        \midrule
+        Stage 1 &
+        Narrow hyperparameter search around the baseline recipe &
+        \texttt{lr0}, \texttt{lrf}, \texttt{weight\_decay}, \texttt{momentum}, \texttt{hsv\_h}, \texttt{hsv\_s}, \texttt{hsv\_v}, \texttt{degrees}, \texttt{translate}, \texttt{scale}, \texttt{mosaic}, \texttt{fliplr}, \texttt{warmup\_epochs}, \texttt{close\_mosaic} &
+        24 trials, 30 epochs each; sanity run of 12 epochs beforehand &
+        Top runs by validation \gls{map} \\
+        Stage 2 &
+        Capacity sweep using the best Stage 1 configurations &
+        Batch size $\in \{8,16\}$, image size $\in \{640,768\}$; Stage 1 parameters kept fixed &
+        100 epochs, patience 15 &
+        Top 5 Stage 1 runs with $\mathrm{mAP}_{50\text{:}95}^{(M)} \ge 0.30$ \\
+        Stage 3 &
+        Late-stage refinement from the best Stage 2 checkpoints &
+        Resume from best checkpoint, halve \texttt{lr0} &
+        180 epochs &
+        Top 2 Stage 2 runs with $\mathrm{mAP}_{50\text{:}95}^{(M)} \ge 0.50$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The tuning process was organized into three stages. In the first stage, a narrow
+hyperparameter search was performed around the known-good baseline configuration
+using Ray Tune within the Ultralytics framework. Twenty-four trials were executed,
+each for 30 epochs, while the dataset split remained fixed so that the validation
+set was used for model selection and the test set remained untouched. The tuned
+hyperparameters were the initial and final learning-rate factors
+(\texttt{lr0}, \texttt{lrf}), \texttt{weight\_decay}, \texttt{momentum}, color
+augmentation parameters (\texttt{hsv\_h}, \texttt{hsv\_s}, \texttt{hsv\_v}),
+\texttt{degrees}, \texttt{translate}, \texttt{scale}, \texttt{mosaic},
+\texttt{fliplr}, \texttt{warmup\_epochs}, and \texttt{close\_mosaic}. To preserve
+comparability with the baseline recipe, \texttt{optimizer=SGD}, \texttt{mixup=0},
+\texttt{shear=0}, and \texttt{perspective=0} were kept fixed. Before the full sweep,
+a short 12-epoch sanity run was executed to confirm that the training pipeline,
+dataset configuration, and logging setup behaved as expected.
+
+The second stage focused on capacity-related settings rather than optimization or
+augmentation parameters. The five best-performing configurations from Stage 1 with
+$\mathrm{mAP}_{50\text{:}95}^{(M)} \ge 0.30$ were selected, and each of them was retrained
+while varying only batch size and input resolution. The tested combinations were
+batch sizes of 8 and 16, and image sizes of 640 and 768 pixels. Each run was
+trained for 100 epochs with patience 15, while all tuned Stage 1 hyperparameters
+were inherited unchanged. This design allowed the influence of computational
+capacity settings to be isolated from the already tuned optimization parameters.
+
+The third stage served as a refinement step. The two best Stage 2 configurations
+with $\mathrm{mAP}_{50\text{:}95}^{(M)} \ge 0.50$ were resumed from their best saved
+checkpoints and trained for 180 additional epochs. In this phase, the initial
+learning rate was halved to support more conservative late-stage optimization.
+
+Two additional experiments were conducted after the three-stage hyperparameter
+tuning process. First, a \gls{yolo}26-small segmentation model was trained using the
+same baseline training recipe, followed by a longer 180-epoch run to assess whether
+the newer architecture could outperform \gls{yolo}v8-Seg under comparable settings.
+Second, the best \gls{yolo}v8 baseline checkpoint was fine-tuned on the mixed
+\texttt{elevator\_adc\_mix} dataset to evaluate domain adaptation with data collected
+from the target environment by the \gls{adc}. This adaptation run was trained for
+40 epochs using conservative settings (\texttt{lr0=0.001}, \texttt{patience=0}) to
+improve environment-specific performance without overwriting the original baseline
+model.
+
+Across the tuning and fine-tuning stages, the train/validation split was used for model fitting and model selection.
+For reporting and model comparison, held-out test splits were used only for final evaluation.
 
 \subsection*{Loss functions and optimization objectives}
 
@@ -285,6 +382,112 @@ by an \gls{ocr}-based recognition module to extract character labels or symbols 
 with each button. This stage enables the robot to associate detected interaction
 points with their functional meaning and supports downstream decision-making during
 autonomous operation.
+
+The semantic interpretation stage is formulated as a cropped-image recognition
+problem rather than as full-scene text detection. This design choice follows
+directly from the preceding instance segmentation stage: once a button instance has
+already been localized, the recognition model no longer needs to solve the harder
+problem of finding text within the full image. Instead, it receives a tightly
+bounded crop around a single button and predicts the button's semantic label. This
+reduces computational cost and makes the \gls{ocr} stage more suitable for embedded
+deployment.
+
+\paragraph{OCR dataset construction.}
+The recognition dataset was built from the original \texttt{train\_set} and
+\texttt{test\_set} image collections together with their Pascal VOC XML
+annotations. For each annotated button, the corresponding bounding box was cropped
+from the source image and enlarged with a fixed contextual padding of 15\% of the
+box width and height. This padding was included to retain relevant local context,
+such as the button border or icon outline, while still presenting the recognizer
+with a mostly isolated button instance.
+
+The dataset builder grouped samples by source image before creating a fixed
+80/20 train/validation split using a deterministic random seed. This means that
+all button crops originating from one source image were placed either in the
+training set or in the validation set, but never in both. This design avoids
+optimistic validation scores caused by strong visual similarity between buttons
+from the same panel. The final recognition
+dataset used for the main OCR experiments, denoted
+\texttt{ocr\_rec\_dataset\_drop\_textprefix\_full}, contained 11{,}953 training
+crops, 2{,}973 validation crops, and 6{,}861 held-out test crops.
+
+Several dataset variants were explored during development. In particular,
+experiments were conducted with a dataset containing all labels, a dataset with
+icon labels removed, and a dataset where generic free-text placeholder labels were
+excluded. The final dataset definition removed labels named exactly
+\texttt{text} and labels beginning with the prefix \texttt{text\_}. These labels
+were not useful semantic targets for button interpretation, because they indicate
+the presence of unspecified free text rather than the actual text string visible on
+the button. Retaining them caused the recognizer to over-predict generic
+``TEXT''-like outputs and reduced its ability to generalize to unseen textual
+content. By excluding only these placeholder labels, the final dataset preserved
+meaningful button semantics such as floor numbers, alphanumeric floor identifiers,
+and icon-derived semantic labels including \texttt{OPEN}, \texttt{CLOSE},
+\texttt{ALARM}, and \texttt{KEYHOLE}.
+
+\paragraph{Recognition model architecture.}
+For cropped-button recognition, a lightweight \gls{ocr} recognizer based on
+\texttt{PP-OCRv5\_mobile\_rec} was selected. This model was preferred because it is
+designed for efficient deployment and already provides a compact recognition
+backbone suitable for embedded hardware. The architecture uses a
+\texttt{PPLCNetV3} backbone with scale 0.95, followed by an \texttt{SVTR}-style
+sequence modeling neck and a \texttt{MultiHead} recognition head combining
+\texttt{CTC} and \texttt{NRTR} objectives. In practice, this architecture is
+appropriate for the current task because button labels range from single digits and
+single letters to short strings such as \texttt{10}, \texttt{4A}, or
+\texttt{CLOSE}, while still requiring efficient inference on cropped inputs.
+
+Only the recognition component of the OCR stack was used. The detection component
+of PaddleOCR was intentionally omitted from the final recognition pipeline, because
+button localization was already solved upstream by the instance segmentation model.
+This avoids redundant computation and makes the OCR stage conceptually cleaner:
+segmentation localizes the button instance, and OCR interprets that localized
+instance.
+
+\paragraph{Fine-tuning strategy.}
+The recognizer was initialized from the official pretrained English
+\texttt{PP-OCRv5\_mobile\_rec} weights and fine-tuned on the project-specific crop
+dataset. Input crops were resized to an effective recognition shape of
+$48 \times 320$ pixels. Training used the Adam optimizer with $\beta_1 = 0.9$,
+$\beta_2 = 0.999$, cosine learning-rate scheduling, an initial learning rate of
+$5 \times 10^{-4}$, and L2 regularization with weight decay
+$3 \times 10^{-5}$. A five-epoch warmup was applied in the initial fine-tuning
+configuration. The training data loader used a multiscale sampling strategy and a
+batch size of 128, while recognition augmentation
+(\texttt{RecConAug}, probability 0.5) was enabled to improve robustness to
+appearance variation.
+
+Model selection followed a two-stage hyperparameter tuning procedure. The first
+stage varied only the total number of epochs while keeping the baseline optimizer
+settings fixed. Epoch budgets of 30, 50, 60, and 80 were evaluated in order to
+determine whether the original 60-epoch recipe was necessary. This stage showed
+that the model reached its best validation performance before epoch 50 and that
+training beyond this point produced negligible gain. The second stage therefore
+fixed the epoch budget at 50 and performed a narrow sweep over optimizer
+hyperparameters, primarily learning rate and weight decay. The main configurations
+tested were $\{3 \times 10^{-4}, 5 \times 10^{-4}, 7 \times 10^{-4}\}$ for the
+initial learning rate and $\{1 \times 10^{-5}, 3 \times 10^{-5}\}$ for weight
+decay, while warmup was adjusted conservatively between 3 and 5 epochs. All OCR
+tuning runs were logged in \gls{wandb} so that training curves, hyperparameter
+choices, and validation metrics could be compared systematically.
+
+\paragraph{Inference integration and post-processing.}
+After training, the best OCR checkpoint was exported in Paddle inference format and
+integrated into the button-interpretation pipeline. At runtime, the instance
+segmentation model produces button crops, each crop is passed through the
+recognition model, and the highest-confidence recognition output is selected. OCR
+outputs are normalized to uppercase form and filtered through simple validity
+constraints, including a maximum output length and a restricted character pattern
+for accepted predictions.
+
+For non-numeric predictions, an additional lightweight vocabulary-based correction
+step was introduced. The predicted string is normalized and compared against a
+precomputed list of valid non-numeric labels derived from the dataset annotations.
+Fast bounded edit-distance matching is then used to map near-miss predictions such
+as \texttt{OPE}, \texttt{ALAR}, or \texttt{BLOSE} to their most plausible target
+labels when a unique close match exists. This post-processing step is computationally
+cheap and improves the practical usability of the OCR module without requiring a
+larger recognition model.
 
 
 \section{Evaluation metrics and methodology}
@@ -410,4 +613,3 @@ The complete deployment and optimization workflow is illustrated in
 Figure~\ref{fig:tensorrt_workflow}. This approach ensures a consistent and efficient
 deployment pipeline and enables fair evaluation of different model architectures
 under identical runtime constraints.
-

@@ -1,0 +1,279 @@
+\chapter{Results}
+\label{ch:results}
+
+This chapter presents the quantitative results obtained for the main technical
+components of the proposed elevator-interaction pipeline. The current version of
+the report focuses on the visual detection subsystem based on \gls{yolo}
+instance segmentation. Unless stated otherwise, final model comparisons are
+reported on held-out test sets, while model selection during training and
+hyperparameter tuning is based on the validation split.
+
+\section{YOLO hyperparameter tuning and evaluation}
+
+\subsection{Baseline YOLOv8-Seg performance}
+
+The baseline \gls{yolo}v8-Seg model trained on \texttt{elevator\_split} established
+the main reference point for all subsequent experiments. On the validation split,
+the best checkpoint was obtained at epoch 49. This model achieved a mask
+$\mathrm{mAP}_{50}$ of 0.93931 and a mask
+$\mathrm{mAP}_{50\text{:}95}$ of 0.59645, with mask precision and recall of
+0.90623 and 0.89947, respectively. These results confirmed that the initial
+configuration was already strong enough to serve as a realistic benchmark rather
+than only as a preliminary starting point.
+
+When evaluated on the held-out original test split at an image size of 640 pixels,
+the same baseline model achieved a mask $\mathrm{mAP}_{50}$ of 0.91921 and a mask
+$\mathrm{mAP}_{50\text{:}95}$ of 0.58295. This test result is slightly lower than the
+best validation value, which is expected, but it still indicates good
+generalization to unseen elevator-panel images.
+
+\subsection{Hyperparameter tuning results}
+
+The three-stage hyperparameter tuning procedure improved validation performance,
+but the gains were moderate. Stage 1 served as a narrow Ray Tune search around
+the baseline configuration. As shown in Figure~\ref{fig:stage1_mask_map}, most of
+the displayed Stage 1 trials did not produce meaningful mask performance.
+Among the first ten runs shown in the \gls{wandb} export, only three
+configurations reached non-zero $\mathrm{mAP}_{50\text{:}95}$ values, while the
+remaining trials stayed at zero throughout the 30-epoch search horizon. These
+zero-valued runs still count as valid tuning outcomes because they identify
+unsuccessful regions of the hyperparameter space. The main conclusion from Stage
+1 was therefore not that tuning broadly improved all runs, but that only a small
+subset of configurations was suitable for further evaluation in Stage 2.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage1_yolo_mAP50-95_M.png}
+    \caption{Stage 1 validation mask $\mathrm{mAP}_{50\text{:}95}$ for the first ten runs shown in the \gls{wandb} sweep export. Only a small subset of configurations produced non-zero validation performance.}
+    \label{fig:stage1_mask_map}
+\end{figure}
+
+The most relevant outcome of the tuning pipeline was that the best Stage 2
+configuration consistently selected a batch size of 16 and an input resolution of
+768 pixels. Stage 3 then resumed training from this configuration with a reduced
+initial learning rate.
+
+Figure~\ref{fig:stage2_mask_map} shows the broader Stage 2 validation mask
+$\mathrm{mAP}_{50\text{:}95}$ trends. In contrast to Stage 1, Stage 2 produced a
+larger number of usable configurations because the search was restricted to the
+top Stage 1 candidates and only varied image size and batch size. The logged
+results show that eight out of sixteen unique Stage 2 configurations achieved
+non-zero mask $\mathrm{mAP}_{50\text{:}95}$ values. Most successful runs were
+observed at an input resolution of 640 pixels, while many 768-pixel variants
+remained unsuccessful. The main exception was the
+\texttt{cfg1\_b16\_sz768} configuration, which produced the best Stage 2 result
+and was therefore selected for Stage 3 refinement.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage2_yolo_mAP50-95_m_full.png}
+    \caption{Stage 2 validation mask $\mathrm{mAP}_{50\text{:}95}$ for the broader set of capacity-tuning runs. Compared with Stage 1, more configurations produced usable validation performance, although unsuccessful runs were still present.}
+    \label{fig:stage2_mask_map}
+\end{figure}
+
+Table~\ref{tab:yolo_tuning_results} summarizes the best validation results of the
+baseline model and the best Stage 3 tuned model. The tuned model reached its best
+validation performance at epoch 120 and improved mask
+$\mathrm{mAP}_{50\text{:}95}$ from 0.59645 to 0.63064. This corresponds to an absolute
+gain of 0.03419 on the validation set. Precision changed only slightly, while
+recall increased from 0.89947 to 0.90810, indicating that the tuned model mainly
+benefited from better localization and mask quality rather than from a major shift
+in confidence calibration. This improvement, however, should be interpreted as a
+validation-stage model-selection result and not as evidence that the tuned model
+outperformed the baseline on the final held-out test set.
+
+Figures~\ref{fig:stage3_mask_map} and \ref{fig:stage3_val_seg_loss} show the
+behavior of the two Stage 3 refinement runs. Both runs followed almost identical
+validation trajectories, which indicates that the refinement step was stable once
+the best Stage 2 configuration had been selected. The validation mask
+$\mathrm{mAP}_{50\text{:}95}$ increased rapidly in the early epochs and then
+stabilized slightly above 0.62. At the same time, the validation segmentation
+loss dropped sharply at the start of training and then remained close to a stable
+plateau. These curves indicate a controlled refinement of an already strong
+configuration rather than a major qualitative change in optimization behavior.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_mAP50-95_M.png}
+    \caption{Stage 3 validation mask $\mathrm{mAP}_{50\text{:}95}$ for the two refinement runs. The runs followed nearly identical trajectories and converged to the same performance region.}
+    \label{fig:stage3_mask_map}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_seg_loss_val.png}
+    \caption{Stage 3 validation segmentation loss. After a steep initial decrease, the loss remained stable, indicating consistent convergence during refinement.}
+    \label{fig:stage3_val_seg_loss}
+\end{figure}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Best validation results of the baseline and tuned \gls{yolo}v8-Seg models.}
+    \label{tab:yolo_tuning_results}
+    \small
+    \begin{tabular}{lccccc}
+        \toprule
+        Model & Best epoch & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
+        \midrule
+        Baseline YOLOv8-Seg & 49 & 0.93931 & 0.59645 & 0.90623 & 0.89947 \\
+        Stage 3 tuned YOLOv8-Seg & 120 & 0.94268 & 0.63064 & 0.90150 & 0.90810 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Held-out test-set comparison between the baseline and the selected Stage 3 tuned \gls{yolo}v8-Seg model.}
+    \label{tab:yolo_tuning_test_results}
+    \small
+    \begin{tabular}{lccccc}
+        \toprule
+        Model & Image size & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
+        \midrule
+        Baseline YOLOv8-Seg & 640 & 0.92819 & 0.73744 & 0.87603 & 0.90832 \\
+        Stage 3 tuned YOLOv8-Seg & 640 & 0.91706 & 0.68829 & 0.86839 & 0.88443 \\
+        Baseline YOLOv8-Seg & 768 & 0.92638 & 0.74752 & 0.86778 & 0.92329 \\
+        Stage 3 tuned YOLOv8-Seg & 768 & 0.92719 & 0.71985 & 0.87399 & 0.90724 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+These results show that systematic hyperparameter tuning was useful for improving
+validation performance. However, the held-out test comparison in
+Table~\ref{tab:yolo_tuning_test_results} does not support replacing the baseline
+checkpoint with the Stage 3 model. At an image size of 640 pixels, the baseline
+outperformed the tuned model by 0.04915 mask $\mathrm{mAP}_{50\text{:}95}$, and
+at 768 pixels the margin remained 0.02767 in favor of the baseline. For this
+reason, the original baseline checkpoint remained the reference model for the
+later deployment-oriented experiments and for the final adaptation study.
+
+\subsection{Comparison with YOLO26}
+
+To evaluate whether a newer Ultralytics architecture could provide a better
+segmentation model under comparable conditions, YOLO26-small was trained using
+the same baseline recipe and later extended to a longer 180-epoch run. The final
+comparison was performed on the held-out original test split at image sizes of 640
+and 768 pixels.
+
+The results are presented in Table~\ref{tab:yolo26_comparison}. At an image size
+of 640 pixels, the baseline \gls{yolo}v8-Seg model achieved a mask
+$\mathrm{mAP}_{50\text{:}95}$ of 0.58295, whereas YOLO26 reached 0.57538. At 768
+pixels, the baseline again remained slightly better, with 0.62325 compared with
+0.61689 for YOLO26. The higher-resolution evaluation benefited both models, but it
+did not change the ranking between them. Under the training and evaluation
+conditions used in this project, YOLO26 therefore did not outperform the baseline
+\gls{yolo}v8-Seg model on the held-out test set.
+
+Figure~\ref{fig:yolo26_mask_map} shows the corresponding validation mask
+$\mathrm{mAP}_{50\text{:}95}$ curves for the two YOLO26 runs. Extending the
+training to 180 epochs shifted the validation curve upward and produced a higher
+plateau than the shorter run. However, the improvement remained modest and was
+not sufficient to reverse the final test-set ranking against the baseline
+\gls{yolo}v8-Seg model.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Test-set comparison between the baseline \gls{yolo}v8-Seg model and YOLO26-small.}
+    \label{tab:yolo26_comparison}
+    \small
+    \begin{tabular}{lccccc}
+        \toprule
+        Model & Image size & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
+        \midrule
+        YOLOv8-Seg baseline & 640 & 0.91921 & 0.58295 & 0.86835 & 0.89896 \\
+        YOLO26-small & 640 & 0.91209 & 0.57538 & 0.87300 & 0.89879 \\
+        YOLOv8-Seg baseline & 768 & 0.92384 & 0.62325 & 0.86577 & 0.91939 \\
+        YOLO26-small & 768 & 0.92596 & 0.61689 & 0.88408 & 0.91326 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/yolo26_mAP50-95_M.png}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the two YOLO26 training runs. The longer 180-epoch run improved over the shorter run, but the resulting model still did not surpass the YOLOv8 baseline on the held-out test set.}
+    \label{fig:yolo26_mask_map}
+\end{figure}
+
+\subsection{Environment-specific fine-tuning with ADC data}
+
+The final \gls{yolo} experiment focused on adaptation to the target university
+environment. For this purpose, the baseline checkpoint was fine-tuned on a mixed
+dataset that combined the original elevator-panel dataset with 46 newly
+collected and annotated images from HAN University, Building 31. This building
+served as the pilot environment for planned robot deployment tests. The
+environment-specific images were collected with the \gls{adc} and then split into
+32 training images, 7 validation images, and 7 test images before being merged
+with the original dataset. The resulting evaluation therefore makes it possible
+to determine whether the adapted model improves in the target environment without
+losing too much performance on the original domain.
+
+Table~\ref{tab:adc_original_test} shows the results on the original held-out test
+split. The fine-tuned model remained effectively tied with the baseline. Its mask
+$\mathrm{mAP}_{50\text{:}95}$ changed from 0.58295 to 0.58293, which is
+negligible. The box metrics improved slightly, and mask precision and recall also
+increased marginally. This indicates that adaptation to the new environment did
+not cause a meaningful degradation on the original dataset.
+
+The corresponding validation curve is shown in
+Figure~\ref{fig:adc_finetune_mask_map}. The fine-tuned model remained in the same
+overall validation range as the original baseline, with modest fluctuations
+around 0.58. This is consistent with the final original-test comparison, which
+showed that the fine-tuned model preserved the baseline's general performance
+while becoming substantially more effective on the environment-specific
+\texttt{adc\_first} test set.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Performance on the original held-out elevator test split before and after ADC fine-tuning.}
+    \label{tab:adc_original_test}
+    \small
+    \begin{tabular}{lcccc}
+        \toprule
+        Model & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
+        \midrule
+        Baseline YOLOv8-Seg & 0.91921 & 0.58295 & 0.86835 & 0.89896 \\
+        ADC fine-tuned YOLOv8-Seg & 0.91912 & 0.58293 & 0.88043 & 0.90050 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/yolo_adc_fine_tune_mAP50-95_M.png}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ during ADC-based fine-tuning. The curve remains close to the baseline validation range, which aligns with the near-identical performance observed on the original held-out test split.}
+    \label{fig:adc_finetune_mask_map}
+\end{figure}
+
+The effect on the \gls{adc}-specific test set is much more pronounced, as shown in
+Table~\ref{tab:adc_env_test}. On this environment-specific split, the baseline
+model achieved a mask $\mathrm{mAP}_{50\text{:}95}$ of only 0.12290. After
+fine-tuning, the same metric increased to 0.50463. Mask precision increased from
+0.61209 to 1.00000, and mask recall increased from 0.70136 to 0.99712. This is
+the clearest result of the \gls{yolo} experiments: collecting a relatively small
+amount of real deployment data and using it for controlled fine-tuning
+substantially improved performance in the target environment while preserving the
+performance level on the original test set.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Performance on the environment-specific \gls{adc} test split before and after ADC fine-tuning.}
+    \label{tab:adc_env_test}
+    \small
+    \begin{tabular}{lcccc}
+        \toprule
+        Model & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
+        \midrule
+        Baseline YOLOv8-Seg & 0.53520 & 0.12290 & 0.61209 & 0.70136 \\
+        ADC fine-tuned YOLOv8-Seg & 0.99500 & 0.50463 & 1.00000 & 0.99712 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Overall, the \gls{yolo} results show three main findings. First, the baseline
+\gls{yolo}v8-Seg model was already strong and difficult to surpass on the general
+elevator test set. Second, staged hyperparameter tuning improved validation
+performance but did not fundamentally change the final model ranking. Third, the
+most practically valuable improvement was achieved through environment-specific
+fine-tuning with \gls{adc} data, which substantially increased performance on the
+target deployment domain while preserving performance on the original dataset.

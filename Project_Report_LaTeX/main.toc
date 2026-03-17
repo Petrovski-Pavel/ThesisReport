@@ -20,18 +20,28 @@
 \contentsline {section}{\numberline {3.1}Overview of the proposed perception pipeline}{9}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Dataset selection and preparation}{10}{section.3.2}%
 \contentsline {section}{\numberline {3.3}Annotation strategy and workflow}{10}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Dataset quality assessment.}{11}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Statistical quality metrics.}{11}{subsection.3.4.1}%
+\contentsline {section}{\numberline {3.4}Dataset quality assessment}{11}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Statistical quality metrics.}{12}{subsection.3.4.1}%
 \contentsline {subsection}{\numberline {3.4.2}Model-assisted image assessment.}{12}{subsection.3.4.2}%
 \contentsline {paragraph}{Method.}{12}{subsection.3.4.2}%
-\contentsline {paragraph}{Inspection.}{12}{equation.3.3}%
+\contentsline {paragraph}{Inspection.}{13}{equation.3.4.3}%
 \contentsline {section}{\numberline {3.5}Model architectures and training strategy}{13}{section.3.5}%
-\contentsline {paragraph}{Mask R-CNN.}{14}{section.3.5}%
-\contentsline {paragraph}{YOLOv8-Seg.}{14}{equation.3.4}%
-\contentsline {section}{\numberline {3.6}Evaluation metrics and methodology}{14}{section.3.6}%
-\contentsline {subsection}{\numberline {3.6.1}Intersection over Union}{15}{subsection.3.6.1}%
-\contentsline {subsection}{\numberline {3.6.2}Precision, recall, and F1-score}{15}{subsection.3.6.2}%
-\contentsline {subsection}{\numberline {3.6.3}Average Precision under the COCO protocol}{15}{subsection.3.6.3}%
-\contentsline {subsection}{\numberline {3.6.4}Mean IoU and runtime performance}{16}{subsection.3.6.4}%
-\contentsline {subsection}{\numberline {3.6.5}Evaluation protocol}{16}{subsection.3.6.5}%
-\contentsline {section}{\numberline {3.7}Embedded deployment and optimization}{16}{section.3.7}%
+\contentsline {paragraph}{Mask R-CNN.}{16}{table.caption.13}%
+\contentsline {paragraph}{YOLOv8-Seg.}{16}{equation.3.5.4}%
+\contentsline {paragraph}{OCR dataset construction.}{16}{equation.3.5.5}%
+\contentsline {paragraph}{Recognition model architecture.}{17}{equation.3.5.5}%
+\contentsline {paragraph}{Fine-tuning strategy.}{17}{equation.3.5.5}%
+\contentsline {paragraph}{Inference integration and post-processing.}{18}{equation.3.5.5}%
+\contentsline {section}{\numberline {3.6}Evaluation metrics and methodology}{18}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Intersection over Union}{18}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Precision, recall, and F1-score}{18}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Average Precision under the COCO protocol}{19}{subsection.3.6.3}%
+\contentsline {subsection}{\numberline {3.6.4}Mean IoU and runtime performance}{19}{subsection.3.6.4}%
+\contentsline {subsection}{\numberline {3.6.5}Evaluation protocol}{19}{subsection.3.6.5}%
+\contentsline {section}{\numberline {3.7}Embedded deployment and optimization}{19}{section.3.7}%
+\contentsline {chapter}{\numberline {4}Results}{21}{chapter.4}%
+\contentsline {section}{\numberline {4.1}YOLO hyperparameter tuning and evaluation}{21}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Baseline YOLOv8-Seg performance}{21}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Hyperparameter tuning results}{21}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Comparison with YOLO26}{24}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Environment-specific fine-tuning with ADC data}{24}{subsection.4.1.4}%
