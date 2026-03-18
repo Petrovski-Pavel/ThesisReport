@@ -1,0 +1,141 @@
+\chapter{Discussion}
+\label{ch:discussion}
+
+This chapter interprets the results presented in Chapter~4 and relates them to
+the project objective of developing an efficient and scalable computer-vision
+workflow for robot interaction with elevator infrastructure on embedded
+hardware.
+
+\section{Interpretation of the main findings}
+
+The main outcome of this project is that a practical embedded perception
+workflow can be achieved by combining instance-segmentation-based button
+detection, crop-based \gls{ocr}, and a modular \gls{ros2} runtime pipeline. The
+results show that the strongest overall system did not come from selecting the
+newest model architecture or from maximizing validation performance in isolation.
+Instead, the most effective workflow emerged from a sequence of engineering
+decisions that balanced perception quality, deployment constraints, and future
+scalability.
+
+For \gls{yolo}, the baseline \gls{yolo}v8-Seg model remained the most reliable
+choice for deployment. Hyperparameter tuning improved validation performance, but
+those gains did not translate into a better final held-out test model. Likewise,
+YOLO26-small did not outperform the baseline under the same evaluation
+conditions. This is an important result because it shows that, for this task, a
+carefully chosen and well-understood baseline can be more valuable than adopting
+a newer architecture without a clear deployment benefit. The most practically
+useful \gls{yolo} improvement came from environment-specific fine-tuning with
+\gls{adc} data from HAN University, Building 31, which substantially improved
+performance in the target environment while preserving the original-domain
+performance.
+
+For \gls{ocr}, the project produced a clearer tuning outcome. The selected stage-2
+configuration improved both test accuracy and normalized edit distance relative
+to the initial recognizer. In contrast to the \gls{yolo} tuning results, the
+\gls{ocr} validation improvements did translate into better held-out test-set
+performance. This suggests that the \gls{ocr} stage was more sensitive to
+optimization settings in a way that remained meaningful at test time.
+
+At system level, the deployed \gls{ros2} pipeline demonstrates that model
+quality alone is not sufficient for real-time embedded performance. The final
+pipeline throughput depended strongly on how much non-inference work remained in
+the runtime path. The shift from full-image mask export to compact ROI-local mask
+handling, together with the split-node \gls{yolo}/\gls{ocr} architecture and the
+bounded \gls{ocr} workload, produced the most important runtime gains. The best
+measured configuration achieved about 13.1~\gls{fps}, while the collector-enabled
+configuration remained practical at about 10~\gls{fps}. This shows that the
+embedded performance target was not reached by model export alone, but by a
+combination of model export, message-design decisions, and workload placement.
+
+\section{Relation to the research questions}
+
+The results provide a coherent answer to the main research question. An
+efficient and scalable computer-vision workflow for hospital interaction-point
+perception can be designed by using instance segmentation for button localization,
+crop-based \gls{ocr} for semantic interpretation, \gls{tensorrt} export for
+embedded execution, and an \gls{ros2}-based split-node architecture for modular
+runtime integration.
+
+The first sub-question concerned the relevant human-interaction points in
+hospital environments. The project focused on elevator buttons and related panel
+interfaces because they are a concrete and operationally critical interaction
+class for multi-floor service-robot mobility. This focus proved appropriate: the
+task is sufficiently challenging to expose problems of detection, segmentation,
+recognition, and embedded deployment, while still being narrow enough to support
+a complete workflow.
+
+The second sub-question asked which methods and architectures were suitable.
+The literature review suggested that instance segmentation is better aligned with
+precise robot interaction than coarse object detection alone, and the results
+support this choice. The segmentation masks were directly useful for masked depth
+estimation and 3D target generation. The final architecture therefore combined a
+segmentation-based detector with a separate recognizer rather than relying on a
+single end-to-end model.
+
+The third sub-question concerned dataset design. The results show that dataset
+quality and dataset relevance were both important. The original curated dataset
+was sufficient to train a strong baseline, but the environment-specific
+fine-tuning experiment demonstrated that even a relatively small amount of
+deployment-collected data can substantially improve performance in the target
+domain. This supports the decision to include an \gls{adc} in the full workflow.
+
+The fourth sub-question asked which optimization techniques support embedded
+inference. Here the answer is twofold. First, \gls{tensorrt} export was
+beneficial for both \gls{yolo} and \gls{ocr}, with especially strong gains for
+\gls{ocr}. Second, export alone was not enough: runtime-side optimizations such
+as reducing annotation overhead, separating the inference nodes, and limiting the
+number of processed \gls{ocr} regions were equally important.
+
+The fifth sub-question concerned scalability and efficient future improvement.
+The final system addresses this directly through the \gls{adc}, which turns
+runtime use into a source of curated retraining data. The environment-specific
+\gls{yolo} improvement demonstrates that this design is not only theoretically
+scalable, but also practically useful.
+
+\section{Limitations}
+
+Several limitations should be considered when interpreting the results. First,
+the project focused on elevator-interface perception rather than the full set of
+hospital interaction elements. While this was a justified and useful scope
+reduction, the final conclusions should not automatically be generalized to all
+door panels, access readers, or human-machine interfaces.
+
+Second, some benchmark results remain sensitive to the evaluation setup. For
+example, the single-image framework-to-\gls{tensorrt} comparison is useful for
+illustrating acceleration trends, but it is not by itself a complete deployment
+benchmark. Likewise, some distance-related \gls{yolo} improvements were most
+clearly observed in field behavior and specific replay analyses rather than in a
+single universal summary metric. For this reason, the confidence and coverage
+improvements are stronger conclusions than any claim of a general doubling of
+recognition range.
+
+Third, the project was executed on a single embedded platform and camera setup.
+The \gls{jetson} Orin Nano and Stereolabs ZED X are representative for the
+target use case, but performance and tuning decisions may differ on other edge
+devices or other sensing configurations.
+
+Fourth, the report currently emphasizes perception and runtime integration rather
+than downstream manipulation or actuation. The system produces 3D button targets
+and button labels, but the full closed-loop robot interaction behavior lies
+beyond the present project scope.
+
+\section{Implications for future robot deployment}
+
+Despite these limitations, the project has clear practical implications. The
+results suggest that a service robot does not require a monolithic perception
+stack to achieve useful embedded performance. A modular pipeline with explicit
+message interfaces can be easier to tune, benchmark, and extend. This is
+particularly important for educational and research robots such as CareBot, where
+iterative development and subsystem replacement are expected.
+
+The project also suggests that deployment data should be treated as a core part
+of the system design rather than as an afterthought. The inclusion of the
+\gls{adc} makes the perception workflow self-improving in a structured way: the
+same runtime system used in deployment can collect higher-value examples for the
+next training cycle. This closes an important loop between experimentation,
+deployment, and future model improvement.
+
+Overall, the project shows that the combination of instance segmentation,
+task-specific \gls{ocr}, \gls{tensorrt} acceleration, and structured deployment
+data collection provides a credible foundation for later integration into a more
+complete autonomous hospital robot.

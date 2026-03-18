@@ -4,7 +4,7 @@
 This chapter presents the quantitative results obtained for the main technical
 components of the proposed elevator-interaction pipeline. The current version of
 the report focuses on the visual detection subsystem based on \gls{yolo}
-instance segmentation and the OCR-based button interpretation stage. Unless
+instance segmentation and the \gls{ocr}-based button interpretation stage. Unless
 stated otherwise, final model comparisons are
 reported on held-out test sets, while model selection during training and
 hyperparameter tuning is based on the validation split.
@@ -196,7 +196,7 @@ not sufficient to reverse the final test-set ranking against the baseline
     \label{fig:yolo26_mask_map}
 \end{figure}
 
-\subsection{Environment-specific fine-tuning with ADC data}
+\subsection{Environment-specific fine-tuning with \gls{adc} data}
 
 The final \gls{yolo} experiment focused on adaptation to the target university
 environment. For this purpose, the baseline checkpoint was fine-tuned on a mixed
@@ -226,7 +226,7 @@ while becoming substantially more effective on the environment-specific
 
 \begin{table}[htbp]
     \centering
-    \caption{Performance on the original held-out elevator test split before and after ADC fine-tuning.}
+    \caption{Performance on the original held-out elevator test split before and after \gls{adc} fine-tuning.}
     \label{tab:adc_original_test}
     \small
     \begin{tabular}{lcccc}
@@ -234,7 +234,7 @@ while becoming substantially more effective on the environment-specific
         Model & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
         \midrule
         Baseline YOLOv8-Seg & 0.91921 & 0.58295 & 0.86835 & 0.89896 \\
-        ADC fine-tuned YOLOv8-Seg & 0.91912 & 0.58293 & 0.88043 & 0.90050 \\
+        \glsentryshort{adc} fine-tuned YOLOv8-Seg & 0.91912 & 0.58293 & 0.88043 & 0.90050 \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -242,7 +242,7 @@ while becoming substantially more effective on the environment-specific
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/yolo_adc_fine_tune_mAP50-95_M.png}
-    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ during ADC-based fine-tuning. The curve remains close to the baseline validation range, which aligns with the near-identical performance observed on the original held-out test split.}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ during \gls{adc}-based fine-tuning. The curve remains close to the baseline validation range, which aligns with the near-identical performance observed on the original held-out test split.}
     \label{fig:adc_finetune_mask_map}
 \end{figure}
 
@@ -258,7 +258,7 @@ performance level on the original test set.
 
 \begin{table}[htbp]
     \centering
-    \caption{Performance on the environment-specific \gls{adc} test split before and after ADC fine-tuning.}
+    \caption{Performance on the environment-specific \gls{adc} test split before and after \gls{adc} fine-tuning.}
     \label{tab:adc_env_test}
     \small
     \begin{tabular}{lcccc}
@@ -266,10 +266,23 @@ performance level on the original test set.
         Model & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
         \midrule
         Baseline YOLOv8-Seg & 0.53520 & 0.12290 & 0.61209 & 0.70136 \\
-        ADC fine-tuned YOLOv8-Seg & 0.99500 & 0.50463 & 1.00000 & 0.99712 \\
+        \glsentryshort{adc} fine-tuned YOLOv8-Seg & 0.99500 & 0.50463 & 1.00000 & 0.99712 \\
         \bottomrule
     \end{tabular}
 \end{table}
+
+This environment-specific improvement was also reflected in deployment-oriented
+behavior after retraining on \gls{adc} data from HAN University, Building 31.
+In a controlled replay experiment on the same recorded \gls{rgbd} sequence, the
+retrained model increased mean target confidence from 0.8184 to 0.8422 and
+raised the 10th-percentile target confidence from 0.6562 to 0.7727, indicating
+that the main gain occurred in weaker detections rather than only in already
+easy cases. Distance-related improvements were more scenario-dependent, but live
+deployment observations showed a practical increase in outside elevator-panel
+single-button recognition distance from approximately 35~cm to 75~cm. This
+distance gain should be interpreted as a task-specific field observation rather
+than a universal range increase across all scenes, but it still supports the
+conclusion that retraining improved practical usability in the target building.
 
 Overall, the \gls{yolo} results show three main findings. First, the baseline
 \gls{yolo}v8-Seg model was already strong and difficult to surpass on the general
@@ -279,17 +292,17 @@ most practically valuable improvement was achieved through environment-specific
 fine-tuning with \gls{adc} data, which substantially increased performance on the
 target deployment domain while preserving performance on the original dataset.
 
-\section{OCR hyperparameter tuning and evaluation}
+\section{\Gls{ocr} hyperparameter tuning and evaluation}
 
-The OCR experiments focused on improving cropped-button recognition while keeping
+The \gls{ocr} experiments focused on improving cropped-button recognition while keeping
 the recognizer lightweight enough for later embedded deployment. As in the
-\gls{yolo} experiments, model selection during OCR tuning was based on the
-validation split, and the final comparison between OCR candidates was performed on
-the held-out OCR test set.
+\gls{yolo} experiments, model selection during \gls{ocr} tuning was based on the
+validation split, and the final comparison between \gls{ocr} candidates was performed on
+the held-out \gls{ocr} test set.
 
 \subsection{Stage 1: epoch selection}
 
-The first OCR tuning stage varied only the number of training epochs while keeping
+The first \gls{ocr} tuning stage varied only the number of training epochs while keeping
 the optimizer configuration fixed. The main objective of this stage was to
 determine whether the original 60-epoch fine-tuning recipe was necessary or
 whether a shorter training budget would already achieve the same validation
@@ -300,7 +313,7 @@ converged to almost identical validation performance, both reaching their best
 result at epoch 46. In contrast, the 30-epoch run underperformed clearly. This
 indicates that the recognizer required more than 30 epochs to converge, but that
 training beyond 50 epochs provided no meaningful additional benefit. For that
-reason, 50 epochs were selected as the fixed budget for the next stage of OCR
+reason, 50 epochs were selected as the fixed budget for the next stage of \gls{ocr}
 hyperparameter tuning. This interpretation is also supported by the Stage 1
 training-loss curves shown in Figure~\ref{fig:ocr_stage1_loss}, where the main
 decrease occurs well before the end of the 50-epoch run and the longer schedule
@@ -309,7 +322,7 @@ does not suggest a qualitatively different convergence regime.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/stage1_ocr_train_loss.png}
-    \caption{Stage 1 OCR training loss for the epoch-selection runs. Most of the
+    \caption{Stage 1 \gls{ocr} training loss for the epoch-selection runs. Most of the
     optimization progress occurs before the 50-epoch mark, which supports the
     decision to use 50 epochs for the subsequent optimizer sweep.}
     \label{fig:ocr_stage1_loss}
@@ -317,7 +330,7 @@ does not suggest a qualitatively different convergence regime.
 
 \begin{table}[htbp]
     \centering
-    \caption{Stage 1 OCR epoch-sweep results on the validation split.}
+    \caption{Stage 1 \gls{ocr} epoch-sweep results on the validation split.}
     \label{tab:ocr_stage1_results}
     \small
     \begin{tabular}{lccc}
@@ -341,14 +354,14 @@ Table~\ref{tab:ocr_stage2_results}.
 The best configuration used an initial learning rate of
 $3 \times 10^{-4}$ and a weight decay of $3 \times 10^{-5}$. This run achieved a
 validation accuracy of 0.84157 and a normalized edit distance of 0.87098, making
-it the strongest OCR candidate of the sweep. The configuration with the same
+it the strongest \gls{ocr} candidate of the sweep. The configuration with the same
 learning rate but lower weight decay performed substantially worse, while the run
 using $5 \times 10^{-4}$ degraded sharply and converged to a much lower
 performance level. Increasing the learning rate further to $7 \times 10^{-4}$
 recovered most of the performance, but still remained below the best
 $3 \times 10^{-4}$ run.
 
-These results indicate that OCR fine-tuning was sensitive to the optimizer
+These results indicate that \gls{ocr} fine-tuning was sensitive to the optimizer
 settings even within a relatively narrow search range. In particular, the stage-2
 results suggest that a slightly lower learning rate than the original baseline
 provided more stable and ultimately better convergence on the recognition task.
@@ -360,7 +373,7 @@ strongest normalized edit-distance curve.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/stage2_ocr_eval_acc.png}
-    \caption{Stage 2 OCR evaluation accuracy for the learning-rate and
+    \caption{Stage 2 \gls{ocr} evaluation accuracy for the learning-rate and
     weight-decay sweep. The configuration with learning rate
     $3 \times 10^{-4}$ and weight decay $3 \times 10^{-5}$ achieved the best
     validation accuracy.}
@@ -370,7 +383,7 @@ strongest normalized edit-distance curve.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/stage2_ocr_eval_norm_edit_dis.png}
-    \caption{Stage 2 OCR normalized edit distance for the learning-rate and
+    \caption{Stage 2 \gls{ocr} normalized edit distance for the learning-rate and
     weight-decay sweep. The best-performing configuration also achieved the
     highest normalized edit-distance score.}
     \label{fig:ocr_stage2_ned}
@@ -378,7 +391,7 @@ strongest normalized edit-distance curve.
 
 \begin{table}[htbp]
     \centering
-    \caption{Stage 2 OCR hyperparameter sweep on the validation split.}
+    \caption{Stage 2 \gls{ocr} hyperparameter sweep on the validation split.}
     \label{tab:ocr_stage2_results}
     \small
     \begin{tabular}{lcccc}
@@ -393,35 +406,159 @@ strongest normalized edit-distance curve.
     \end{tabular}
 \end{table}
 
-\subsection{Final OCR benchmark}
+\subsection{Final \gls{ocr} benchmark}
 
-The final OCR benchmark compared the original fine-tuned recognizer against the
-best-performing stage-2 configuration on the held-out OCR test set. The results
+The final \gls{ocr} benchmark compared the original fine-tuned recognizer against the
+best-performing stage-2 configuration on the held-out \gls{ocr} test set. The results
 are shown in Table~\ref{tab:ocr_final_benchmark}. The stage-2 model outperformed
-the initial OCR model on both recognition-quality metrics. Test accuracy improved
+the initial \gls{ocr} model on both recognition-quality metrics. Test accuracy improved
 from 0.81635 to 0.83486, while normalized edit distance improved from 0.85574 to
 0.87190. In addition, the measured evaluation throughput increased slightly from
 805.68 to 817.71 samples per second.
 
-Taken together, these results show that the OCR hyperparameter tuning process
+Taken together, these results show that the \gls{ocr} hyperparameter tuning process
 produced a real improvement rather than only a validation-specific gain. Unlike
 the \gls{yolo} tuning experiments, where better validation performance did not
-translate into a better final test-set model, the OCR stage-2 winner also
-improved the held-out test benchmark. For this reason, the stage-2 best OCR model
+translate into a better final test-set model, the \gls{ocr} stage-2 winner also
+improved the held-out test benchmark. For this reason, the stage-2 best \gls{ocr} model
 was selected as the final recognition candidate for later integration into the
 complete perception pipeline.
 
 \begin{table}[htbp]
     \centering
-    \caption{Held-out OCR test-set comparison between the initial recognizer and the selected stage-2 OCR model.}
+    \caption{Held-out \gls{ocr} test-set comparison between the initial recognizer and the selected stage-2 \gls{ocr} model.}
     \label{tab:ocr_final_benchmark}
     \small
     \begin{tabular}{lccc}
         \toprule
         Model & Accuracy & Normalized edit distance & Throughput (samples/s) \\
         \midrule
-        Initial OCR model & 0.81635 & 0.85574 & 805.68 \\
-        Stage-2 best OCR model & \textbf{0.83486} & \textbf{0.87190} & \textbf{817.71} \\
+        Initial \glsentryshort{ocr} model & 0.81635 & 0.85574 & 805.68 \\
+        Stage-2 best \glsentryshort{ocr} model & \textbf{0.83486} & \textbf{0.87190} & \textbf{817.71} \\
         \bottomrule
     \end{tabular}
 \end{table}
+
+\subsection{Model hardware optimization results}
+
+As described in Chapter~3, the final \gls{yolo} and \gls{ocr} models were
+exported to \gls{tensorrt} for optimized execution on the \gls{jetson} platform.
+To verify the effect of this export step, a compact benchmark was performed on
+the held-out test image \texttt{367.jpg}. For \gls{yolo}, the comparison used the
+PyTorch checkpoint and the exported \gls{tensorrt} engine on the same full image.
+For \gls{ocr}, the comparison used the Paddle inference model and the exported
+\gls{tensorrt} engine on the five annotated button crops from the same image.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Single-image model hardware optimization benchmark on test image \texttt{367.jpg}. For \gls{ocr}, the reported latency is average time per single button crop.}
+    \label{tab:model_hw_optimization}
+    \small
+    \begin{tabular}{lccc}
+        \toprule
+        Model stage & Baseline backend & \glsentryshort{tensorrt} backend & Speedup \\
+        \midrule
+        \glsentryshort{yolo} inference [ms/image] & 36.46 & 24.43 & 1.49$\times$ \\
+        \glsentryshort{yolo} wall time [ms/image] & 64.19 & 64.52 & 1.00$\times$ \\
+        \glsentryshort{ocr} latency [ms/crop] & 167.72 & 10.29 & 16.30$\times$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The \gls{yolo} result shows that \gls{tensorrt} reduced the forward-pass time
+substantially, even though the total offline single-image wall time remained
+almost unchanged because preprocessing and postprocessing still contributed a
+large fraction of the runtime. The \gls{ocr} result is more direct: the
+\gls{tensorrt} engine reduced average latency from 167.72~ms to 10.29~ms per
+button crop while preserving the same accepted predictions on all five button
+regions in the test image. These results support the use of \gls{tensorrt}
+export as an important deployment optimization step before integrating the models
+into the full \gls{ros2} pipeline.
+
+\section{\Gls{ros2} pipeline performance}
+
+After the final \gls{yolo} and \gls{ocr} models were exported to \gls{tensorrt}, the complete
+perception stack was evaluated on the \gls{jetson} Orin Nano in its deployed \gls{ros2}
+configuration. The purpose of these experiments was not to compare neural-network
+accuracy, but to quantify the practical throughput of the integrated pipeline under
+different runtime settings. The reported measurements correspond to the final
+post-refactor pipeline in which ROI-local masks are published by the YOLO node and
+full-image annotation reconstruction is performed only inside the \gls{adc} when
+export is required. During these experiments, the Stereolabs ZED X camera was
+launched with the \texttt{zedx} wrapper profile, which uses a native
+\texttt{HD1200} grab mode at 30~Hz and publishes rectified color and depth data at
+15~\gls{fps}. With the configured downscale factor of 2.0, the effective published
+image resolution used by the perception pipeline was 960$\times$600 pixels.
+
+Three final runtime scenarios were compared:
+\begin{itemize}
+    \item camera + \gls{yolo} + \gls{ocr} + \gls{adc},
+    \item camera + \gls{yolo} + \gls{ocr} without collector and with \gls{ocr} uncapped, and
+    \item camera + \gls{yolo} + \gls{ocr} without collector and with \gls{ocr} limited to four regions per message.
+\end{itemize}
+
+Table~\ref{tab:ros2_pipeline_fps} summarizes the resulting topic throughput. The
+collector-enabled configuration sustained approximately 10~\gls{fps} while preserving
+the full deployment data-collection path. When the collector was disabled and \gls{ocr}
+was allowed to process all candidate regions, the end-to-end rate increased to
+about 12.2~\gls{fps}. The best runtime-oriented configuration was obtained when \gls{ocr}
+was capped to four regions per message, yielding approximately 13.1~\gls{fps}
+end-to-end on the final \texttt{/button\_targets\_3d\_ocr} output topic. The
+reported topic rates were measured with the standard \texttt{ros2 topic hz}
+utility on the relevant output topics.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Final \gls{ros2} pipeline throughput on the \gls{jetson} Orin Nano after the ROI-mask refactor, measured with \texttt{ros2 topic hz}.}
+    \label{tab:ros2_pipeline_fps}
+    \small
+    \begin{tabular}{lcc}
+        \toprule
+        Configuration & \texttt{/button\_targets\_3d} \gls{fps} & \texttt{/button\_targets\_3d\_ocr} \gls{fps} \\
+        \midrule
+        With collector & $\sim 10.0$ & $\sim 10.0$ \\
+        No collector, \gls{ocr} uncapped & $\sim 12.15$ & $\sim 12.29$ \\
+        No collector, \gls{ocr} capped to 4 ROIs & $\sim 13.14$--$13.47$ & $\sim 13.08$--$13.25$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The timing breakdown confirms that the final system bottleneck is not the \gls{tensorrt}
+forward pass alone, but the combined cost of segmentation postprocessing, depth
+estimation, and \gls{ocr} execution inside the live \gls{ros2} graph. Table~\ref{tab:ros2_pipeline_timing}
+shows typical timing ranges of the \gls{yolo} and \gls{ocr} nodes for the three runtime
+configurations. In collector mode, the YOLO node required approximately
+81--91~ms per callback and the \gls{ocr} node 79--95~ms. Removing the collector while
+keeping \gls{ocr} uncapped reduced the practical throughput penalty of data export but
+still required roughly 11 processed \gls{ocr} regions per message, which kept \gls{ocr} total
+time in the 77--102~ms range. Limiting \gls{ocr} to four regions reduced \gls{ocr} total time
+to roughly 33--35~ms and allowed the complete pipeline to reach its best measured
+throughput.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Typical node timing ranges for the final \gls{ros2} runtime experiments.}
+    \label{tab:ros2_pipeline_timing}
+    \small
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lcccc}
+        \toprule
+        Configuration & \glsentryshort{yolo} total [ms] & \glsentryshort{yolo} depth [ms] & \glsentryshort{ocr} total [ms] & \glsentryshort{ocr} processed ROIs \\
+        \midrule
+        With collector & $\sim 81$--$91$ & $\sim 3.6$--$6.6$ & $\sim 79$--$95$ & not capped \\
+        No collector, \gls{ocr} uncapped & $\sim 78$--$99$ & $\sim 4$--$7$ & $\sim 77$--$102$ & $\sim 10.7$--$10.9$ \\
+        No collector, \gls{ocr} capped to 4 ROIs & $\sim 70.4$--$77.8$ & $\sim 5.3$--$7.0$ & $\sim 33.0$--$35.2$ & $4.0$ \\
+        \bottomrule
+    \end{tabular}
+    }
+\end{table}
+
+These results show that the integrated perception pipeline can operate at
+deployment-relevant frame rates on the \gls{jetson} Orin Nano, provided that annotation
+serialization is kept out of the real-time \gls{yolo} path and \gls{ocr} workload is bounded.
+For runtime operation, the most effective configuration is the ROI-limited \gls{ocr}
+setup without concurrent collection, which achieved approximately 13.1~\gls{fps}.
+For deployment sessions that must simultaneously gather new training data, the
+collector-enabled configuration remains practical at approximately 10~\gls{fps},
+which is sufficient to preserve the full adaptive data-collection loop described in
+Chapter~\ref{ch:methodology}.

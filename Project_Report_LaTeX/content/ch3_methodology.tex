@@ -62,19 +62,19 @@ This 1,400-image base subset (1122+281) was used to train the initial baseline m
 The 602-image test split was never used for optimization or model selection.
 
 In later stages, the original dataset was extended with images collected in the target installation (HAN University).
-For ADC adaptation, these base images were extended with real-environment images and re-split as the mixed dataset (\texttt{elevator\_adc\_mix}):
+For \gls{adc} adaptation, these base images were extended with real-environment images and re-split as the mixed dataset (\texttt{elevator\_adc\_mix}):
 \begin{itemize}
     \item train: 1154 images
     \item validation: 288 images
     \item test: 609 images
 \end{itemize}
-This mixed split was used for stage-wise tuning and the final ADC fine-tuning experiments.
+This mixed split was used for stage-wise tuning and the final \gls{adc} fine-tuning experiments.
 Each subset follows the same directory structure, containing an \texttt{images} folder with the raw \gls{rgb}
 images and an annotation folder with matching labels.
 
 In the original dataset, annotations are used in the project-specific \gls{yolo}-compatible
 instance-mask format. For the domain adaptation experiment, additional
-annotations from the target environment (ADC) were provided in \gls{coco}-style JSON and
+annotations from the target environment (\gls{adc}) were provided in \gls{coco}-style JSON and
 converted to \gls{yolo}-segmentation labels with a dedicated conversion script.
 This ensures compatibility with \gls{yolo} while maintaining a consistent train/val/test
 folder layout and class consistency.
@@ -94,24 +94,24 @@ semantic interpretation stage was derived from the same annotated source images.
 For this purpose, each annotated button instance was cropped from the original
 image using its existing bounding-box annotation, with an additional contextual
 padding of 15\% of the box width and height. This produced a button-centered crop
-dataset for OCR fine-tuning without requiring any additional manual image
+dataset for \gls{ocr} fine-tuning without requiring any additional manual image
 collection.
 
-The OCR dataset builder grouped crops by source image before creating a fixed
+The \gls{ocr} dataset builder grouped crops by source image before creating a fixed
 80/20 train/validation split with a deterministic random seed. As a result, all
 button crops originating from one panel image were placed either in the training
 set or in the validation set, but never in both. This prevents information
 leakage caused by highly similar button appearances within the same elevator
-panel. The held-out OCR test set was generated directly from the original test
+panel. The held-out \gls{ocr} test set was generated directly from the original test
 images and their annotations.
 
-Several OCR dataset variants were explored during development. The final variant
+Several \gls{ocr} dataset variants were explored during development. The final variant
 used for the main recognition experiments removed labels named exactly
 \texttt{text} and labels starting with the prefix \texttt{text\_}. These labels do
 not encode the actual button content, but merely indicate the presence of
 unspecified free text. Retaining them caused the recognizer to over-predict
 generic ``TEXT''-like outputs and reduced generalization to unseen textual button
-content. The final OCR dataset,
+content. The final \gls{ocr} dataset,
 \texttt{ocr\_rec\_dataset\_drop\_textprefix\_full}, contained 11{,}953 training
 crops, 2{,}973 validation crops, and 6{,}861 held-out test crops.
 
@@ -224,13 +224,13 @@ deployment-oriented solution suitable for embedded hardware.
 
 \subsection*{Experimental hardware and software environment}
 
-All \gls{yolo} and OCR training experiments reported in this thesis were executed
+All \gls{yolo} and \gls{ocr} training experiments reported in this thesis were executed
 on the same workstation. The host system ran Ubuntu 22.04.5 LTS with Linux kernel
 6.8.0-90. The machine was equipped with an AMD Ryzen 9 9950X 16-core processor,
 176~GiB of system memory, and an NVIDIA GeForce RTX 4090 graphics card with
 24~GiB of \gls{vram}. The training software environment used Python 3.10.12 and
 PyTorch 2.5.1 compiled against CUDA 12.1. This configuration provided the
-computational platform for the baseline training, hyperparameter tuning, OCR
+computational platform for the baseline training, hyperparameter tuning, \gls{ocr}
 fine-tuning, and the comparative evaluation runs discussed in Chapters~3 and~4.
 
 \subsection*{Common training strategy}
@@ -400,7 +400,7 @@ Despite architectural differences, both models optimize comparable objectives,
 enabling consistent evaluation of segmentation accuracy and computational
 efficiency across reference and deployment-oriented architectures.
 
-\subsection*{OCR-based button interpretation}
+\subsection*{\gls{ocr}-based button interpretation}
 
 Following instance segmentation, the detected button regions are passed to a
 semantic interpretation stage. Segmented button instances are cropped and processed
@@ -434,11 +434,11 @@ current task because button labels range from single digits and single letters t
 short strings such as \texttt{10}, \texttt{4A}, or \texttt{CLOSE}, while still
 requiring efficient inference on cropped inputs.
 
-Only the recognition component of the OCR stack was used. The detection component
+Only the recognition component of the \gls{ocr} stack was used. The detection component
 of \gls{paddleocr} was intentionally omitted from the final recognition pipeline, because
 button localization was already solved upstream by the instance segmentation model.
-This avoids redundant computation and makes the OCR stage conceptually cleaner:
-segmentation localizes the button instance, and OCR interprets that localized
+This avoids redundant computation and makes the \gls{ocr} stage conceptually cleaner:
+segmentation localizes the button instance, and \gls{ocr} interprets that localized
 instance.
 
 \paragraph{Fine-tuning strategy.}
@@ -461,7 +461,7 @@ fixed presentation and improves tolerance to realistic differences in scale,
 contrast, blur, and local appearance.
 
 The implementation followed the standard \gls{paddleocr} training workflow. Rather than
-building a custom OCR training loop from scratch, the official
+building a custom \gls{ocr} training loop from scratch, the official
 \texttt{tools/train.py} and \texttt{tools/eval.py} scripts provided by the
 \gls{paddleocr} framework were used directly. Project-specific experiments were
 defined through \gls{yaml} configuration files and command-line overrides, in the same spirit as
@@ -478,7 +478,7 @@ fixed the epoch budget at 50 and performed a narrow sweep over optimizer
 hyperparameters, primarily learning rate and weight decay. The main configurations
 tested were $\{3 \times 10^{-4}, 5 \times 10^{-4}, 7 \times 10^{-4}\}$ for the
 initial learning rate and $\{1 \times 10^{-5}, 3 \times 10^{-5}\}$ for weight
-decay, while warmup was adjusted conservatively between 3 and 5 epochs. All OCR
+decay, while warmup was adjusted conservatively between 3 and 5 epochs. All \gls{ocr}
 tuning runs were logged in \gls{wandb} so that training curves, hyperparameter
 choices, and validation metrics could be compared systematically.
 
@@ -533,7 +533,7 @@ These metrics provide intuitive insight into detection reliability and are
 particularly relevant for robotic interaction tasks, where both missed detections
 and false positives can lead to failed interactions.
 
-\subsection{Average Precision under the COCO protocol}
+\subsection{Average Precision under the \gls{coco} protocol}
 
 To enable standardized benchmarking, model performance is additionally evaluated
 using the \gls{coco} instance segmentation protocol. Average Precision (\gls{ap}) is computed
@@ -557,9 +557,9 @@ performance is measured by recording per-image inference time. Average inference
 time and frames per second (\gls{fps}) are reported to evaluate suitability for real-time
 deployment on embedded hardware.
 
-\subsection{OCR accuracy and normalized edit distance}
+\subsection{\gls{ocr} accuracy and normalized edit distance}
 
-The OCR recognition models are evaluated using exact-match accuracy and
+The \gls{ocr} recognition models are evaluated using exact-match accuracy and
 normalized edit distance. Exact-match accuracy is the fraction of button crops for
 which the predicted label string matches the ground-truth label exactly after the
 same normalization procedure is applied to both. This metric is strict and is
@@ -568,7 +568,7 @@ therefore suitable for the final semantic interpretation task, where predicting
 be counted as an error.
 
 \begin{equation}
-\mathrm{Accuracy}_{\text{OCR}} = \frac{N_{\text{correct}}}{N_{\text{total}}}
+\mathrm{Accuracy}_{\text{\glsentryshort{ocr}}} = \frac{N_{\text{correct}}}{N_{\text{total}}}
 \end{equation}
 
 where $N_{\text{correct}}$ is the number of exactly correct predictions and
@@ -579,7 +579,7 @@ how close an incorrect prediction is to the target string. This metric is derive
 from the Levenshtein edit distance between prediction and target and is normalized
 to the interval $[0,1]$, where 1 indicates a perfect match. Unlike exact-match
 accuracy, normalized edit distance gives partial credit to near-correct
-predictions, which is useful when analyzing OCR behavior on short strings and icon
+predictions, which is useful when analyzing \gls{ocr} behavior on short strings and icon
 labels that are often confused by only one or two characters.
 
 \begin{equation}
@@ -590,9 +590,9 @@ labels that are often confused by only one or two characters.
 where $\hat{y}_i$ is the predicted string, $y_i$ is the corresponding ground-truth
 string, and $d_{\text{edit}}$ denotes the Levenshtein edit distance.
 
-During OCR tuning, validation accuracy was treated as the primary model-selection
+During \gls{ocr} tuning, validation accuracy was treated as the primary model-selection
 metric, while normalized edit distance was used as a secondary quality indicator.
-Final OCR benchmarking was then performed on the held-out OCR test split using the
+Final \gls{ocr} benchmarking was then performed on the held-out \gls{ocr} test split using the
 official \gls{paddleocr} evaluation script with the same configuration family as
 used during training.
 
@@ -610,20 +610,20 @@ quantitative comparison of models presented in Chapter~\ref{ch:results}
 
 \section{Embedded deployment and optimization}
 
-\begin{wrapfigure}{r}{0.42\textwidth}
+\begin{wrapfigure}{r}{0.32\textwidth}
     \centering
     \vspace{-10pt}
-    \includegraphics[width=0.25\textwidth]{figures/methodology/Embedded_workflow.png}
-    \captionsetup{width=0.3\textwidth}
-    \caption{Deployment and optimization workflow for 
-    models on \gls{jetson} Orin using \gls{onnx} and \gls{tensorrt}.}
+    \includegraphics[width=0.20\textwidth]{figures/methodology/Embedded_workflow.png}
+    \captionsetup{width=0.28\textwidth}
+    \caption{Deployment and optimization workflow for models on \gls{jetson} Orin using \gls{onnx} and \gls{tensorrt}.}
     \label{fig:tensorrt_workflow}
     \vspace{-10pt}
 \end{wrapfigure}
 
+
 To enable real-time execution on embedded hardware, and wrap up step 1 of the workflow strategy in Figure~\ref{fig:scalable_workflow}, trained models are optimized
 and deployed on a \gls{jetson} Orin platform. The deployment workflow is designed
-to be identical for both the instance segmentation model and the OCR-based button
+to be identical for both the instance segmentation model and the \gls{ocr}-based button
 classification model.
 
 Models are first trained in PyTorch and exported to the Open Neural Network Exchange
@@ -646,3 +646,117 @@ The complete deployment and optimization workflow is illustrated in
 Figure~\ref{fig:tensorrt_workflow}. This approach ensures a consistent and efficient
 deployment pipeline and enables fair evaluation of different model architectures
 under identical runtime constraints.
+
+\section{ROS2 pipeline architecture}
+
+After deployment-oriented model selection, the \gls{tensorrt} engines were integrated into
+a modular \gls{ros2} runtime pipeline on the target robot computer. This stage links
+the trained perception models to live camera input, downstream message passing, and
+deployment data collection.
+
+\subsection{Deployment platform}
+
+The runtime pipeline was executed on an \gls{jetson} Orin Nano running Ubuntu 22.04.5 LTS and \gls{ros2} Humble. The
+device uses NVIDIA Linux for Tegra release \texttt{R36.4.7} with Linux kernel
+\texttt{5.15.148-tegra}. \gls{tensorrt}~10.7.0 was used for optimized inference. Visual
+input was provided by a Stereolabs ZED X camera connected through a ZED Link Duo
+capture card, using ZED SDK~5.2.1.
+
+\subsection{Runtime node graph}
+
+The deployed runtime graph consists of the ZED camera driver, a \gls{yolo} inference
+node, an \gls{ocr} inference node, and an \gls{adc}. The ZED wrapper
+publishes rectified color images, registered depth images, and camera calibration
+data. The \texttt{yolo\_engine\_node} subscribes to these topics and publishes
+\texttt{/button\_targets\_3d}. The \texttt{ocr\_trt\_node} subscribes to the camera
+image topic and \texttt{/button\_targets\_3d}, performs text recognition on cropped
+button regions, and publishes \texttt{/button\_targets\_3d\_ocr}. The
+\texttt{data\_collector} then subscribes to the \gls{ocr}-enriched target stream
+and the camera image stream for deployment data logging.
+
+The split-node design was chosen deliberately. Earlier experiments showed that
+placing \gls{yolo} and \gls{ocr} \gls{tensorrt} inference in a single Python process increased the
+risk of CUDA-context conflicts and made the system harder to debug. Separating the
+geometric perception stage from the semantic recognition stage improved modularity
+and allowed both runtime components to be benchmarked independently.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/methodology/ros2_pipeline_mermaid_high.png}
+    \caption{\Gls{ros2} runtime architecture used for deployment. The ZED X camera
+    provides image, depth, and camera calibration topics to the \gls{yolo} node. The \gls{ocr}
+    node enriches the geometric targets with text labels, and the active data
+    collector stores accepted deployment samples for later retraining.}
+    \label{fig:ros2_runtime_architecture}
+\end{figure}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Main ROS 2 nodes in the deployed perception pipeline.}
+    \label{tab:ros2_nodes}
+    \small
+    \begin{tabular}{p{3.1cm} p{4.0cm} p{6.1cm}}
+        \toprule
+        \textbf{Node} & \textbf{Primary topics} & \textbf{Function} \\
+        \midrule
+        \texttt{zed\_wrapper} & \gls{rgb}, depth, camera info & Publishes sensor streams from the ZED X camera. \\
+        \texttt{yolo\_engine\_node} & In: \gls{rgb}, depth, camera info; Out: \texttt{/button\_targets\_3d} & Runs \gls{tensorrt} segmentation, estimates target depth, and projects detections to 3D. \\
+        \texttt{ocr\_trt\_node} & In: \gls{rgb}, \texttt{/button\_targets\_3d}; Out: \texttt{/button\_targets\_3d\_ocr} & Matches detections to buffered images and adds \gls{ocr} labels. \\
+        \texttt{active\_data\_collector} & In: \gls{rgb}, \texttt{/button\_targets\_3d\_ocr} & Exports selected deployment samples for later review and retraining. \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Message flow and collector design}
+
+The internal interface between the perception nodes is the custom
+\texttt{ButtonTarget3D} message, which combines 2D detection geometry, 3D position
+estimates, compact mask data, and \gls{ocr} fields in a single transport format. Image
+topics use a best-effort, keep-last quality-of-service setting so that the pipeline
+always prefers recent sensor data over delayed frames.
+
+Within the \texttt{yolo\_engine\_node}, target depth is estimated only from valid
+depth pixels that fall inside the predicted segmentation mask. Let $\mathcal{V}$
+denote the set of valid masked depth pixels after finite-value filtering, depth
+range filtering, and the minimum-valid-pixel test. The representative target depth
+is then computed as
+\begin{equation}
+z = \mathrm{Percentile}\left(\{d(i,j)\mid (i,j)\in \mathcal{V}\},\, p\right),
+\end{equation}
+where $p$ is the configured depth percentile. In the current implementation,
+$p=50$ is used, corresponding to the median of the valid masked depth samples.
+Using a percentile-based estimate rather than a plain mean reduces sensitivity to
+outliers caused by missing returns and reflective elevator surfaces.
+
+The representative image location is also derived from the valid masked depth
+pixels. In the current implementation, the pixel coordinates are taken as the
+median valid depth location:
+\begin{equation}
+u = \mathrm{median}\left(\{j \mid (i,j)\in \mathcal{V}\}\right), \qquad
+v = \mathrm{median}\left(\{i \mid (i,j)\in \mathcal{V}\}\right).
+\end{equation}
+
+If the camera intrinsics are given by focal lengths $(f_x,f_y)$ and principal
+point $(c_x,c_y)$, the 3D target position in the camera optical frame is computed
+as
+\begin{equation}
+x = \frac{(u-c_x)z}{f_x}, \qquad
+y = \frac{(v-c_y)z}{f_y}.
+\end{equation}
+This projection step provides the 3D button target used by downstream robotic
+modules and by the \gls{adc}.
+
+To support iterative improvement after deployment, the \gls{adc} stores
+selected images and annotations in a \gls{coco}-compatible structure. Sample export
+is not performed for every frame. Instead, frames pass a sequence of quality gates
+before they are written to a dataset session. At image level, the collector applies
+brightness and sharpness checks. Brightness is used to reject severely underexposed
+or overexposed frames, while sharpness is used to reject blurred frames. At target
+level, the collector applies minimum score and size thresholds, followed by
+temporal stability checks and near-duplicate rejection.
+
+An important late-stage refactor moved full-image mask encoding out of the YOLO
+node and into the collector. In the final design, the YOLO node publishes only a
+compact ROI-local mask, while the collector reconstructs full-image annotations
+only for accepted samples. This reduces runtime overhead in the perception path and
+keeps dataset-generation logic out of the real-time inference loop.

@@ -1,0 +1,60 @@
+\chapter{Conclusions and recommendations}
+\label{ch:conclusions}
+
+\section{Conclusions}
+
+The objective of this project was to develop and validate an efficient and
+scalable computer-vision workflow that enables a service-robot platform to detect
+and classify human-interaction elements in hospital environments using embedded
+hardware. Based on the results presented in this report, this objective was
+achieved for the targeted elevator-interaction use case.
+
+The project demonstrates that a practical embedded perception workflow can be
+constructed from four main components: a strong instance-segmentation baseline
+for button localization, a crop-based \gls{ocr} stage for button interpretation,
+\gls{tensorrt} export for hardware-efficient inference, and a modular \gls{ros2}
+pipeline that integrates detection, 3D projection, text recognition, and
+deployment data collection.
+
+The main conclusions are as follows.
+
+\begin{enumerate}
+    \item Instance segmentation is an effective method for elevator-button perception because it supports both accurate 2D localization and mask-based depth estimation for 3D target generation.
+    \item The baseline \gls{yolo}v8-Seg model was the strongest deployment candidate among the evaluated detector variants. Hyperparameter tuning improved validation performance, but not the final held-out test ranking.
+    \item Environment-specific fine-tuning with \gls{adc} data from HAN University, Building 31 produced the most practically valuable \gls{yolo} improvement, substantially increasing target-domain performance while preserving original-domain performance.
+    \item The selected stage-2 \gls{ocr} model improved held-out recognition quality and formed a suitable semantic interpretation stage for the full pipeline.
+    \item \gls{tensorrt} export was beneficial for both deployed models. The effect was moderate but clear for \gls{yolo} inference time, and very strong for \gls{ocr} latency.
+    \item The final \gls{ros2} pipeline achieved practical embedded runtime performance on the \gls{jetson} Orin Nano, with the best measured configuration operating at about 13.1~\gls{fps} and the collector-enabled configuration remaining usable at about 10~\gls{fps}.
+    \item Scalability is supported not only by model architecture choices, but also by the inclusion of the \gls{adc}, which enables structured deployment-time data collection for future retraining.
+\end{enumerate}
+
+Taken together, these conclusions answer the main research question: an efficient
+and scalable computer-vision workflow for hospital interaction-point perception
+can be achieved on embedded hardware by combining segmentation-based detection,
+task-specific recognition, deployment-oriented optimization, and iterative
+deployment data collection within a modular \gls{ros2} architecture.
+
+\section{Recommendations}
+
+The following recommendations are proposed for future work and further
+development of the system.
+
+\begin{enumerate}
+    \item Extend the perception scope beyond elevator buttons to additional hospital interaction elements such as access readers, door controls, and other panel interfaces.
+    \item Perform larger and more controlled deployment trials in multiple buildings so that domain shift, lighting variation, and panel diversity can be evaluated more systematically.
+    \item Continue using the \gls{adc} as part of regular deployment, with periodic review and retraining cycles based on newly collected samples.
+    \item Investigate whether task-specific filtering or ranking strategies can further reduce unnecessary \gls{ocr} workload without harming end-to-end recognition quality.
+    \item Evaluate the pipeline on additional embedded platforms to determine how transferable the optimization choices are beyond the current \gls{jetson}-based setup.
+    \item Integrate the perception pipeline with downstream robot action modules so that the 3D target estimates can be validated in full interaction tasks rather than perception-only experiments.
+    \item Refine the final report by moving low-value implementation detail out of the main chapters when necessary, while keeping the central research narrative focused on the validated workflow and its deployment implications.
+\end{enumerate}
+
+\section{Final reflection}
+
+This project provides a concrete foundation for autonomous interaction with
+elevator infrastructure in hospital-like environments. More broadly, it shows
+that robust embedded perception is not achieved by model selection alone. The
+best results emerged from treating dataset design, model choice, runtime
+architecture, and deployment data collection as one connected system. That
+systems perspective is likely to remain essential as the CareBot platform evolves
+toward more complete autonomous operation in real healthcare environments.
