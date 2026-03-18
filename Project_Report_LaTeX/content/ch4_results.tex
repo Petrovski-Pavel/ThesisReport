@@ -4,7 +4,8 @@
 This chapter presents the quantitative results obtained for the main technical
 components of the proposed elevator-interaction pipeline. The current version of
 the report focuses on the visual detection subsystem based on \gls{yolo}
-instance segmentation. Unless stated otherwise, final model comparisons are
+instance segmentation and the OCR-based button interpretation stage. Unless
+stated otherwise, final model comparisons are
 reported on held-out test sets, while model selection during training and
 hyperparameter tuning is based on the validation split.
 
@@ -277,3 +278,150 @@ performance but did not fundamentally change the final model ranking. Third, the
 most practically valuable improvement was achieved through environment-specific
 fine-tuning with \gls{adc} data, which substantially increased performance on the
 target deployment domain while preserving performance on the original dataset.
+
+\section{OCR hyperparameter tuning and evaluation}
+
+The OCR experiments focused on improving cropped-button recognition while keeping
+the recognizer lightweight enough for later embedded deployment. As in the
+\gls{yolo} experiments, model selection during OCR tuning was based on the
+validation split, and the final comparison between OCR candidates was performed on
+the held-out OCR test set.
+
+\subsection{Stage 1: epoch selection}
+
+The first OCR tuning stage varied only the number of training epochs while keeping
+the optimizer configuration fixed. The main objective of this stage was to
+determine whether the original 60-epoch fine-tuning recipe was necessary or
+whether a shorter training budget would already achieve the same validation
+quality.
+
+Table~\ref{tab:ocr_stage1_results} shows that the 50-epoch and 60-epoch runs
+converged to almost identical validation performance, both reaching their best
+result at epoch 46. In contrast, the 30-epoch run underperformed clearly. This
+indicates that the recognizer required more than 30 epochs to converge, but that
+training beyond 50 epochs provided no meaningful additional benefit. For that
+reason, 50 epochs were selected as the fixed budget for the next stage of OCR
+hyperparameter tuning. This interpretation is also supported by the Stage 1
+training-loss curves shown in Figure~\ref{fig:ocr_stage1_loss}, where the main
+decrease occurs well before the end of the 50-epoch run and the longer schedule
+does not suggest a qualitatively different convergence regime.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage1_ocr_train_loss.png}
+    \caption{Stage 1 OCR training loss for the epoch-selection runs. Most of the
+    optimization progress occurs before the 50-epoch mark, which supports the
+    decision to use 50 epochs for the subsequent optimizer sweep.}
+    \label{fig:ocr_stage1_loss}
+\end{figure}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Stage 1 OCR epoch-sweep results on the validation split.}
+    \label{tab:ocr_stage1_results}
+    \small
+    \begin{tabular}{lccc}
+        \toprule
+        Trial & Best epoch & Accuracy & Normalized edit distance \\
+        \midrule
+        30 epochs & 16 & 0.78776 & 0.83732 \\
+        50 epochs & 46 & 0.84124 & 0.87080 \\
+        60 epochs & 46 & 0.84057 & 0.86893 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Stage 2: learning rate and weight decay sweep}
+
+After fixing the training budget at 50 epochs, a second tuning stage evaluated a
+narrow optimizer sweep over learning rate and weight decay. Four configurations
+were tested. The resulting validation scores are summarized in
+Table~\ref{tab:ocr_stage2_results}.
+
+The best configuration used an initial learning rate of
+$3 \times 10^{-4}$ and a weight decay of $3 \times 10^{-5}$. This run achieved a
+validation accuracy of 0.84157 and a normalized edit distance of 0.87098, making
+it the strongest OCR candidate of the sweep. The configuration with the same
+learning rate but lower weight decay performed substantially worse, while the run
+using $5 \times 10^{-4}$ degraded sharply and converged to a much lower
+performance level. Increasing the learning rate further to $7 \times 10^{-4}$
+recovered most of the performance, but still remained below the best
+$3 \times 10^{-4}$ run.
+
+These results indicate that OCR fine-tuning was sensitive to the optimizer
+settings even within a relatively narrow search range. In particular, the stage-2
+results suggest that a slightly lower learning rate than the original baseline
+provided more stable and ultimately better convergence on the recognition task.
+This behavior is visible in Figure~\ref{fig:ocr_stage2_acc}, where the best run
+maintains the highest evaluation accuracy, and in
+Figure~\ref{fig:ocr_stage2_ned}, where the same configuration also produces the
+strongest normalized edit-distance curve.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage2_ocr_eval_acc.png}
+    \caption{Stage 2 OCR evaluation accuracy for the learning-rate and
+    weight-decay sweep. The configuration with learning rate
+    $3 \times 10^{-4}$ and weight decay $3 \times 10^{-5}$ achieved the best
+    validation accuracy.}
+    \label{fig:ocr_stage2_acc}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage2_ocr_eval_norm_edit_dis.png}
+    \caption{Stage 2 OCR normalized edit distance for the learning-rate and
+    weight-decay sweep. The best-performing configuration also achieved the
+    highest normalized edit-distance score.}
+    \label{fig:ocr_stage2_ned}
+\end{figure}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Stage 2 OCR hyperparameter sweep on the validation split.}
+    \label{tab:ocr_stage2_results}
+    \small
+    \begin{tabular}{lcccc}
+        \toprule
+        Trial & Learning rate & Weight decay & Accuracy & Normalized edit distance \\
+        \midrule
+        lr3e4\_wd1e5\_ep50 & $3 \times 10^{-4}$ & $1 \times 10^{-5}$ & 0.77531 & 0.83148 \\
+        lr3e4\_wd3e5\_ep50 & $3 \times 10^{-4}$ & $3 \times 10^{-5}$ & \textbf{0.84157} & \textbf{0.87098} \\
+        lr5e4\_wd3e5\_ep50 & $5 \times 10^{-4}$ & $3 \times 10^{-5}$ & 0.59603 & 0.74899 \\
+        lr7e4\_wd3e5\_ep50 & $7 \times 10^{-4}$ & $3 \times 10^{-5}$ & 0.83653 & 0.86546 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Final OCR benchmark}
+
+The final OCR benchmark compared the original fine-tuned recognizer against the
+best-performing stage-2 configuration on the held-out OCR test set. The results
+are shown in Table~\ref{tab:ocr_final_benchmark}. The stage-2 model outperformed
+the initial OCR model on both recognition-quality metrics. Test accuracy improved
+from 0.81635 to 0.83486, while normalized edit distance improved from 0.85574 to
+0.87190. In addition, the measured evaluation throughput increased slightly from
+805.68 to 817.71 samples per second.
+
+Taken together, these results show that the OCR hyperparameter tuning process
+produced a real improvement rather than only a validation-specific gain. Unlike
+the \gls{yolo} tuning experiments, where better validation performance did not
+translate into a better final test-set model, the OCR stage-2 winner also
+improved the held-out test benchmark. For this reason, the stage-2 best OCR model
+was selected as the final recognition candidate for later integration into the
+complete perception pipeline.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Held-out OCR test-set comparison between the initial recognizer and the selected stage-2 OCR model.}
+    \label{tab:ocr_final_benchmark}
+    \small
+    \begin{tabular}{lccc}
+        \toprule
+        Model & Accuracy & Normalized edit distance & Throughput (samples/s) \\
+        \midrule
+        Initial OCR model & 0.81635 & 0.85574 & 805.68 \\
+        Stage-2 best OCR model & \textbf{0.83486} & \textbf{0.87190} & \textbf{817.71} \\
+        \bottomrule
+    \end{tabular}
+\end{table}

@@ -42,7 +42,7 @@ with dataset selection and preparation.
 
 This project uses a dataset derived from an established elevator interaction-point dataset.
 The original split used for this thesis is the repository-specific
-\texttt{elevator\_split}, which is prepared in YOLO-compatible
+\texttt{elevator\_split}, which is prepared in \gls{yolo}-compatible
 format for training instance-segmentation models.
 This section corresponds to the initial model-development step in
 Figure~\ref{fig:scalable_workflow}, detailing the dataset and its preparation
@@ -51,7 +51,7 @@ The origin and relevance of this dataset were discussed in \nameref{ch:literatur
 therefore, this section focuses on its structure and preparation for use in this
 project.
 
-The initial dataset used for the baseline YOLOv8-Seg model was split as follows (\texttt{elevator\_split}):
+The initial dataset used for the baseline \gls{yolo}v8-Seg model was split as follows (\texttt{elevator\_split}):
 \begin{itemize}
     \item train: 1122 images
     \item validation: 281 images
@@ -72,11 +72,11 @@ This mixed split was used for stage-wise tuning and the final ADC fine-tuning ex
 Each subset follows the same directory structure, containing an \texttt{images} folder with the raw \gls{rgb}
 images and an annotation folder with matching labels.
 
-In the original dataset, annotations are used in the project-specific YOLO-compatible
+In the original dataset, annotations are used in the project-specific \gls{yolo}-compatible
 instance-mask format. For the domain adaptation experiment, additional
 annotations from the target environment (ADC) were provided in \gls{coco}-style JSON and
-converted to YOLO-segmentation labels with a dedicated conversion script.
-This ensures compatibility with YOLO while maintaining a consistent train/val/test
+converted to \gls{yolo}-segmentation labels with a dedicated conversion script.
+This ensures compatibility with \gls{yolo} while maintaining a consistent train/val/test
 folder layout and class consistency.
 \begin{figure}[htbp]
     \centering
@@ -88,6 +88,32 @@ folder layout and class consistency.
 
 The resulting dataset structure provides a consistent and reusable foundation for
 annotation, model training, and evaluation, as described in the following sections.
+
+In addition to the instance-segmentation datasets, a recognition dataset for the
+semantic interpretation stage was derived from the same annotated source images.
+For this purpose, each annotated button instance was cropped from the original
+image using its existing bounding-box annotation, with an additional contextual
+padding of 15\% of the box width and height. This produced a button-centered crop
+dataset for OCR fine-tuning without requiring any additional manual image
+collection.
+
+The OCR dataset builder grouped crops by source image before creating a fixed
+80/20 train/validation split with a deterministic random seed. As a result, all
+button crops originating from one panel image were placed either in the training
+set or in the validation set, but never in both. This prevents information
+leakage caused by highly similar button appearances within the same elevator
+panel. The held-out OCR test set was generated directly from the original test
+images and their annotations.
+
+Several OCR dataset variants were explored during development. The final variant
+used for the main recognition experiments removed labels named exactly
+\texttt{text} and labels starting with the prefix \texttt{text\_}. These labels do
+not encode the actual button content, but merely indicate the presence of
+unspecified free text. Retaining them caused the recognizer to over-predict
+generic ``TEXT''-like outputs and reduced generalization to unseen textual button
+content. The final OCR dataset,
+\texttt{ocr\_rec\_dataset\_drop\_textprefix\_full}, contained 11{,}953 training
+crops, 2{,}973 validation crops, and 6{,}861 held-out test crops.
 
 \section{Annotation strategy and workflow}
 
@@ -392,53 +418,24 @@ bounded crop around a single button and predicts the button's semantic label. Th
 reduces computational cost and makes the \gls{ocr} stage more suitable for embedded
 deployment.
 
-\paragraph{OCR dataset construction.}
-The recognition dataset was built from the original \texttt{train\_set} and
-\texttt{test\_set} image collections together with their Pascal VOC XML
-annotations. For each annotated button, the corresponding bounding box was cropped
-from the source image and enlarged with a fixed contextual padding of 15\% of the
-box width and height. This padding was included to retain relevant local context,
-such as the button border or icon outline, while still presenting the recognizer
-with a mostly isolated button instance.
-
-The dataset builder grouped samples by source image before creating a fixed
-80/20 train/validation split using a deterministic random seed. This means that
-all button crops originating from one source image were placed either in the
-training set or in the validation set, but never in both. This design avoids
-optimistic validation scores caused by strong visual similarity between buttons
-from the same panel. The final recognition
-dataset used for the main OCR experiments, denoted
-\texttt{ocr\_rec\_dataset\_drop\_textprefix\_full}, contained 11{,}953 training
-crops, 2{,}973 validation crops, and 6{,}861 held-out test crops.
-
-Several dataset variants were explored during development. In particular,
-experiments were conducted with a dataset containing all labels, a dataset with
-icon labels removed, and a dataset where generic free-text placeholder labels were
-excluded. The final dataset definition removed labels named exactly
-\texttt{text} and labels beginning with the prefix \texttt{text\_}. These labels
-were not useful semantic targets for button interpretation, because they indicate
-the presence of unspecified free text rather than the actual text string visible on
-the button. Retaining them caused the recognizer to over-predict generic
-``TEXT''-like outputs and reduced its ability to generalize to unseen textual
-content. By excluding only these placeholder labels, the final dataset preserved
-meaningful button semantics such as floor numbers, alphanumeric floor identifiers,
-and icon-derived semantic labels including \texttt{OPEN}, \texttt{CLOSE},
-\texttt{ALARM}, and \texttt{KEYHOLE}.
-
 \paragraph{Recognition model architecture.}
 For cropped-button recognition, a lightweight \gls{ocr} recognizer based on
 \texttt{PP-OCRv5\_mobile\_rec} was selected. This model was preferred because it is
 designed for efficient deployment and already provides a compact recognition
-backbone suitable for embedded hardware. The architecture uses a
-\texttt{PPLCNetV3} backbone with scale 0.95, followed by an \texttt{SVTR}-style
-sequence modeling neck and a \texttt{MultiHead} recognition head combining
-\texttt{CTC} and \texttt{NRTR} objectives. In practice, this architecture is
-appropriate for the current task because button labels range from single digits and
-single letters to short strings such as \texttt{10}, \texttt{4A}, or
-\texttt{CLOSE}, while still requiring efficient inference on cropped inputs.
+backbone suitable for embedded hardware. In simplified form, the recognizer
+consists of a compact visual feature extractor, a sequence-modeling stage that
+arranges features in reading order, and a recognition head that predicts the final
+label string. In the selected configuration, the feature extractor is based on
+\texttt{PPLCNetV3} with scale 0.95, meaning that a slightly reduced-width version
+of the backbone is used to keep the model compact. The sequence-modeling stage is
+\texttt{SVTR}-based, and the recognition head combines \texttt{CTC} and
+\texttt{NRTR} objectives during training. This architecture is appropriate for the
+current task because button labels range from single digits and single letters to
+short strings such as \texttt{10}, \texttt{4A}, or \texttt{CLOSE}, while still
+requiring efficient inference on cropped inputs.
 
 Only the recognition component of the OCR stack was used. The detection component
-of PaddleOCR was intentionally omitted from the final recognition pipeline, because
+of \gls{paddleocr} was intentionally omitted from the final recognition pipeline, because
 button localization was already solved upstream by the instance segmentation model.
 This avoids redundant computation and makes the OCR stage conceptually cleaner:
 segmentation localizes the button instance, and OCR interprets that localized
@@ -447,15 +444,29 @@ instance.
 \paragraph{Fine-tuning strategy.}
 The recognizer was initialized from the official pretrained English
 \texttt{PP-OCRv5\_mobile\_rec} weights and fine-tuned on the project-specific crop
-dataset. Input crops were resized to an effective recognition shape of
-$48 \times 320$ pixels. Training used the Adam optimizer with $\beta_1 = 0.9$,
-$\beta_2 = 0.999$, cosine learning-rate scheduling, an initial learning rate of
-$5 \times 10^{-4}$, and L2 regularization with weight decay
-$3 \times 10^{-5}$. A five-epoch warmup was applied in the initial fine-tuning
-configuration. The training data loader used a multiscale sampling strategy and a
-batch size of 128, while recognition augmentation
-(\texttt{RecConAug}, probability 0.5) was enabled to improve robustness to
-appearance variation.
+dataset. During training, each crop was resized to the fixed input resolution of
+$48 \times 320$ defined in the \gls{paddleocr} recognition configuration so that all
+samples reached the network with a consistent image height and width.
+Optimization was performed with Adam, cosine learning-rate
+scheduling, warmup in the early training phase, and L2 regularization. In this
+context, cosine learning-rate scheduling means that the step size starts
+relatively high and then decreases smoothly during training, allowing larger
+parameter updates in the early epochs and more conservative refinement in the
+later epochs.
+
+Recognition-specific data augmentation and multiscale sampling were enabled to
+improve robustness to appearance variation and to reduce overfitting. In
+practice, this prevents the recognizer from seeing each button crop in only one
+fixed presentation and improves tolerance to realistic differences in scale,
+contrast, blur, and local appearance.
+
+The implementation followed the standard \gls{paddleocr} training workflow. Rather than
+building a custom OCR training loop from scratch, the official
+\texttt{tools/train.py} and \texttt{tools/eval.py} scripts provided by the
+\gls{paddleocr} framework were used directly. Project-specific experiments were
+defined through \gls{yaml} configuration files and command-line overrides, in the same spirit as
+using configuration-driven training through Ultralytics for the \gls{yolo}
+experiments.
 
 Model selection followed a two-stage hyperparameter tuning procedure. The first
 stage varied only the total number of epochs while keeping the baseline optimizer
@@ -470,24 +481,6 @@ initial learning rate and $\{1 \times 10^{-5}, 3 \times 10^{-5}\}$ for weight
 decay, while warmup was adjusted conservatively between 3 and 5 epochs. All OCR
 tuning runs were logged in \gls{wandb} so that training curves, hyperparameter
 choices, and validation metrics could be compared systematically.
-
-\paragraph{Inference integration and post-processing.}
-After training, the best OCR checkpoint was exported in Paddle inference format and
-integrated into the button-interpretation pipeline. At runtime, the instance
-segmentation model produces button crops, each crop is passed through the
-recognition model, and the highest-confidence recognition output is selected. OCR
-outputs are normalized to uppercase form and filtered through simple validity
-constraints, including a maximum output length and a restricted character pattern
-for accepted predictions.
-
-For non-numeric predictions, an additional lightweight vocabulary-based correction
-step was introduced. The predicted string is normalized and compared against a
-precomputed list of valid non-numeric labels derived from the dataset annotations.
-Fast bounded edit-distance matching is then used to map near-miss predictions such
-as \texttt{OPE}, \texttt{ALAR}, or \texttt{BLOSE} to their most plausible target
-labels when a unique close match exists. This post-processing step is computationally
-cheap and improves the practical usability of the OCR module without requiring a
-larger recognition model.
 
 
 \section{Evaluation metrics and methodology}
@@ -564,6 +557,45 @@ performance is measured by recording per-image inference time. Average inference
 time and frames per second (\gls{fps}) are reported to evaluate suitability for real-time
 deployment on embedded hardware.
 
+\subsection{OCR accuracy and normalized edit distance}
+
+The OCR recognition models are evaluated using exact-match accuracy and
+normalized edit distance. Exact-match accuracy is the fraction of button crops for
+which the predicted label string matches the ground-truth label exactly after the
+same normalization procedure is applied to both. This metric is strict and is
+therefore suitable for the final semantic interpretation task, where predicting
+\texttt{4} instead of \texttt{14}, or \texttt{OPE} instead of \texttt{OPEN}, must
+be counted as an error.
+
+\begin{equation}
+\mathrm{Accuracy}_{\text{OCR}} = \frac{N_{\text{correct}}}{N_{\text{total}}}
+\end{equation}
+
+where $N_{\text{correct}}$ is the number of exactly correct predictions and
+$N_{\text{total}}$ is the total number of evaluated crops.
+
+In addition to exact-match accuracy, normalized edit distance is used to quantify
+how close an incorrect prediction is to the target string. This metric is derived
+from the Levenshtein edit distance between prediction and target and is normalized
+to the interval $[0,1]$, where 1 indicates a perfect match. Unlike exact-match
+accuracy, normalized edit distance gives partial credit to near-correct
+predictions, which is useful when analyzing OCR behavior on short strings and icon
+labels that are often confused by only one or two characters.
+
+\begin{equation}
+\mathrm{NED} = 1 - \frac{1}{N} \sum_{i=1}^{N}
+\frac{d_{\text{edit}}(\hat{y}_i, y_i)}{\max(|\hat{y}_i|, |y_i|, 1)}
+\end{equation}
+
+where $\hat{y}_i$ is the predicted string, $y_i$ is the corresponding ground-truth
+string, and $d_{\text{edit}}$ denotes the Levenshtein edit distance.
+
+During OCR tuning, validation accuracy was treated as the primary model-selection
+metric, while normalized edit distance was used as a secondary quality indicator.
+Final OCR benchmarking was then performed on the held-out OCR test split using the
+official \gls{paddleocr} evaluation script with the same configuration family as
+used during training.
+
 \subsection{Evaluation protocol}
 
 All evaluations are conducted on a held-out test set that is not used during
@@ -573,7 +605,8 @@ are computed using the official evaluation tools, while precision, recall, F1-sc
 mean \gls{iou}, and runtime statistics are computed using a custom evaluation pipeline.
 
 The evaluation methodology described in this section forms the basis for the
-quantitative comparison of models presented in Chapter~4.
+quantitative comparison of models presented in Chapter~\ref{ch:results}
+(\nameref{ch:results}).
 
 \section{Embedded deployment and optimization}
 

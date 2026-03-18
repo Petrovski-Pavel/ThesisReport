@@ -19,29 +19,32 @@
 \contentsline {chapter}{\numberline {3}Methodology}{9}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Overview of the proposed perception pipeline}{9}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Dataset selection and preparation}{10}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Annotation strategy and workflow}{10}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Dataset quality assessment}{11}{section.3.4}%
+\contentsline {section}{\numberline {3.3}Annotation strategy and workflow}{11}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Dataset quality assessment}{12}{section.3.4}%
 \contentsline {subsection}{\numberline {3.4.1}Statistical quality metrics.}{12}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}Model-assisted image assessment.}{12}{subsection.3.4.2}%
-\contentsline {paragraph}{Method.}{12}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.2}Model-assisted image assessment.}{13}{subsection.3.4.2}%
+\contentsline {paragraph}{Method.}{13}{subsection.3.4.2}%
 \contentsline {paragraph}{Inspection.}{13}{equation.3.4.3}%
 \contentsline {section}{\numberline {3.5}Model architectures and training strategy}{13}{section.3.5}%
 \contentsline {paragraph}{Mask R-CNN.}{16}{table.caption.13}%
 \contentsline {paragraph}{YOLOv8-Seg.}{16}{equation.3.5.4}%
-\contentsline {paragraph}{OCR dataset construction.}{16}{equation.3.5.5}%
 \contentsline {paragraph}{Recognition model architecture.}{17}{equation.3.5.5}%
 \contentsline {paragraph}{Fine-tuning strategy.}{17}{equation.3.5.5}%
-\contentsline {paragraph}{Inference integration and post-processing.}{18}{equation.3.5.5}%
 \contentsline {section}{\numberline {3.6}Evaluation metrics and methodology}{18}{section.3.6}%
 \contentsline {subsection}{\numberline {3.6.1}Intersection over Union}{18}{subsection.3.6.1}%
 \contentsline {subsection}{\numberline {3.6.2}Precision, recall, and F1-score}{18}{subsection.3.6.2}%
 \contentsline {subsection}{\numberline {3.6.3}Average Precision under the COCO protocol}{19}{subsection.3.6.3}%
 \contentsline {subsection}{\numberline {3.6.4}Mean IoU and runtime performance}{19}{subsection.3.6.4}%
-\contentsline {subsection}{\numberline {3.6.5}Evaluation protocol}{19}{subsection.3.6.5}%
-\contentsline {section}{\numberline {3.7}Embedded deployment and optimization}{19}{section.3.7}%
-\contentsline {chapter}{\numberline {4}Results}{21}{chapter.4}%
-\contentsline {section}{\numberline {4.1}YOLO hyperparameter tuning and evaluation}{21}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Baseline YOLOv8-Seg performance}{21}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Hyperparameter tuning results}{21}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Comparison with YOLO26}{24}{subsection.4.1.3}%
-\contentsline {subsection}{\numberline {4.1.4}Environment-specific fine-tuning with ADC data}{24}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {3.6.5}OCR accuracy and normalized edit distance}{19}{subsection.3.6.5}%
+\contentsline {subsection}{\numberline {3.6.6}Evaluation protocol}{20}{subsection.3.6.6}%
+\contentsline {section}{\numberline {3.7}Embedded deployment and optimization}{20}{section.3.7}%
+\contentsline {chapter}{\numberline {4}Results}{22}{chapter.4}%
+\contentsline {section}{\numberline {4.1}YOLO hyperparameter tuning and evaluation}{22}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Baseline YOLOv8-Seg performance}{22}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Hyperparameter tuning results}{22}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Comparison with YOLO26}{25}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Environment-specific fine-tuning with ADC data}{25}{subsection.4.1.4}%
+\contentsline {section}{\numberline {4.2}OCR hyperparameter tuning and evaluation}{27}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Stage 1: epoch selection}{27}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Stage 2: learning rate and weight decay sweep}{28}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Final OCR benchmark}{30}{subsection.4.2.3}%
