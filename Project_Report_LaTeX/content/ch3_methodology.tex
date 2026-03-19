@@ -40,44 +40,23 @@ with dataset selection and preparation.
 
 \section{Dataset selection and preparation}
 
-This project uses a dataset derived from an established elevator interaction-point dataset.
-The original split used for this thesis is the repository-specific
-\texttt{elevator\_split}, which is prepared in \gls{yolo}-compatible
-format for training instance-segmentation models.
-This section corresponds to the initial model-development step in
-Figure~\ref{fig:scalable_workflow}, detailing the dataset and its preparation
-before the first training cycle.
-The origin and relevance of this dataset were discussed in \nameref{ch:literature};
-therefore, this section focuses on its structure and preparation for use in this
-project.
+This project uses a subset of the elevator-panel dataset released by
+\citet{liu2021elevator}. For this thesis, approximately 2000 images were used,
+split into 1122 training images, 281 validation images, and 602 held-out test
+images. The test split was reserved for final evaluation only.
 
-The initial dataset used for the baseline \gls{yolo}v8-Seg model was split as follows (\texttt{elevator\_split}):
-\begin{itemize}
-    \item train: 1122 images
-    \item validation: 281 images
-    \item test: 602 images (held out for final evaluation only)
-\end{itemize}
+The original dataset provided XML annotations with bounding boxes and textual
+labels, but no instance masks. To support instance segmentation, the images were
+re-annotated in a semi-automatic \gls{cvat} workflow using a \gls{maskrcnn}
+pre-annotation model, as described in Section~3.3. The resulting annotations
+were stored in \gls{coco}-style JSON and then converted to the label format
+required by \gls{yolo}-based segmentation training.
 
-This 1,400-image base subset (1122+281) was used to train the initial baseline model.
-The 602-image test split was never used for optimization or model selection.
-
-In later stages, the original dataset was extended with images collected in the target installation (HAN University).
-For \gls{adc} adaptation, these base images were extended with real-environment images and re-split as the mixed dataset (\texttt{elevator\_adc\_mix}):
-\begin{itemize}
-    \item train: 1154 images
-    \item validation: 288 images
-    \item test: 609 images
-\end{itemize}
-This mixed split was used for stage-wise tuning and the final \gls{adc} fine-tuning experiments.
-Each subset follows the same directory structure, containing an \texttt{images} folder with the raw \gls{rgb}
-images and an annotation folder with matching labels.
-
-In the original dataset, annotations are used in the project-specific \gls{yolo}-compatible
-instance-mask format. For the domain adaptation experiment, additional
-annotations from the target environment (\gls{adc}) were provided in \gls{coco}-style JSON and
-converted to \gls{yolo}-segmentation labels with a dedicated conversion script.
-This ensures compatibility with \gls{yolo} while maintaining a consistent train/val/test
-folder layout and class consistency.
+In the later deployment-oriented adaptation stage, the dataset was extended with
+46 additional images collected in HAN University Building 31, the pilot
+environment for robot deployment testing. These images were added only after the
+baseline and hyperparameter tuning stages, so that the initial \gls{yolo}
+experiments remained directly comparable with the original benchmark setting.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.4\textwidth]
@@ -145,8 +124,11 @@ Figure~\ref{fig:annotation_workflow}.
 To support iterative improvement, the dataset was annotated in batches of
 approximately 150 images. After each batch, the model was retrained using the
 newly annotated data and reused for subsequent annotation rounds. Model checkpoints
-were created after approximately 100, 450, and 900 annotated images, enabling
-progressively improved pre-annotations and reduced manual correction effort.
+were created after approximately 90, 449, and 900 annotated images, followed by a
+final checkpoint trained on the full 1400-image training split. This enabled
+progressively improved pre-annotations and reduced manual correction effort. A
+quantitative comparison of these annotation-support checkpoints on the held-out
+test set is provided in Appendix~\ref{app:maskrcnn_checkpoints}.
 
 All automatically generated annotations were also manually reviewed and corrected when needed to
 ensure accurate instance boundaries, correct separation of adjacent buttons, and
@@ -483,79 +465,40 @@ tuning runs were logged in \gls{wandb} so that training curves, hyperparameter
 choices, and validation metrics could be compared systematically.
 
 
-\section{Evaluation metrics and methodology}
+\section{Evaluation metrics}
 
-The performance of the instance segmentation models is evaluated using a combination
-of standard \gls{coco} metrics and task-oriented instance-level metrics. This dual
-evaluation strategy allows both standardized benchmarking and direct assessment of
-model suitability for robotic interaction tasks.
+The quantitative evaluation in this project follows the metrics produced by the
+training and validation toolchains that were actually used in the experiments.
+For the \gls{yolo}-based instance-segmentation models, the primary metric is mask
+\gls{map} under the \gls{coco} protocol, because the target task is instance
+segmentation rather than bounding-box detection alone. For completeness, the
+corresponding box metrics are also reported. The \gls{maskrcnn} annotation-support
+model was evaluated separately on the same held-out test split, but this
+comparison is included only as supplementary material in
+Appendix~\ref{app:maskrcnn_checkpoints}, since \gls{maskrcnn} was not selected as
+the deployment model.
 
-\subsection{Intersection over Union}
+\subsection{\gls{yolo} segmentation metrics under the \gls{coco} protocol}
 
-Segmentation quality is measured using Intersection over Union (\gls{iou}). For a
-predicted instance mask $M_p$ and the corresponding ground-truth mask $M_{gt}$, \gls{iou}
-is defined as:
+The \gls{yolo} experiments report the standard Ultralytics/\gls{coco} validation
+and test metrics for both bounding boxes and segmentation masks. The main metric
+used for model selection is mask \glsentryshort{map}@[0.50:0.95], written in the
+training logs as \texttt{metrics/mAP50-95(M)}. This metric averages \gls{ap} over
+\gls{iou} thresholds from 0.50 to 0.95 in increments of 0.05 and is the most
+representative single indicator of segmentation quality. In addition,
+\texttt{metrics/mAP50(M)} is reported to show performance at the less strict 0.50
+\gls{iou} threshold.
 
-\begin{equation}
-\mathrm{IoU} = \frac{|M_p \cap M_{gt}|}{|M_p \cup M_{gt}|}
-\end{equation}
-
-\gls{iou} values range from 0 (no overlap) to 1 (perfect overlap). In this project, \gls{iou} is
-computed at the instance level and used both for matching predicted and ground-truth
-instances and for computing summary statistics.
-
-\subsection{Precision, recall, and F1-score}
-
-Instance-level detection performance is quantified using precision, recall, and
-F1-score. A predicted instance is considered a true positive if its \gls{iou} with an
-unmatched ground-truth instance exceeds a threshold of 0.5. Precision and recall
-are defined as:
-
-\begin{equation}
-\mathrm{Precision} = \frac{TP}{TP + FP}
-\end{equation}
-
-\begin{equation}
-\mathrm{Recall} = \frac{TP}{TP + FN}
-\end{equation}
-
-where $TP$, $FP$, and $FN$ denote the number of true positives, false positives, and
-false negatives, respectively.
-
-The F1-score, which balances precision and recall, is computed as:
-
-\begin{equation}
-\mathrm{F1} = \frac{2 \cdot \mathrm{Precision} \cdot \mathrm{Recall}}
-{\mathrm{Precision} + \mathrm{Recall}}
-\end{equation}
-
-These metrics provide intuitive insight into detection reliability and are
-particularly relevant for robotic interaction tasks, where both missed detections
-and false positives can lead to failed interactions.
-
-\subsection{Average Precision under the \gls{coco} protocol}
-
-To enable standardized benchmarking, model performance is additionally evaluated
-using the \gls{coco} instance segmentation protocol. Average Precision (\gls{ap}) is computed
-as the area under the precision--recall curve:
-
-\begin{equation}
-\mathrm{AP} = \int_{0}^{1} p(r)\,dr
-\end{equation}
-
-where $p(r)$ denotes precision as a function of recall $r$. Following the \gls{coco}
-evaluation methodology, \gls{ap} is reported as the mean over multiple \gls{iou} thresholds
-ranging from 0.50 to 0.95 in increments of 0.05. Additional metrics such as
-$\mathrm{AP}_{50}$ and $\mathrm{AP}_{75}$ are also reported to provide insight into
-performance at specific overlap thresholds.
-
-\subsection{Mean IoU and runtime performance}
-
-For correctly matched instances, the mean \gls{iou} is computed across the test set to
-assess overall segmentation accuracy. In addition to accuracy metrics, runtime
-performance is measured by recording per-image inference time. Average inference
-time and frames per second (\gls{fps}) are reported to evaluate suitability for real-time
-deployment on embedded hardware.
+The complete set of reported \gls{yolo} metrics in this report therefore includes
+mask precision, mask recall, \texttt{mAP50(M)}, and \texttt{mAP50-95(M)}, together
+with the corresponding box metrics \texttt{precision(B)}, \texttt{recall(B)},
+\texttt{mAP50(B)}, and \texttt{mAP50-95(B)}. These additional values are retained
+because they help explain the behavior of a model beyond a single summary number.
+For example, precision and recall indicate whether a model tends to miss valid
+instances or to produce false positives, while the box metrics make it possible
+to distinguish localization quality from mask quality. However, when ranking
+segmentation models in this report, mask \glsentryshort{map}@[0.50:0.95] remains
+the primary comparison criterion.
 
 \subsection{\gls{ocr} accuracy and normalized edit distance}
 
@@ -598,14 +541,20 @@ used during training.
 
 \subsection{Evaluation protocol}
 
-All evaluations are conducted on a held-out test set that is not used during
-training or validation. Identical datasets, matching criteria, and thresholds are
-used across all model architectures to ensure fair comparison. \gls{coco}-based metrics
-are computed using the official evaluation tools, while precision, recall, F1-score,
-mean \gls{iou}, and runtime statistics are computed using a custom evaluation pipeline.
+For the \gls{yolo} experiments, validation metrics were used during training and
+hyperparameter tuning, while the final model comparisons were performed on a
+held-out test split that was not used for optimization. This distinction is
+important in the present work, because some tuned configurations achieved better
+validation performance without surpassing the baseline on the final test set.
+Accordingly, the results chapter distinguishes explicitly between validation-time
+model selection and held-out test-set benchmarking.
 
-The evaluation methodology described in this section forms the basis for the
-quantitative comparison of models presented in Chapter~\ref{ch:results}
+The \gls{maskrcnn} checkpoint comparison in the appendix follows the same principle:
+all checkpoints are evaluated on the same held-out test annotations, allowing a
+fair comparison of the annotation-support model as the training set grew. Final
+\gls{ocr} benchmarking was likewise performed on a held-out test split using the
+official \gls{paddleocr} evaluation script. Together, these procedures form the
+basis for the quantitative comparisons presented in Chapter~\ref{ch:results}
 (\nameref{ch:results}).
 
 \section{Embedded deployment and optimization}

@@ -1,0 +1,40 @@
+\chapter{Supplementary model evaluations}
+\label{app:maskrcnn_checkpoints}
+
+\section{Mask R-CNN checkpoint progression during annotation support}
+
+The \gls{maskrcnn} model was used as an annotation-support model within the
+\gls{cvat}--Nuclio workflow, rather than as the final deployment model. During
+dataset construction, the model was retrained several times as more annotated
+images became available. To quantify the effect of this iterative retraining, four
+checkpoints were evaluated on the same held-out test split used for the
+annotation dataset. Table~\ref{tab:maskrcnn_checkpoint_progression} reports both
+bounding-box and mask metrics, with mask \gls{ap} treated as the primary
+segmentation indicator.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Held-out test-set performance of the annotation-support \gls{maskrcnn}
+    checkpoints as the training set grew during the annotation process.}
+    \label{tab:maskrcnn_checkpoint_progression}
+    \begin{tabular}{lcccc}
+        \toprule
+        Checkpoint stage & Training images & BBox AP@[.50:.95] & Mask AP@[.50:.95] & Mask AP@0.50 \\
+        \midrule
+        Initial checkpoint & 90 & 0.5878 & 0.5844 & 0.7776 \\
+        Retrained checkpoint & 449 & 0.6682 & 0.6660 & 0.8284 \\
+        Retrained checkpoint & 900 & 0.7007 & 0.6903 & 0.8772 \\
+        Final checkpoint & 1400 & 0.7192 & 0.7000 & 0.8990 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The results show a consistent improvement trend as the amount of annotated data
+increased. The largest gain was observed between the initial 90-image checkpoint
+and the first larger retrained checkpoint at 449 images, while later retraining
+to 900 and 1400 images provided smaller but still measurable improvements. On
+the primary mask metric, AP@[0.50:0.95] increased from 0.5844 to 0.7000. This
+supports the annotation strategy adopted in this project: iterative retraining of
+the pre-annotation model improved the quality of automatically proposed
+instances, thereby reducing the manual correction burden in later annotation
+rounds.

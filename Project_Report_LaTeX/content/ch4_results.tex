@@ -32,20 +32,20 @@ generalization to unseen elevator-panel images.
 
 The three-stage hyperparameter tuning procedure improved validation performance,
 but the gains were moderate. Stage 1 served as a narrow Ray Tune search around
-the baseline configuration. As shown in Figure~\ref{fig:stage1_mask_map}, most of
-the displayed Stage 1 trials did not produce meaningful mask performance.
-Among the first ten runs shown in the \gls{wandb} export, only three
-configurations reached non-zero $\mathrm{mAP}_{50\text{:}95}$ values, while the
-remaining trials stayed at zero throughout the 30-epoch search horizon. These
-zero-valued runs still count as valid tuning outcomes because they identify
-unsuccessful regions of the hyperparameter space. The main conclusion from Stage
-1 was therefore not that tuning broadly improved all runs, but that only a small
-subset of configurations was suitable for further evaluation in Stage 2.
+the baseline configuration. Most sampled Stage 1 trials did not produce
+meaningful mask performance and therefore did not progress to later stages.
+Figure~\ref{fig:stage1_mask_map} focuses on the small subset of successful Stage 1
+trials and shows their validation mask $\mathrm{mAP}_{50\text{:}95}$ trajectories.
+These runs converged into a similar performance band, which justified carrying
+only the best-performing candidates forward to Stage 2. The unsuccessful
+zero-valued trials still count as valid tuning outcomes because they identify
+poor regions of the hyperparameter space, but they are not shown in this figure
+in order to keep the comparison readable.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.82\textwidth]{figures/results/stage1_yolo_mAP50-95_M.png}
-    \caption{Stage 1 validation mask $\mathrm{mAP}_{50\text{:}95}$ for the first ten runs shown in the \gls{wandb} sweep export. Only a small subset of configurations produced non-zero validation performance.}
+    \includegraphics[width=0.82\textwidth]{figures/results/stage1_yolo_trials_mAP50-95_M.png}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the successful Stage 1 hyperparameter trials. Only a limited subset of the Stage 1 configurations produced stable non-zero segmentation performance and was considered for Stage 2.}
     \label{fig:stage1_mask_map}
 \end{figure}
 
@@ -55,20 +55,20 @@ configuration consistently selected a batch size of 16 and an input resolution o
 initial learning rate.
 
 Figure~\ref{fig:stage2_mask_map} shows the broader Stage 2 validation mask
-$\mathrm{mAP}_{50\text{:}95}$ trends. In contrast to Stage 1, Stage 2 produced a
-larger number of usable configurations because the search was restricted to the
-top Stage 1 candidates and only varied image size and batch size. The logged
-results show that eight out of sixteen unique Stage 2 configurations achieved
-non-zero mask $\mathrm{mAP}_{50\text{:}95}$ values. Most successful runs were
-observed at an input resolution of 640 pixels, while many 768-pixel variants
-remained unsuccessful. The main exception was the
-\texttt{cfg1\_b16\_sz768} configuration, which produced the best Stage 2 result
+$\mathrm{mAP}_{50\text{:}95}$ trends for the successful unique Stage 2
+configurations. In contrast to Stage 1, Stage 2 produced a larger number of
+usable configurations because the search was restricted to the top Stage 1
+candidates and only varied image size and batch size. The logged results show
+that eight out of sixteen unique Stage 2 configurations achieved non-zero mask
+$\mathrm{mAP}_{50\text{:}95}$ values. Most successful runs were observed at an
+input resolution of 640 pixels, while the main successful 768-pixel exception was
+\texttt{cfg1\_b16\_sz768}, which also produced the best overall Stage 2 result
 and was therefore selected for Stage 3 refinement.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.82\textwidth]{figures/results/stage2_yolo_mAP50-95_m_full.png}
-    \caption{Stage 2 validation mask $\mathrm{mAP}_{50\text{:}95}$ for the broader set of capacity-tuning runs. Compared with Stage 1, more configurations produced usable validation performance, although unsuccessful runs were still present.}
+    \includegraphics[width=0.82\textwidth]{figures/results/stage2_yolo_valid_only_mAP_M.png}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the successful unique Stage 2 capacity-tuning configurations. The \texttt{cfg1\_b16\_sz768} setting achieved the strongest validation performance and was selected for Stage 3 refinement.}
     \label{fig:stage2_mask_map}
 \end{figure}
 
