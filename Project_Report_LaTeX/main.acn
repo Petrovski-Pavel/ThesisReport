@@ -13,6 +13,7 @@
 \glossaryentry{GPU?\glossentry{gpu}|setentrycounter[]{page}"\glsnumberformat}{iii}
 \glossaryentry{IEEE?\glossentry{ieee}|setentrycounter[]{page}"\glsnumberformat}{iii}
 \glossaryentry{IoU?\glossentry{iou}|setentrycounter[]{page}"\glsnumberformat}{iii}
+\glossaryentry{JSON?\glossentry{json}|setentrycounter[]{page}"\glsnumberformat}{iii}
 \glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{iii}
 \glossaryentry{mAP?\glossentry{map}|setentrycounter[]{page}"\glsnumberformat}{iii}
 \glossaryentry{ML?\glossentry{ml}|setentrycounter[]{page}"\glsnumberformat}{iii}
@@ -60,9 +61,11 @@
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{7}
 \glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{7}
 \glossaryentry{GPU?\glossentry{gpu}|setentrycounter[]{page}"\glsnumberformat}{7}
+\glossaryentry{XML?\glossentry{xml}|setentrycounter[]{page}"\glsnumberformat}{10}
 \glossaryentry{CVAT?\glossentry{cvat}|setentrycounter[]{page}"\glsnumberformat}{10}
 \glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{10}
 \glossaryentry{COCO?\glossentry{coco}|setentrycounter[]{page}"\glsnumberformat}{10}
+\glossaryentry{JSON?\glossentry{json}|setentrycounter[]{page}"\glsnumberformat}{10}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{10}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{10}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{10}
@@ -83,89 +86,84 @@
 \glossaryentry{IoU?\glossentry{iou}|setentrycounter[]{page}"\glsnumberformat}{13}
 \glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{13}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{13}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{13}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{13}
 \glossaryentry{VRAM?\glossentry{vram}|setentrycounter[]{page}"\glsnumberformat}{13}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{13}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{13}
 \glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{14}
+\glossaryentry{CVAT?\glossentry{cvat}|setentrycounter[]{page}"\glsnumberformat}{14}
 \glossaryentry{COCO?\glossentry{coco}|setentrycounter[]{page}"\glsnumberformat}{14}
-\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{14}
 \glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{14}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{14}
 \glossaryentry{W"\&B?\glossentry{wandb}|setentrycounter[]{page}"\glsnumberformat}{14}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{14}
+\glossaryentry{mAP?\glossentry{map}|setentrycounter[]{page}"\glsnumberformat}{14}
+\glossaryentry{W"\&B?\glossentry{wandb}|setentrycounter[]{page}"\glsnumberformat}{15}
+\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{15}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{15}
-\glossaryentry{mAP?\glossentry{map}|setentrycounter[]{page}"\glsnumberformat}{15}
+\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{15}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{15}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{15}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{15}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{15}
-\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{15}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{15}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{16}
+\glossaryentry{YAML?\glossentry{yaml}|setentrycounter[]{page}"\glsnumberformat}{16}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{16}
-\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{16}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{16}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{16}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{16}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{16}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{16}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{17}
-\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{17}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{17}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{17}
-\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{17}
-\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{17}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{17}
-\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{17}
-\glossaryentry{YAML?\glossentry{yaml}|setentrycounter[]{page}"\glsnumberformat}{17}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{17}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{17}
 \glossaryentry{W"\&B?\glossentry{wandb}|setentrycounter[]{page}"\glsnumberformat}{17}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{mAP?\glossentry{map}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{COCO?\glossentry{coco}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{COCO?\glossentry{coco}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{COCO?\glossentry{coco}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{AP?\glossentry{ap}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{IoU?\glossentry{iou}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{IoU?\glossentry{iou}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{18}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{mAP?\glossentry{map}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{COCO?\glossentry{coco}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{COCO?\glossentry{coco}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{COCO?\glossentry{coco}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{AP?\glossentry{ap}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{IoU?\glossentry{iou}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{IoU?\glossentry{iou}|setentrycounter[]{page}"\glsnumberformat}{17}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{17}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{18}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{18}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{18}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{18}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{18}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{18}
+\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{18}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{18}
+\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{18}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{18}
+\glossaryentry{PaddleOCR?\glossentry{paddleocr}|setentrycounter[]{page}"\glsnumberformat}{18}
 \glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{19}
 \glossaryentry{ONNX?\glossentry{onnx}|setentrycounter[]{page}"\glsnumberformat}{19}
 \glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{19}
 \glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{19}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{19}
 \glossaryentry{ONNX?\glossentry{onnx}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{ONNX?\glossentry{onnx}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{ONNX?\glossentry{onnx}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{ONNX?\glossentry{onnx}|setentrycounter[]{page}"\glsnumberformat}{19}
 \glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{19}
 \glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{19}
-\glossaryentry{GPU?\glossentry{gpu}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{FP16?\glossentry{fp16}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{RGB-D?\glossentry{rgbd}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{GPU?\glossentry{gpu}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{FP16?\glossentry{fp16}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{ONNX?\glossentry{onnx}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{RGB-D?\glossentry{rgbd}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{19}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{19}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{20}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{20}
 \glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{20}
@@ -173,42 +171,54 @@
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{20}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{20}
 \glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{20}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{21}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{21}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{21}
-\glossaryentry{RGB?\glossentry{rgb}|setentrycounter[]{page}"\glsnumberformat}{21}
-\glossaryentry{RGB?\glossentry{rgb}|setentrycounter[]{page}"\glsnumberformat}{21}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{21}
-\glossaryentry{RGB?\glossentry{rgb}|setentrycounter[]{page}"\glsnumberformat}{21}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{21}
-\glossaryentry{RGB?\glossentry{rgb}|setentrycounter[]{page}"\glsnumberformat}{21}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{21}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{22}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{22}
-\glossaryentry{COCO?\glossentry{coco}|setentrycounter[]{page}"\glsnumberformat}{22}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{RGB?\glossentry{rgb}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{RGB?\glossentry{rgb}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{RGB?\glossentry{rgb}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{RGB?\glossentry{rgb}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{20}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{21}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{21}
+\glossaryentry{COCO?\glossentry{coco}|setentrycounter[]{page}"\glsnumberformat}{21}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{22}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{22}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{22}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{23}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{23}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{23}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{25}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{25}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{25}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{25}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{26}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{26}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{26}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{26}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{26}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{26}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{26}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{26}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{26}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{26}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{26}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{26}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{26}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{26}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{27}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{27}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{27}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{27}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{27}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{28}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{28}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{28}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{28}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{28}
-\glossaryentry{RGB-D?\glossentry{rgbd}|setentrycounter[]{page}"\glsnumberformat}{28}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{28}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{28}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{27}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{27}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{27}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{27}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{27}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{27}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{27}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{28}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{28}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{28}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{28}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{29}
@@ -216,167 +226,149 @@
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{29}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{29}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{29}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{30}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{30}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{30}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{30}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{30}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{31}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{31}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{31}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{31}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{31}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{31}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{32}
 \glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{32}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
 \glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
 \glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{32}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{32}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
 \glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
 \glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{33}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{33}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{33}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{33}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{33}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{33}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{33}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{34}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{33}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{33}
+\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{34}
 \glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{34}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{34}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{34}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{34}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{35}
 \glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{35}
 \glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{35}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{35}
 \glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{35}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{35}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{35}
 \glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{35}
 \glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{35}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{35}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{35}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{35}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{35}
+\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{35}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{35}
+\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{35}
 \glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{35}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{35}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{35}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{35}
-\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{36}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{35}
 \glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{36}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{36}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{36}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{FPS?\glossentry{fps}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{37}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{38}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{38}
-\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{38}
-\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{41}
-\glossaryentry{CVAT?\glossentry{cvat}|setentrycounter[]{page}"\glsnumberformat}{41}
-\glossaryentry{AP?\glossentry{ap}|setentrycounter[]{page}"\glsnumberformat}{41}
-\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{41}
+\glossaryentry{NVIDIA Jetson?\glossentry{jetson}|setentrycounter[]{page}"\glsnumberformat}{36}
+\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{39}
+\glossaryentry{CVAT?\glossentry{cvat}|setentrycounter[]{page}"\glsnumberformat}{39}
+\glossaryentry{AP?\glossentry{ap}|setentrycounter[]{page}"\glsnumberformat}{39}
+\glossaryentry{Mask R-CNN?\glossentry{maskrcnn}|setentrycounter[]{page}"\glsnumberformat}{39}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{40}
+\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{41}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{41}
+\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{41}
+\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{41}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{41}
+\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{41}
+\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{41}
 \glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{42}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{42}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{42}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{42}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{42}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{42}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{42}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{42}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{42}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{42}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{42}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{42}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{42}
 \glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{43}
 \glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{43}
-\glossaryentry{YOLO?\glossentry{yolo}|setentrycounter[]{page}"\glsnumberformat}{43}
-\glossaryentry{TensorRT?\glossentry{tensorrt}|setentrycounter[]{page}"\glsnumberformat}{43}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{43}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{43}
-\glossaryentry{ADC?\glossentry{adc}|setentrycounter[]{page}"\glsnumberformat}{43}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{44}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{44}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{44}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{44}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{44}
-\glossaryentry{ROS 2?\glossentry{ros2}|setentrycounter[]{page}"\glsnumberformat}{45}
-\glossaryentry{OCR?\glossentry{ocr}|setentrycounter[]{page}"\glsnumberformat}{45}

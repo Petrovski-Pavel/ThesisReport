@@ -39,17 +39,18 @@ with dataset selection and preparation.
 \end{figure}
 
 \section{Dataset selection and preparation}
+\label{sec:dataset_selection}
 
-This project uses a subset of the elevator-panel dataset released by
-\citet{liu2021elevator}. For this thesis, approximately 2000 images were used,
-split into 1122 training images, 281 validation images, and 602 held-out test
-images. The test split was reserved for final evaluation only.
+This project uses the elevator-panel dataset released by \citet{liu2021elevator}.
+For this thesis, the working dataset comprised approximately 2000 images, split
+into 1122 training images, 281 validation images, and 602 held-out test images.
+The test split was reserved for final evaluation only.
 
-The original dataset provided XML annotations with bounding boxes and textual
+The original dataset provided \gls{xml} annotations with bounding boxes and textual
 labels, but no instance masks. To support instance segmentation, the images were
 re-annotated in a semi-automatic \gls{cvat} workflow using a \gls{maskrcnn}
-pre-annotation model, as described in Section~3.3. The resulting annotations
-were stored in \gls{coco}-style JSON and then converted to the label format
+pre-annotation model, as described in Section~\ref{sec:annotation_strategy}. The resulting annotations
+were stored in \gls{coco}-style \gls{json} and then converted to the label format
 required by \gls{yolo}-based segmentation training.
 
 In the later deployment-oriented adaptation stage, the dataset was extended with
@@ -90,11 +91,11 @@ used for the main recognition experiments removed labels named exactly
 not encode the actual button content, but merely indicate the presence of
 unspecified free text. Retaining them caused the recognizer to over-predict
 generic ``TEXT''-like outputs and reduced generalization to unseen textual button
-content. The final \gls{ocr} dataset,
-\texttt{ocr\_rec\_dataset\_drop\_textprefix\_full}, contained 11{,}953 training
+content. The final \gls{ocr} dataset, contained 11{,}953 training
 crops, 2{,}973 validation crops, and 6{,}861 held-out test crops.
 
 \section{Annotation strategy and workflow}
+\label{sec:annotation_strategy}
 
 Instance-level ground truth was created using a semi-automatic workflow that
 combines model-based pre-annotation with manual verification. This strategy was
@@ -206,7 +207,7 @@ deployment-oriented solution suitable for embedded hardware.
 
 \subsection*{Experimental hardware and software environment}
 
-All \gls{yolo} and \gls{ocr} training experiments reported in this thesis were executed
+All models training experiments reported in this thesis were executed
 on the same workstation. The host system ran Ubuntu 22.04.5 LTS with Linux kernel
 6.8.0-90. The machine was equipped with an AMD Ryzen 9 9950X 16-core processor,
 176~GiB of system memory, and an NVIDIA GeForce RTX 4090 graphics card with
@@ -217,38 +218,24 @@ fine-tuning, and the comparative evaluation runs discussed in Chapters~3 and~4.
 
 \subsection*{Common training strategy}
 
-All models are trained using a transfer learning approach. Networks are initialized
-from pretrained checkpoints and fine-tuned on the project-specific dataset, rather
-than being trained from scratch. This strategy improves convergence speed and
-generalization performance, particularly given the moderate dataset size.
-
-The final mixed dataset used for adaptation fine-tuning follows a fixed random split (seed 123)
-with train/validation/test separation for model selection and reporting.
-Standard augmentation is applied during training (HSV jitter, geometric perturbations,
-and horizontal flip with $p=0.5$) to improve robustness to viewpoint and lighting
-variations.
-
-For the initial baseline training phase, training used only the available train split and
-the test split was held out for final validation.
+All trainable vision models were fine-tuned from pretrained weights rather than
+trained from scratch. Across the experiments, the train/validation split was used
+for model fitting and model selection, while the held-out test split was reserved
+for final comparison only. This separation was especially important in the
+\gls{yolo} experiments, where the best validation model did not always remain the
+best model on the final test set.
 
 \subsection*{Mask R-CNN training}
 
-\gls{maskrcnn} is trained using a custom PyTorch-based pipeline with \gls{coco}-formatted
-instance annotations. Training is performed for 50 epochs with a batch size of 2,
-reflecting the higher memory requirements of region-based instance segmentation
-models.
-
-Optimization is performed using the AdamW optimizer with a learning rate of
-$5 \times 10^{-4}$ and weight decay of $1 \times 10^{-4}$. A ReduceLROnPlateau learning
-rate scheduler is employed, reducing the learning rate by a factor of 0.5 when the
-validation loss does not improve for three consecutive epochs. Early stopping is
-enabled with a patience of 10 epochs based on validation loss.
-
-\gls{maskrcnn} is retrained iteratively as the annotated dataset grows. This iterative
-training is applied exclusively to the \gls{maskrcnn} model, as it is used to generate
-pre-annotations during the semi-automatic annotation process. Model checkpoints are
-created after approximately 100, 450, and 900 annotated training images, enabling
-progressively improved annotation quality and reduced manual correction effort.
+\gls{maskrcnn} was used only as an annotation-support model within the
+semi-automatic \gls{cvat} workflow. The model was trained with a custom
+PyTorch-based pipeline on \gls{coco}-formatted instance annotations and was
+retrained iteratively as the annotated dataset grew. Across these retraining
+stages, the training setup remained based on transfer learning, AdamW
+optimization, and validation-loss-driven checkpoint selection. The exact
+checkpoint progression and its held-out test performance are summarized in
+Appendix~\ref{app:maskrcnn_checkpoints}; only the role of \gls{maskrcnn} in the
+annotation workflow is relevant to the main methodology.
 
 \subsection*{YOLOv8-Seg training}
 
@@ -300,48 +287,15 @@ accompanying text explains the rationale behind each stage.
     \end{tabular}
 \end{table}
 
-The tuning process was organized into three stages. In the first stage, a narrow
-hyperparameter search was performed around the known-good baseline configuration
-using Ray Tune within the Ultralytics framework. Twenty-four trials were executed,
-each for 30 epochs, while the dataset split remained fixed so that the validation
-set was used for model selection and the test set remained untouched. The tuned
-hyperparameters were the initial and final learning-rate factors
-(\texttt{lr0}, \texttt{lrf}), \texttt{weight\_decay}, \texttt{momentum}, color
-augmentation parameters (\texttt{hsv\_h}, \texttt{hsv\_s}, \texttt{hsv\_v}),
-\texttt{degrees}, \texttt{translate}, \texttt{scale}, \texttt{mosaic},
-\texttt{fliplr}, \texttt{warmup\_epochs}, and \texttt{close\_mosaic}. To preserve
-comparability with the baseline recipe, \texttt{optimizer=SGD}, \texttt{mixup=0},
-\texttt{shear=0}, and \texttt{perspective=0} were kept fixed. Before the full sweep,
-a short 12-epoch sanity run was executed to confirm that the training pipeline,
-dataset configuration, and logging setup behaved as expected.
-
-The second stage focused on capacity-related settings rather than optimization or
-augmentation parameters. The five best-performing configurations from Stage 1 with
-$\mathrm{mAP}_{50\text{:}95}^{(M)} \ge 0.30$ were selected, and each of them was retrained
-while varying only batch size and input resolution. The tested combinations were
-batch sizes of 8 and 16, and image sizes of 640 and 768 pixels. Each run was
-trained for 100 epochs with patience 15, while all tuned Stage 1 hyperparameters
-were inherited unchanged. This design allowed the influence of computational
-capacity settings to be isolated from the already tuned optimization parameters.
-
-The third stage served as a refinement step. The two best Stage 2 configurations
-with $\mathrm{mAP}_{50\text{:}95}^{(M)} \ge 0.50$ were resumed from their best saved
-checkpoints and trained for 180 additional epochs. In this phase, the initial
-learning rate was halved to support more conservative late-stage optimization.
-
-Two additional experiments were conducted after the three-stage hyperparameter
-tuning process. First, a \gls{yolo}26-small segmentation model was trained using the
-same baseline training recipe, followed by a longer 180-epoch run to assess whether
-the newer architecture could outperform \gls{yolo}v8-Seg under comparable settings.
-Second, the best \gls{yolo}v8 baseline checkpoint was fine-tuned on the mixed
-\texttt{elevator\_adc\_mix} dataset to evaluate domain adaptation with data collected
-from the target environment by the \gls{adc}. This adaptation run was trained for
-40 epochs using conservative settings (\texttt{lr0=0.001}, \texttt{patience=0}) to
-improve environment-specific performance without overwriting the original baseline
-model.
-
-Across the tuning and fine-tuning stages, the train/validation split was used for model fitting and model selection.
-For reporting and model comparison, held-out test splits were used only for final evaluation.
+The tuning process itself is summarized in Table~\ref{tab:yolo_hparam_tuning}. In
+short, Stage 1 performed a narrow search around the baseline recipe, Stage 2
+tested only capacity-related settings such as batch size and image resolution for
+the best Stage 1 candidates, and Stage 3 resumed the strongest Stage 2
+checkpoints for late-stage refinement. All tuning runs were tracked in
+\gls{wandb}. After this three-stage tuning procedure, two further experiments
+were performed: a comparison with YOLO26-small and a domain-adaptation
+fine-tuning run using the mixed dataset that included images collected in the
+target deployment environment.
 
 \subsection*{Loss functions and optimization objectives}
 
@@ -489,6 +443,15 @@ representative single indicator of segmentation quality. In addition,
 \texttt{metrics/mAP50(M)} is reported to show performance at the less strict 0.50
 \gls{iou} threshold.
 
+\begin{equation}
+\mathrm{Precision} = \frac{TP}{TP + FP}, \qquad
+\mathrm{Recall} = \frac{TP}{TP + FN}
+\end{equation}
+
+\begin{equation}
+\mathrm{mAP}_{50\text{:}95} = \frac{1}{10}\sum_{t \in \{0.50,0.55,\ldots,0.95\}} \mathrm{AP}_{t}
+\end{equation}
+
 The complete set of reported \gls{yolo} metrics in this report therefore includes
 mask precision, mask recall, \texttt{mAP50(M)}, and \texttt{mAP50-95(M)}, together
 with the corresponding box metrics \texttt{precision(B)}, \texttt{recall(B)},
@@ -575,16 +538,18 @@ and deployed on a \gls{jetson} Orin platform. The deployment workflow is designe
 to be identical for both the instance segmentation model and the \gls{ocr}-based button
 classification model.
 
-Models are first trained in PyTorch and exported to the Open Neural Network Exchange
-(\gls{onnx}) \citep{onnx2019} format. The exported \gls{onnx} models are validated on a desktop system using \gls{onnx}
-Runtime and model inspection tools to ensure numerical correctness and structural
-compatibility prior to deployment.
+Models are first trained in PyTorch, exported to the Open Neural Network Exchange
+(\gls{onnx}) \citep{onnx2019} format, and then converted on the \gls{jetson} Orin
+device into optimized \gls{tensorrt} engines. Engine generation was performed
+directly on the target hardware to ensure compatibility with the device-specific
+\gls{gpu} architecture. \gls{fp16} precision was used to reduce memory footprint
+and improve inference speed.
 
-Validated \gls{onnx} models are then transferred to the \gls{jetson} Orin device, where
-\gls{tensorrt} is used to build optimized inference engines. Engine generation is
-performed directly on the target device to ensure compatibility with the specific
-\gls{gpu} architecture. \gls{fp16} precision is used to reduce memory footprint and improve
-inference speed while maintaining sufficient numerical accuracy.
+In this project, the intermediate \gls{onnx} models were not benchmarked as
+standalone deployment artifacts. Instead, the final \gls{tensorrt}
+\texttt{.engine} models were validated directly on the target device by running
+them on a subset of held-out test images and checking that the predictions were
+numerically sensible and visually consistent with the trained desktop models.
 
 The resulting \gls{tensorrt} engines are integrated into \gls{ros2} nodes responsible for
 perception tasks. At runtime, image data from the \gls{rgbd} camera is passed through
@@ -599,7 +564,7 @@ under identical runtime constraints.
 \section{ROS2 pipeline architecture}
 
 After deployment-oriented model selection, the \gls{tensorrt} engines were integrated into
-a modular \gls{ros2} runtime pipeline on the target robot computer. This stage links
+a modular \gls{ros2} pipeline on the target robot computer. This stage links
 the trained perception models to live camera input, downstream message passing, and
 deployment data collection.
 
@@ -615,7 +580,7 @@ capture card, using ZED SDK~5.2.1.
 
 The deployed runtime graph consists of the ZED camera driver, a \gls{yolo} inference
 node, an \gls{ocr} inference node, and an \gls{adc}. The ZED wrapper
-publishes rectified color images, registered depth images, and camera calibration
+publishes lens-corrected color images, registered depth images, and camera calibration
 data. The \texttt{yolo\_engine\_node} subscribes to these topics and publishes
 \texttt{/button\_targets\_3d}. The \texttt{ocr\_trt\_node} subscribes to the camera
 image topic and \texttt{/button\_targets\_3d}, performs text recognition on cropped
@@ -631,7 +596,7 @@ and allowed both runtime components to be benchmarked independently.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{figures/methodology/ros2_pipeline_mermaid_high.png}
+    \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{figures/methodology/ros2_pipeline_mermaid_high.png}
     \caption{\Gls{ros2} runtime architecture used for deployment. The ZED X camera
     provides image, depth, and camera calibration topics to the \gls{yolo} node. The \gls{ocr}
     node enriches the geometric targets with text labels, and the active data
@@ -651,7 +616,7 @@ and allowed both runtime components to be benchmarked independently.
         \texttt{zed\_wrapper} & \gls{rgb}, depth, camera info & Publishes sensor streams from the ZED X camera. \\
         \texttt{yolo\_engine\_node} & In: \gls{rgb}, depth, camera info; Out: \texttt{/button\_targets\_3d} & Runs \gls{tensorrt} segmentation, estimates target depth, and projects detections to 3D. \\
         \texttt{ocr\_trt\_node} & In: \gls{rgb}, \texttt{/button\_targets\_3d}; Out: \texttt{/button\_targets\_3d\_ocr} & Matches detections to buffered images and adds \gls{ocr} labels. \\
-        \texttt{active\_data\_collector} & In: \gls{rgb}, \texttt{/button\_targets\_3d\_ocr} & Exports selected deployment samples for later review and retraining. \\
+        \texttt{data\_collector} & In: \gls{rgb}, \texttt{/button\_targets\_3d\_ocr} & Exports selected deployment samples for later review and retraining. \\
         \bottomrule
     \end{tabular}
 \end{table}

@@ -1,0 +1,6 @@
+Add the ROS2 evaluation metrics in the proepr chapter
+Try to change image size on the Jetson and check the performance
+Get rid of some dumb info in 4.3 ROS2 PP
+FIX Data quality assessment
+Finish Chapter 5 and 6
+
