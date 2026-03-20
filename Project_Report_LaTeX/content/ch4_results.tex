@@ -1,12 +1,14 @@
 \chapter{Results}
 \label{ch:results}
 
-This chapter presents the quantitative results of the main perception components
-of the proposed elevator-interaction pipeline. It first reports the results of
-the \gls{yolo}-based button-instance segmentation system and then summarizes the
-\gls{ocr}-based button interpretation results. Final
-model comparisons are reported on held-out test sets, while model selection
-during training and hyperparameter tuning is based on the validation split.
+This chapter presents the quantitative and qualitative results obtained for the
+proposed elevator-interaction pipeline. It first summarizes the dataset quality
+assessment, then reports the results of the \gls{yolo}-based button-instance
+segmentation system and the \gls{ocr}-based button interpretation module,
+followed by hardware-optimization benchmarks and integrated \gls{ros2} pipeline
+results. Final model comparisons are reported on held-out test sets, while model
+selection during training and hyperparameter tuning is based on the validation
+split.
 
 \section{Dataset quality results}
 \label{sec:dataset_quality_results}
@@ -211,7 +213,7 @@ but the final test-set ranking remained in favor of the baseline model.
 The final \gls{yolo} experiment addressed domain adaptation to the target
 university environment. The baseline checkpoint was fine-tuned on the original
 dataset augmented with 46 newly collected and annotated images from HAN
-University, R31. Table~\ref{tab:adc_original_test} shows that this
+University, Building 31. Table~\ref{tab:adc_original_test} shows that this
 adaptation step did not materially degrade performance on the original held-out
 test split: mask $\mathrm{mAP}_{50\text{:}95}$ remained effectively unchanged
 (0.58295 vs.\ 0.58293). The validation curve in
@@ -459,10 +461,7 @@ After the final \gls{yolo} and \gls{ocr} models were exported to \gls{tensorrt},
 perception stack was evaluated on the \gls{jetson} Orin Nano in its deployed \gls{ros2}
 configuration. The purpose of these experiments was not to compare neural-network
 accuracy, but to quantify the practical throughput of the integrated pipeline under
-different runtime settings. The reported measurements correspond to the final
-post-refactor pipeline in which ROI-local masks are published by the YOLO node and
-full-image annotation reconstruction is performed only inside the \gls{adc} when
-export is required. During these experiments, the Stereolabs ZED X camera was
+different runtime settings. During these experiments, the Stereolabs ZED X camera was
 launched with the \texttt{zedx} wrapper profile, which uses a native
     \texttt{HD1200} grab mode at 30~Hz and publishes lens-corrected color and depth data at
 15~\gls{fps}. With the configured downscale factor of 2.0, the effective published
@@ -524,7 +523,7 @@ throughput.
         Configuration & \glsentryshort{yolo} total [ms] & \glsentryshort{yolo} depth [ms] & \glsentryshort{ocr} total [ms] & \glsentryshort{ocr} processed ROIs \\
         \midrule
         With collector & $\sim 81$--$91$ & $\sim 3.6$--$6.6$ & $\sim 79$--$95$ & not capped \\
-        No collector, \gls{ocr} uncapped & $\sim 78$--$99$ & $\sim 4$--$7$ & $\sim 77$--$102$ & $\sim 10.7$--$10.9$ \\
+        No collector, \gls{ocr} uncapped & $\sim 78$--$99$ & $\sim 4$--$7$ & $\sim 77$--$102$ & $\sim 11$ \\
         No collector, \gls{ocr} capped to 4 ROIs & $\sim 70.4$--$77.8$ & $\sim 5.3$--$7.0$ & $\sim 33.0$--$35.2$ & $4.0$ \\
         \bottomrule
     \end{tabular}
@@ -540,3 +539,36 @@ For deployment sessions that must simultaneously gather new training data, the
 collector-enabled configuration remains practical at approximately 10~\gls{fps},
 which is sufficient to preserve the full adaptive data-collection loop described in
 Chapter~\ref{ch:methodology}.
+
+
+\subsection{Qualitative end-to-end pipeline output}
+
+Figure~\ref{fig:ros2_pipeline_output_examples} illustrates the final deployed
+output of the integrated perception pipeline for an in-cabin elevator panel
+observed during live testing with the mobile cart in HAN University Building 31.
+Both overlays are derived from the same accepted \texttt{/button\_targets\_3d\_ocr}
+message set, but visualize different aspects of the final result. The first view
+emphasizes the segmentation masks, representative button centers, and estimated
+distance values, while the second view emphasizes bounding boxes, recognized
+labels, and the corresponding \gls{yolo} confidence scores.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/conclusion/1773668101805465000_center_distance.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/conclusion/1773668101805465000_bbox_label.jpg}
+    \end{minipage}
+    \caption{End-to-end visualization of the final deployed \gls{ros2} perception output for a representative in-cabin elevator panel. Left: yellow predicted masks with red crosses marking the representative button centers used for depth projection, together with blue distance annotations. Right: green bounding boxes with recognized button labels and \gls{yolo} confidence scores. Together, the two views show how the final \texttt{/button\_targets\_3d\_ocr} output combines geometric localization and semantic interpretation.}
+    \label{fig:ros2_pipeline_output_examples}
+\end{figure}
+
+This example makes the final system output more explicit than throughput tables
+alone. Instead of exposing only intermediate detections, the deployed pipeline
+produces a task-oriented target representation that already combines 2D button
+localization, a representative image center for depth projection, semantic text
+interpretation, and an estimated spatial distance for downstream robot use.

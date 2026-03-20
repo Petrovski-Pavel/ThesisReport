@@ -77,7 +77,10 @@ quality and dataset relevance were both important. The original curated dataset
 was sufficient to train a strong baseline, but the environment-specific
 fine-tuning experiment demonstrated that even a relatively small amount of
 deployment-collected data can substantially improve performance in the target
-domain. This supports the decision to include an \gls{adc} in the full workflow.
+domain, both in confidence and in practical recognition distance. This supports
+the decision to include an \gls{adc} in the full workflow and suggests that
+further fine-tuning on carefully collected deployment data is likely to remain a
+high-value improvement path.
 
 The fourth sub-question asked which optimization techniques support embedded
 inference. Here the answer is twofold. First, \gls{tensorrt} export was
@@ -112,7 +115,9 @@ recognition range.
 Third, the project was executed on a single embedded platform and camera setup.
 The \gls{jetson} Orin Nano and Stereolabs ZED X are representative for the
 target use case, but performance and tuning decisions may differ on other edge
-devices or other sensing configurations.
+devices or other sensing configurations. In addition, the current Jetson setup
+still runs from a microSD card rather than an SSD, which is not ideal for long
+logging sessions, dataset export, or sustained deployment experiments.
 
 Fourth, the report currently emphasizes perception and runtime integration rather
 than downstream manipulation or actuation. The system produces 3D button targets
@@ -138,4 +143,7 @@ deployment, and future model improvement.
 Overall, the project shows that the combination of instance segmentation,
 task-specific \gls{ocr}, \gls{tensorrt} acceleration, and structured deployment
 data collection provides a credible foundation for later integration into a more
-complete autonomous hospital robot.
+complete autonomous hospital robot. The next decisive step is therefore not only
+more perception benchmarking, but real robot testing in hospital-like or actual
+hospital environments, where the perception output can be validated in the full
+navigation-and-interaction loop.

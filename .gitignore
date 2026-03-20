@@ -23,10 +23,22 @@ Project_Report_LaTeX/*.run.xml
 Project_Report_LaTeX/*.synctex.gz
 Project_Report_LaTeX/*.toc
 
-# Generated PDF
-Project_Report_LaTeX/main.pdf
 
 # Editor/local OS files
 .DS_Store
 Thumbs.db
 .vscode/
+
+
+# Extra LaTeX/generated files
+Project_Report_LaTeX/*.nav
+Project_Report_LaTeX/*.snm
+Project_Report_LaTeX/*.vrb
+Project_Report_LaTeX/*.xdv
+Project_Report_LaTeX/*.dvi
+Project_Report_LaTeX/*.ps
+Project_Report_LaTeX/*.bak
+Project_Report_LaTeX/*.backup
+Project_Report_LaTeX/*.swp
+Project_Report_LaTeX/*.swo
+Project_Report_LaTeX/*~

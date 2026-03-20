@@ -284,7 +284,7 @@ function that jointly optimizes object classification, localization, and mask
 prediction. Although \gls{maskrcnn} and \gls{yolo}v8-Seg differ architecturally, their
 optimization objectives are conceptually aligned.
 
-\paragraph{Mask R-CNN.}
+\noindent\textbf{Mask R-CNN.}
 The training objective of \gls{maskrcnn} is defined as a multi-task loss composed of
 three terms \citep{he2017maskrcnn}:
 \begin{equation}
@@ -298,7 +298,7 @@ categorical cross-entropy; $\mathcal{L}_{\text{box}}$ represents bounding-box
 regression using the smooth $L_1$ loss; and $\mathcal{L}_{\text{mask}}$ is a
 pixel-wise binary cross-entropy loss applied to each predicted instance mask.
 
-\paragraph{YOLOv8-Seg.}
+\noindent\textbf{YOLOv8-Seg.}
 \gls{yolo}v8-Seg integrates detection and segmentation into a single-stage architecture.
 The total training loss is expressed as a weighted sum of classification,
 localization, and segmentation losses \citep{jocher2023yolov8}:
@@ -334,7 +334,7 @@ bounded crop around a single button and predicts the button's semantic label. Th
 reduces computational cost and makes the \gls{ocr} stage more suitable for embedded
 deployment.
 
-\paragraph{Recognition model architecture.}
+\noindent\textbf{Recognition model architecture.}
 For cropped-button recognition, a lightweight \gls{ocr} recognizer based on
 \texttt{PP-OCRv5\_mobile\_rec} was selected. This model was preferred because it is
 designed for efficient deployment and already provides a compact recognition
@@ -350,7 +350,7 @@ This avoids redundant computation and makes the \gls{ocr} stage conceptually cle
 segmentation localizes the button instance, and \gls{ocr} interprets that localized
 instance.
 
-\paragraph{Fine-tuning strategy.}
+\noindent\textbf{Fine-tuning strategy.}
 The recognizer was initialized from the official pretrained English
 \texttt{PP-OCRv5\_mobile\_rec} weights and fine-tuned on the project-specific crop
 dataset. During training, each crop was resized to the fixed input resolution of
@@ -476,6 +476,7 @@ applies to the \gls{yolo} segmentation experiments, the supplementary
 results chapter therefore distinguishes consistently between validation-time
 selection and held-out test-set evaluation.
 
+\clearpage
 \section{Embedded deployment and optimization}
 
 \begin{wrapfigure}{r}{0.32\textwidth}
@@ -531,17 +532,19 @@ device uses NVIDIA Linux for Tegra release \texttt{R36.4.7} with Linux kernel
 input was provided by a Stereolabs ZED X camera connected through a ZED Link Duo
 capture card, using ZED SDK~5.2.1.
 
-\subsection{Runtime node graph}
+\subsection{Node responsibilities and outputs}
 
 The deployed runtime graph consists of the ZED camera driver, a \gls{yolo} inference
-node, an \gls{ocr} inference node, and an \gls{adc}. The ZED wrapper
-publishes lens-corrected color images, registered depth images, and camera calibration
-data. The \texttt{yolo\_engine\_node} subscribes to these topics and publishes
-\texttt{/button\_targets\_3d}. The \texttt{ocr\_trt\_node} subscribes to the camera
-image topic and \texttt{/button\_targets\_3d}, performs text recognition on cropped
-button regions, and publishes \texttt{/button\_targets\_3d\_ocr}. The
-\texttt{data\_collector} then subscribes to the \gls{ocr}-enriched target stream
-and the camera image stream for deployment data logging.
+node, an \gls{ocr} inference node, and an \gls{adc}. As illustrated in
+Figure~\ref{fig:ros2_runtime_architecture}, the camera provides the color image,
+registered depth image, and calibration data required for geometric perception.
+The \texttt{yolo\_engine\_node} converts these inputs into button candidates that
+already include 2D localization, a representative image center, and an estimated
+3D position or distance in the camera frame. The \texttt{ocr\_trt\_node} then adds
+semantic information by assigning the recognized button text and its confidence
+to each accepted candidate. Finally, the \gls{adc} receives the enriched button
+candidates together with the camera image and stores only those samples that pass
+the deployment quality gates.
 
 The split-node design was chosen deliberately. Earlier experiments showed that
 placing \gls{yolo} and \gls{ocr} \gls{tensorrt} inference in a single Python process increased the
@@ -551,41 +554,38 @@ and allowed both runtime components to be benchmarked independently.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{figures/methodology/ros2_pipeline_mermaid_high.png}
+    \includegraphics[width=\textwidth]{figures/methodology/COCO Segmentation Pipeline-2026-03-20-142622.png}
     \caption{\Gls{ros2} runtime architecture used for deployment. The ZED X camera
-    provides image, depth, and camera calibration topics to the \gls{yolo} node. The \gls{ocr}
-    node enriches the geometric targets with text labels, and the active data
-    collector stores accepted deployment samples for later retraining.}
+    provides color, depth, and calibration data to the \gls{yolo} node. The \gls{ocr}
+    node enriches the geometric button candidates with recognized text, and the
+    active data collector stores accepted deployment samples for later retraining.}
     \label{fig:ros2_runtime_architecture}
 \end{figure}
 
-
-
-
 \begin{table}[htbp]
     \centering
-    \caption{Main ROS 2 nodes in the deployed perception pipeline.}
+    \caption{Main nodes in the deployed \gls{ros2} perception pipeline and the information exchanged between them.}
     \label{tab:ros2_nodes}
     \small
-    \begin{tabular}{p{3.1cm} p{4.0cm} p{6.1cm}}
+    \begin{tabular}{p{2.9cm} p{4.6cm} p{5.7cm}}
         \toprule
-        \textbf{Node} & \textbf{Primary topics} & \textbf{Function} \\
+        \textbf{Node} & \textbf{Outputs used downstream} & \textbf{Role in the pipeline} \\
         \midrule
-        \texttt{zed\_wrapper} & \gls{rgb}, depth, camera info & Publishes sensor streams from the ZED X camera. \\
-        \texttt{yolo\_engine\_node} & In: \gls{rgb}, depth, camera info; Out: \texttt{/button\_targets\_3d} & Runs \gls{tensorrt} segmentation, estimates target depth, and projects detections to 3D. \\
-        \texttt{ocr\_trt\_node} & In: \gls{rgb}, \texttt{/button\_targets\_3d}; Out: \texttt{/button\_targets\_3d\_ocr} & Matches detections to buffered images and adds \gls{ocr} labels. \\
-        \texttt{data\_collector} & In: \gls{rgb}, \texttt{/button\_targets\_3d\_ocr} & Exports selected deployment samples for later review and retraining. \\
+        \texttt{zed\_wrapper} & Color images, registered depth images, and camera calibration data & Provides the synchronized sensor streams used by the perception pipeline. \\
+        \texttt{yolo\_engine\_node} & Button candidates with 2D localization, representative image centers, detection scores, and estimated 3D positions/distances & Runs \gls{tensorrt} instance segmentation, filters detections, and performs depth-based spatial projection. \\
+        \texttt{ocr\_trt\_node} & OCR-enriched button candidates with recognized text and text confidence, in addition to the geometric fields from the \gls{yolo} stage & Crops button regions from the current image and adds semantic label information to the accepted button candidates. \\
+        \texttt{data\_collector} & Curated deployment samples containing images, annotations, and session metadata & Stores accepted field samples for later dataset expansion and model retraining. \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\subsection{Message flow and collector design}
+\subsection{Distance estimation and collector design}
 
-The internal interface between the perception nodes is the custom
-\texttt{ButtonTarget3D} message, which combines 2D detection geometry, 3D position
-estimates, compact mask data, and \gls{ocr} fields in a single transport format. Image
-topics use a best-effort, keep-last quality-of-service setting so that the pipeline
-always prefers recent sensor data over delayed frames.
+The internal interface between the perception nodes is a custom button-target
+message that carries the geometric output of the \gls{yolo} stage and, after the
+\gls{ocr} step, the recognized button text and text score. Image topics use a
+best-effort, keep-last quality-of-service setting so that the pipeline always
+prefers recent sensor data over delayed frames.
 
 Within the \texttt{yolo\_engine\_node}, target depth is estimated only from valid
 depth pixels that fall inside the predicted segmentation mask. Let $\mathcal{V}$
@@ -615,20 +615,17 @@ as
 x = \frac{(u-c_x)z}{f_x}, \qquad
 y = \frac{(v-c_y)z}{f_y}.
 \end{equation}
-This projection step provides the 3D button target used by downstream robotic
+This projection step provides the spatial button target used by downstream robotic
 modules and by the \gls{adc}.
 
 To support iterative improvement after deployment, the \gls{adc} stores
 selected images and annotations in a \gls{coco}-compatible structure. Sample export
 is not performed for every frame. Instead, frames pass a sequence of quality gates
-before they are written to a dataset session. At image level, the collector applies
-brightness and sharpness checks. Brightness is used to reject severely underexposed
-or overexposed frames, while sharpness is used to reject blurred frames. At target
-level, the collector applies minimum score and size thresholds, followed by
-temporal stability checks and near-duplicate rejection.
-
-An important late-stage refactor moved full-image mask encoding out of the YOLO
-node and into the collector. In the final design, the YOLO node publishes only a
-compact ROI-local mask, while the collector reconstructs full-image annotations
-only for accepted samples. This reduces runtime overhead in the perception path and
-keeps dataset-generation logic out of the real-time inference loop.
+before they are written to a dataset session. The threshold values for image
+brightness, image sharpness, and minimum visible button size were derived from the
+dataset quality assessment in Section~\ref{sec:dataset_quality_results}, where the
+observed brightness, blur, and button-size distributions were analyzed to define
+practical acceptance ranges for deployment collection. At image level, the collector
+therefore applies brightness and sharpness checks, while at target level it applies
+minimum score and size thresholds, followed by temporal stability checks and
+duplicate rejection.

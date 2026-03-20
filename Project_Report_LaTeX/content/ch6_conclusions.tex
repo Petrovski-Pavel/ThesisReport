@@ -21,7 +21,7 @@ The main conclusions are as follows.
 \begin{enumerate}
     \item Instance segmentation is an effective method for elevator-button perception because it supports both accurate 2D localization and mask-based depth estimation for 3D target generation.
     \item The baseline \gls{yolo}v8-Seg model was the strongest deployment candidate among the evaluated detector variants. Hyperparameter tuning improved validation performance, but not the final held-out test ranking.
-    \item Environment-specific fine-tuning with \gls{adc} data from HAN University, Building 31 produced the most practically valuable \gls{yolo} improvement, substantially increasing target-domain performance while preserving original-domain performance.
+    \item Environment-specific fine-tuning with \gls{adc} data from HAN University, Building 31 produced the most practically valuable \gls{yolo} improvement, substantially increasing target-domain performance while preserving original-domain performance, including better confidence on weaker detections and longer practical recognition distance for the tested outdoor single-button panel.
     \item The selected stage-2 \gls{ocr} model improved held-out recognition quality and formed a suitable semantic interpretation stage for the full pipeline.
     \item \gls{tensorrt} export was beneficial for both deployed models. The effect was moderate but clear for \gls{yolo} inference time, and very strong for \gls{ocr} latency.
     \item The final \gls{ros2} pipeline achieved practical embedded runtime performance on the \gls{jetson} Orin Nano, with the best measured configuration operating at about 13.1~\gls{fps} and the collector-enabled configuration remaining usable at about 10~\gls{fps}.
@@ -32,7 +32,14 @@ Taken together, these conclusions answer the main research question: an efficien
 and scalable computer-vision workflow for hospital interaction-point perception
 can be achieved on embedded hardware by combining segmentation-based detection,
 task-specific recognition, deployment-oriented optimization, and iterative
-deployment data collection within a modular \gls{ros2} architecture.
+deployment data collection within a modular \gls{ros2} architecture. They also
+answer the five sub-questions: the relevant interaction class was identified as
+elevator-panel interfaces; instance segmentation with separate \gls{ocr} proved to
+be the most suitable architecture among the tested options; the curated dataset
+plus deployment-collected \gls{adc} samples provided the required data strategy;
+\gls{tensorrt} export and runtime-side optimizations enabled embedded execution;
+and scalability was supported through structured deployment-time data collection
+and retraining.
 
 \section{Recommendations}
 
@@ -42,11 +49,13 @@ development of the system.
 \begin{enumerate}
     \item Extend the perception scope beyond elevator buttons to additional hospital interaction elements such as access readers, door controls, and other panel interfaces.
     \item Perform larger and more controlled deployment trials in multiple buildings so that domain shift, lighting variation, and panel diversity can be evaluated more systematically.
-    \item Continue using the \gls{adc} as part of regular deployment, with periodic review and retraining cycles based on newly collected samples.
+    \item Continue using the \gls{adc} as part of regular deployment, with periodic review, further fine-tuning, and retraining cycles based on newly collected field samples.
+    \item Perform real robot trials in hospital-like and, when possible, actual hospital environments so that the perception pipeline can be validated under realistic operational constraints and new deployment data can be collected systematically.
+    \item Replace the current Jetson microSD-based storage setup with an SSD-based configuration to improve robustness for logging, dataset export, and long deployment sessions.
+    \item Reimplement runtime-critical \gls{ros2} nodes in C++ where appropriate, since the current Python implementation is practical for development but likely leaves performance headroom on the embedded platform.
     \item Investigate whether task-specific filtering or ranking strategies can further reduce unnecessary \gls{ocr} workload without harming end-to-end recognition quality.
     \item Evaluate the pipeline on additional embedded platforms to determine how transferable the optimization choices are beyond the current \gls{jetson}-based setup.
     \item Integrate the perception pipeline with downstream robot action modules so that the 3D target estimates can be validated in full interaction tasks rather than perception-only experiments.
-    \item Refine the final report by moving low-value implementation detail out of the main chapters when necessary, while keeping the central research narrative focused on the validated workflow and its deployment implications.
 \end{enumerate}
 
 \section{Final reflection}
