@@ -94,90 +94,92 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Example of an annotated image showing instance segmentation masks.\relax }}{12}{figure.caption.12}\protected@file@percent }
 \newlabel{fig:example_annotated_image}{{3.4}{12}{Example of an annotated image showing instance segmentation masks.\relax }{figure.caption.12}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.4}Dataset quality assessment}{12}{section.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Statistical quality metrics.}{12}{subsection.3.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Model-assisted image assessment.}{12}{subsection.3.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Method.}{12}{subsection.3.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Inspection.}{13}{equation.3.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.5}Model architectures and training strategy}{13}{section.3.5}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Three-stage hyperparameter tuning procedure for \gls {yolo}v8-Seg.\relax }}{14}{table.caption.13}\protected@file@percent }
-\newlabel{tab:yolo_hparam_tuning}{{3.1}{14}{Three-stage hyperparameter tuning procedure for \gls {yolo}v8-Seg.\relax }{table.caption.13}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Model architectures and training strategy}{12}{section.3.5}\protected@file@percent }
 \citation{he2017maskrcnn}
 \citation{jocher2023yolov8}
-\@writefile{toc}{\contentsline {paragraph}{Mask R-CNN.}{15}{table.caption.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{YOLOv8-Seg.}{15}{equation.3.5.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Recognition model architecture.}{16}{equation.3.5.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Fine-tuning strategy.}{16}{equation.3.5.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.6}Evaluation metrics}{17}{section.3.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}\gls {yolo} segmentation metrics under the \gls {coco} protocol}{17}{subsection.3.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.2}\gls {ocr} accuracy and normalized edit distance}{18}{subsection.3.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.3}Evaluation protocol}{18}{subsection.3.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.7}Embedded deployment and optimization}{18}{section.3.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Three-stage hyperparameter tuning procedure for \gls {yolo}v8-Seg.\relax }}{14}{table.caption.13}\protected@file@percent }
+\newlabel{tab:yolo_hparam_tuning}{{3.1}{14}{Three-stage hyperparameter tuning procedure for \gls {yolo}v8-Seg.\relax }{table.caption.13}{}}
+\@writefile{toc}{\contentsline {paragraph}{Mask R-CNN.}{14}{table.caption.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{YOLOv8-Seg.}{14}{equation.3.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Recognition model architecture.}{15}{equation.3.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Fine-tuning strategy.}{15}{equation.3.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.6}Evaluation metrics}{16}{section.3.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}\gls {yolo} segmentation metrics under the \gls {coco} protocol}{16}{subsection.3.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.2}\gls {ocr} accuracy and normalized edit distance}{17}{subsection.3.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.3}Evaluation protocol}{17}{subsection.3.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.7}Embedded deployment and optimization}{17}{section.3.7}\protected@file@percent }
 \citation{onnx2019}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Deployment and optimization workflow for models on \gls {jetson} Orin using \gls {onnx} and \gls {tensorrt}.\relax }}{19}{figure.caption.14}\protected@file@percent }
-\newlabel{fig:tensorrt_workflow}{{3.5}{19}{Deployment and optimization workflow for models on \gls {jetson} Orin using \gls {onnx} and \gls {tensorrt}.\relax }{figure.caption.14}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.8}ROS2 pipeline architecture}{19}{section.3.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.1}Deployment platform}{19}{subsection.3.8.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.2}Runtime node graph}{20}{subsection.3.8.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces \Gls {ros2} runtime architecture used for deployment. The ZED X camera provides image, depth, and camera calibration topics to the \gls {yolo} node. The \gls {ocr} node enriches the geometric targets with text labels, and the active data collector stores accepted deployment samples for later retraining.\relax }}{20}{figure.caption.15}\protected@file@percent }
-\newlabel{fig:ros2_runtime_architecture}{{3.6}{20}{\Gls {ros2} runtime architecture used for deployment. The ZED X camera provides image, depth, and camera calibration topics to the \gls {yolo} node. The \gls {ocr} node enriches the geometric targets with text labels, and the active data collector stores accepted deployment samples for later retraining.\relax }{figure.caption.15}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Main ROS 2 nodes in the deployed perception pipeline.\relax }}{20}{table.caption.16}\protected@file@percent }
-\newlabel{tab:ros2_nodes}{{3.2}{20}{Main ROS 2 nodes in the deployed perception pipeline.\relax }{table.caption.16}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.3}Message flow and collector design}{20}{subsection.3.8.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Results}{22}{chapter.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Deployment and optimization workflow for models on \gls {jetson} Orin using \gls {onnx} and \gls {tensorrt}.\relax }}{18}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:tensorrt_workflow}{{3.5}{18}{Deployment and optimization workflow for models on \gls {jetson} Orin using \gls {onnx} and \gls {tensorrt}.\relax }{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.8}ROS2 pipeline architecture}{18}{section.3.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.1}Deployment platform}{18}{subsection.3.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.2}Runtime node graph}{19}{subsection.3.8.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces \Gls {ros2} runtime architecture used for deployment. The ZED X camera provides image, depth, and camera calibration topics to the \gls {yolo} node. The \gls {ocr} node enriches the geometric targets with text labels, and the active data collector stores accepted deployment samples for later retraining.\relax }}{19}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:ros2_runtime_architecture}{{3.6}{19}{\Gls {ros2} runtime architecture used for deployment. The ZED X camera provides image, depth, and camera calibration topics to the \gls {yolo} node. The \gls {ocr} node enriches the geometric targets with text labels, and the active data collector stores accepted deployment samples for later retraining.\relax }{figure.caption.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Main ROS 2 nodes in the deployed perception pipeline.\relax }}{19}{table.caption.16}\protected@file@percent }
+\newlabel{tab:ros2_nodes}{{3.2}{19}{Main ROS 2 nodes in the deployed perception pipeline.\relax }{table.caption.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.3}Message flow and collector design}{19}{subsection.3.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Results}{21}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:results}{{4}{22}{Results}{chapter.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}YOLO hyperparameter tuning and evaluation}{22}{section.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Baseline YOLOv8-Seg performance}{22}{subsection.4.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Hyperparameter tuning results}{22}{subsection.4.1.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Validation mask $\mathrm  {mAP}_{50\text  {:}95}$ for the successful Stage 1 hyperparameter trials. Only a limited subset of the Stage 1 configurations produced stable non-zero segmentation performance and was considered for Stage 2.\relax }}{23}{figure.caption.17}\protected@file@percent }
-\newlabel{fig:stage1_mask_map}{{4.1}{23}{Validation mask $\mathrm {mAP}_{50\text {:}95}$ for the successful Stage 1 hyperparameter trials. Only a limited subset of the Stage 1 configurations produced stable non-zero segmentation performance and was considered for Stage 2.\relax }{figure.caption.17}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Validation mask $\mathrm  {mAP}_{50\text  {:}95}$ for the successful unique Stage 2 capacity-tuning configurations. The best result was obtained with batch size 16 and image size 768, which was selected for Stage 3 refinement.\relax }}{23}{figure.caption.18}\protected@file@percent }
-\newlabel{fig:stage2_mask_map}{{4.2}{23}{Validation mask $\mathrm {mAP}_{50\text {:}95}$ for the successful unique Stage 2 capacity-tuning configurations. The best result was obtained with batch size 16 and image size 768, which was selected for Stage 3 refinement.\relax }{figure.caption.18}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Best validation results of the baseline and tuned \gls {yolo}v8-Seg models.\relax }}{23}{table.caption.21}\protected@file@percent }
-\newlabel{tab:yolo_tuning_results}{{4.1}{23}{Best validation results of the baseline and tuned \gls {yolo}v8-Seg models.\relax }{table.caption.21}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Held-out test-set comparison between the baseline and the selected Stage 3 tuned \gls {yolo}v8-Seg model.\relax }}{23}{table.caption.22}\protected@file@percent }
-\newlabel{tab:yolo_tuning_test_results}{{4.2}{23}{Held-out test-set comparison between the baseline and the selected Stage 3 tuned \gls {yolo}v8-Seg model.\relax }{table.caption.22}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Stage 3 validation mask $\mathrm  {mAP}_{50\text  {:}95}$ for the two refinement runs. The runs followed nearly identical trajectories and converged to the same performance region.\relax }}{24}{figure.caption.19}\protected@file@percent }
-\newlabel{fig:stage3_mask_map}{{4.3}{24}{Stage 3 validation mask $\mathrm {mAP}_{50\text {:}95}$ for the two refinement runs. The runs followed nearly identical trajectories and converged to the same performance region.\relax }{figure.caption.19}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Stage 3 validation segmentation loss. After a steep initial decrease, the loss remained stable, indicating consistent convergence during refinement.\relax }}{24}{figure.caption.20}\protected@file@percent }
-\newlabel{fig:stage3_val_seg_loss}{{4.4}{24}{Stage 3 validation segmentation loss. After a steep initial decrease, the loss remained stable, indicating consistent convergence during refinement.\relax }{figure.caption.20}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Comparison with YOLO26}{25}{subsection.4.1.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Test-set comparison between the baseline \gls {yolo}v8-Seg model and YOLO26-small.\relax }}{25}{table.caption.23}\protected@file@percent }
-\newlabel{tab:yolo26_comparison}{{4.3}{25}{Test-set comparison between the baseline \gls {yolo}v8-Seg model and YOLO26-small.\relax }{table.caption.23}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Validation mask $\mathrm  {mAP}_{50\text  {:}95}$ for the two YOLO26 training runs. The longer 180-epoch run improved over the shorter run, but the resulting model still did not surpass the YOLOv8 baseline on the held-out test set.\relax }}{25}{figure.caption.24}\protected@file@percent }
-\newlabel{fig:yolo26_mask_map}{{4.5}{25}{Validation mask $\mathrm {mAP}_{50\text {:}95}$ for the two YOLO26 training runs. The longer 180-epoch run improved over the shorter run, but the resulting model still did not surpass the YOLOv8 baseline on the held-out test set.\relax }{figure.caption.24}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Environment-specific fine-tuning with \gls {adc} data}{25}{subsection.4.1.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces Performance on the original held-out elevator test split before and after \gls {adc} fine-tuning.\relax }}{26}{table.caption.25}\protected@file@percent }
-\newlabel{tab:adc_original_test}{{4.4}{26}{Performance on the original held-out elevator test split before and after \gls {adc} fine-tuning.\relax }{table.caption.25}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces Validation mask $\mathrm  {mAP}_{50\text  {:}95}$ during \gls {adc}-based fine-tuning. The curve remains close to the baseline validation range, which aligns with the near-identical performance observed on the original held-out test split.\relax }}{26}{figure.caption.26}\protected@file@percent }
-\newlabel{fig:adc_finetune_mask_map}{{4.6}{26}{Validation mask $\mathrm {mAP}_{50\text {:}95}$ during \gls {adc}-based fine-tuning. The curve remains close to the baseline validation range, which aligns with the near-identical performance observed on the original held-out test split.\relax }{figure.caption.26}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.5}{\ignorespaces Performance on the environment-specific \gls {adc} test split before and after \gls {adc} fine-tuning.\relax }}{26}{table.caption.27}\protected@file@percent }
-\newlabel{tab:adc_env_test}{{4.5}{26}{Performance on the environment-specific \gls {adc} test split before and after \gls {adc} fine-tuning.\relax }{table.caption.27}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}\Gls {ocr} hyperparameter tuning and evaluation}{26}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Stage 1: epoch selection}{27}{subsection.4.2.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Stage 1 \gls {ocr} training loss for the epoch-selection runs. Most of the optimization progress occurs before the 50-epoch mark, which supports the decision to use 50 epochs for the subsequent optimizer sweep.\relax }}{27}{figure.caption.28}\protected@file@percent }
-\newlabel{fig:ocr_stage1_loss}{{4.7}{27}{Stage 1 \gls {ocr} training loss for the epoch-selection runs. Most of the optimization progress occurs before the 50-epoch mark, which supports the decision to use 50 epochs for the subsequent optimizer sweep.\relax }{figure.caption.28}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.6}{\ignorespaces Stage 1 \gls {ocr} epoch-sweep results on the validation split.\relax }}{27}{table.caption.29}\protected@file@percent }
-\newlabel{tab:ocr_stage1_results}{{4.6}{27}{Stage 1 \gls {ocr} epoch-sweep results on the validation split.\relax }{table.caption.29}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Stage 2: learning rate and weight decay sweep}{28}{subsection.4.2.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces Stage 2 \gls {ocr} evaluation accuracy for the learning-rate and weight-decay sweep. The configuration with learning rate $3 \times 10^{-4}$ and weight decay $3 \times 10^{-5}$ achieved the best validation accuracy.\relax }}{28}{figure.caption.30}\protected@file@percent }
-\newlabel{fig:ocr_stage2_acc}{{4.8}{28}{Stage 2 \gls {ocr} evaluation accuracy for the learning-rate and weight-decay sweep. The configuration with learning rate $3 \times 10^{-4}$ and weight decay $3 \times 10^{-5}$ achieved the best validation accuracy.\relax }{figure.caption.30}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.7}{\ignorespaces Stage 2 \gls {ocr} hyperparameter sweep on the validation split.\relax }}{28}{table.caption.32}\protected@file@percent }
-\newlabel{tab:ocr_stage2_results}{{4.7}{28}{Stage 2 \gls {ocr} hyperparameter sweep on the validation split.\relax }{table.caption.32}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.9}{\ignorespaces Stage 2 \gls {ocr} normalized edit distance for the learning-rate and weight-decay sweep. The best-performing configuration also achieved the highest normalized edit-distance score.\relax }}{29}{figure.caption.31}\protected@file@percent }
-\newlabel{fig:ocr_stage2_ned}{{4.9}{29}{Stage 2 \gls {ocr} normalized edit distance for the learning-rate and weight-decay sweep. The best-performing configuration also achieved the highest normalized edit-distance score.\relax }{figure.caption.31}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Final \gls {ocr} benchmark}{29}{subsection.4.2.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.8}{\ignorespaces Held-out \gls {ocr} test-set comparison between the initial recognizer and the selected stage-2 \gls {ocr} model.\relax }}{29}{table.caption.33}\protected@file@percent }
-\newlabel{tab:ocr_final_benchmark}{{4.8}{29}{Held-out \gls {ocr} test-set comparison between the initial recognizer and the selected stage-2 \gls {ocr} model.\relax }{table.caption.33}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}Model hardware optimization results}{29}{subsection.4.2.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.9}{\ignorespaces Single-image model hardware optimization benchmark on test image \texttt  {367.jpg}. For \gls {ocr}, the reported latency is average time per single button crop.\relax }}{30}{table.caption.34}\protected@file@percent }
-\newlabel{tab:model_hw_optimization}{{4.9}{30}{Single-image model hardware optimization benchmark on test image \texttt {367.jpg}. For \gls {ocr}, the reported latency is average time per single button crop.\relax }{table.caption.34}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}\Gls {ros2} pipeline performance}{30}{section.4.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.10}{\ignorespaces Final \gls {ros2} pipeline throughput on the \gls {jetson} Orin Nano after the ROI-mask refactor, measured with \texttt  {ros2 topic hz}.\relax }}{31}{table.caption.35}\protected@file@percent }
-\newlabel{tab:ros2_pipeline_fps}{{4.10}{31}{Final \gls {ros2} pipeline throughput on the \gls {jetson} Orin Nano after the ROI-mask refactor, measured with \texttt {ros2 topic hz}.\relax }{table.caption.35}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.11}{\ignorespaces Typical node timing ranges for the final \gls {ros2} runtime experiments.\relax }}{31}{table.caption.36}\protected@file@percent }
-\newlabel{tab:ros2_pipeline_timing}{{4.11}{31}{Typical node timing ranges for the final \gls {ros2} runtime experiments.\relax }{table.caption.36}{}}
+\newlabel{ch:results}{{4}{21}{Results}{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Dataset quality results}{21}{section.4.1}\protected@file@percent }
+\newlabel{sec:dataset_quality_results}{{4.1}{21}{Dataset quality results}{section.4.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Compact summary of the dataset quality assessment on the training split.\relax }}{21}{table.caption.17}\protected@file@percent }
+\newlabel{tab:dataset_quality_summary}{{4.1}{21}{Compact summary of the dataset quality assessment on the training split.\relax }{table.caption.17}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}YOLO hyperparameter tuning and evaluation}{22}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Baseline YOLOv8-Seg performance}{22}{subsection.4.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Hyperparameter tuning results}{22}{subsection.4.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Validation mask $\mathrm  {mAP}_{50\text  {:}95}$ for the successful Stage 1 hyperparameter trials. Only a limited subset of the Stage 1 configurations produced stable non-zero segmentation performance and was considered for Stage 2.\relax }}{22}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:stage1_mask_map}{{4.1}{22}{Validation mask $\mathrm {mAP}_{50\text {:}95}$ for the successful Stage 1 hyperparameter trials. Only a limited subset of the Stage 1 configurations produced stable non-zero segmentation performance and was considered for Stage 2.\relax }{figure.caption.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Validation mask $\mathrm  {mAP}_{50\text  {:}95}$ for the successful unique Stage 2 capacity-tuning configurations. The best result was obtained with batch size 16 and image size 768, which was selected for Stage 3 refinement.\relax }}{23}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:stage2_mask_map}{{4.2}{23}{Validation mask $\mathrm {mAP}_{50\text {:}95}$ for the successful unique Stage 2 capacity-tuning configurations. The best result was obtained with batch size 16 and image size 768, which was selected for Stage 3 refinement.\relax }{figure.caption.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Stage 3 validation mask $\mathrm  {mAP}_{50\text  {:}95}$ for refinement from the best Stage 2 768-pixel configuration and the second-best unique 640-pixel configuration. The 768-pixel branch remains clearly superior throughout training.\relax }}{23}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:stage3_mask_map}{{4.3}{23}{Stage 3 validation mask $\mathrm {mAP}_{50\text {:}95}$ for refinement from the best Stage 2 768-pixel configuration and the second-best unique 640-pixel configuration. The 768-pixel branch remains clearly superior throughout training.\relax }{figure.caption.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Stage 3 validation segmentation loss for the two corrected refinement branches. The branch initialized from the stronger Stage 2 configuration maintains the lower validation loss.\relax }}{24}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:stage3_val_seg_loss}{{4.4}{24}{Stage 3 validation segmentation loss for the two corrected refinement branches. The branch initialized from the stronger Stage 2 configuration maintains the lower validation loss.\relax }{figure.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Stage 3 learning-rate schedule (\texttt  {lr/pg0}) for the two corrected refinement branches. Both runs follow essentially the same decay schedule, so the difference in final accuracy cannot be attributed to different learning-rate behavior.\relax }}{24}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:stage3_lr_pg0}{{4.5}{24}{Stage 3 learning-rate schedule (\texttt {lr/pg0}) for the two corrected refinement branches. Both runs follow essentially the same decay schedule, so the difference in final accuracy cannot be attributed to different learning-rate behavior.\relax }{figure.caption.22}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Best validation results of the baseline and tuned \gls {yolo}v8-Seg models.\relax }}{24}{table.caption.23}\protected@file@percent }
+\newlabel{tab:yolo_tuning_results}{{4.2}{24}{Best validation results of the baseline and tuned \gls {yolo}v8-Seg models.\relax }{table.caption.23}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Held-out test-set comparison between the baseline and the selected Stage 3 tuned \gls {yolo}v8-Seg model.\relax }}{24}{table.caption.24}\protected@file@percent }
+\newlabel{tab:yolo_tuning_test_results}{{4.3}{24}{Held-out test-set comparison between the baseline and the selected Stage 3 tuned \gls {yolo}v8-Seg model.\relax }{table.caption.24}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Comparison with YOLO26}{25}{subsection.4.2.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces Test-set comparison between the baseline \gls {yolo}v8-Seg model and YOLO26-small.\relax }}{25}{table.caption.25}\protected@file@percent }
+\newlabel{tab:yolo26_comparison}{{4.4}{25}{Test-set comparison between the baseline \gls {yolo}v8-Seg model and YOLO26-small.\relax }{table.caption.25}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces Validation mask $\mathrm  {mAP}_{50\text  {:}95}$ for the two YOLO26 training runs. The longer 180-epoch run improved over the shorter run, but the resulting model still did not surpass the YOLOv8 baseline on the held-out test set.\relax }}{25}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:yolo26_mask_map}{{4.6}{25}{Validation mask $\mathrm {mAP}_{50\text {:}95}$ for the two YOLO26 training runs. The longer 180-epoch run improved over the shorter run, but the resulting model still did not surpass the YOLOv8 baseline on the held-out test set.\relax }{figure.caption.26}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}Environment-specific fine-tuning with \gls {adc} data}{25}{subsection.4.2.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.5}{\ignorespaces Performance on the original held-out elevator test split before and after \gls {adc} fine-tuning.\relax }}{26}{table.caption.27}\protected@file@percent }
+\newlabel{tab:adc_original_test}{{4.5}{26}{Performance on the original held-out elevator test split before and after \gls {adc} fine-tuning.\relax }{table.caption.27}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Validation mask $\mathrm  {mAP}_{50\text  {:}95}$ during \gls {adc}-based fine-tuning. The curve remains close to the baseline validation range, which aligns with the near-identical performance observed on the original held-out test split.\relax }}{26}{figure.caption.28}\protected@file@percent }
+\newlabel{fig:adc_finetune_mask_map}{{4.7}{26}{Validation mask $\mathrm {mAP}_{50\text {:}95}$ during \gls {adc}-based fine-tuning. The curve remains close to the baseline validation range, which aligns with the near-identical performance observed on the original held-out test split.\relax }{figure.caption.28}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.6}{\ignorespaces Performance on the environment-specific \gls {adc} test split before and after \gls {adc} fine-tuning.\relax }}{26}{table.caption.29}\protected@file@percent }
+\newlabel{tab:adc_env_test}{{4.6}{26}{Performance on the environment-specific \gls {adc} test split before and after \gls {adc} fine-tuning.\relax }{table.caption.29}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}\Gls {ocr} hyperparameter tuning and evaluation}{27}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Stage 1: epoch selection}{27}{subsection.4.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces Stage 1 \gls {ocr} training loss for the epoch-selection runs. Most of the optimization progress occurs before the 50-epoch mark, which supports the decision to use 50 epochs for the subsequent optimizer sweep.\relax }}{27}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:ocr_stage1_loss}{{4.8}{27}{Stage 1 \gls {ocr} training loss for the epoch-selection runs. Most of the optimization progress occurs before the 50-epoch mark, which supports the decision to use 50 epochs for the subsequent optimizer sweep.\relax }{figure.caption.30}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.7}{\ignorespaces Stage 1 \gls {ocr} epoch-sweep results on the validation split.\relax }}{27}{table.caption.31}\protected@file@percent }
+\newlabel{tab:ocr_stage1_results}{{4.7}{27}{Stage 1 \gls {ocr} epoch-sweep results on the validation split.\relax }{table.caption.31}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Stage 2: learning rate and weight decay sweep}{28}{subsection.4.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.9}{\ignorespaces Stage 2 \gls {ocr} evaluation accuracy for the learning-rate and weight-decay sweep. The configuration with learning rate $3 \times 10^{-4}$ and weight decay $3 \times 10^{-5}$ achieved the best validation accuracy.\relax }}{28}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:ocr_stage2_acc}{{4.9}{28}{Stage 2 \gls {ocr} evaluation accuracy for the learning-rate and weight-decay sweep. The configuration with learning rate $3 \times 10^{-4}$ and weight decay $3 \times 10^{-5}$ achieved the best validation accuracy.\relax }{figure.caption.32}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.8}{\ignorespaces Stage 2 \gls {ocr} hyperparameter sweep on the validation split.\relax }}{28}{table.caption.34}\protected@file@percent }
+\newlabel{tab:ocr_stage2_results}{{4.8}{28}{Stage 2 \gls {ocr} hyperparameter sweep on the validation split.\relax }{table.caption.34}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.10}{\ignorespaces Stage 2 \gls {ocr} normalized edit distance for the learning-rate and weight-decay sweep. The best-performing configuration also achieved the highest normalized edit-distance score.\relax }}{29}{figure.caption.33}\protected@file@percent }
+\newlabel{fig:ocr_stage2_ned}{{4.10}{29}{Stage 2 \gls {ocr} normalized edit distance for the learning-rate and weight-decay sweep. The best-performing configuration also achieved the highest normalized edit-distance score.\relax }{figure.caption.33}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Final \gls {ocr} benchmark}{29}{subsection.4.3.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.9}{\ignorespaces Held-out \gls {ocr} test-set comparison between the initial recognizer and the selected stage-2 \gls {ocr} model.\relax }}{29}{table.caption.35}\protected@file@percent }
+\newlabel{tab:ocr_final_benchmark}{{4.9}{29}{Held-out \gls {ocr} test-set comparison between the initial recognizer and the selected stage-2 \gls {ocr} model.\relax }{table.caption.35}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}Model hardware optimization results}{29}{subsection.4.3.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.10}{\ignorespaces Single-image model hardware optimization benchmark on test image \texttt  {367.jpg}. For \gls {ocr}, the reported latency is average time per single button crop.\relax }}{30}{table.caption.36}\protected@file@percent }
+\newlabel{tab:model_hw_optimization}{{4.10}{30}{Single-image model hardware optimization benchmark on test image \texttt {367.jpg}. For \gls {ocr}, the reported latency is average time per single button crop.\relax }{table.caption.36}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}\Gls {ros2} pipeline performance}{30}{section.4.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.11}{\ignorespaces Final \gls {ros2} pipeline throughput on the \gls {jetson} Orin Nano after the ROI-mask refactor, measured with \texttt  {ros2 topic hz}.\relax }}{31}{table.caption.37}\protected@file@percent }
+\newlabel{tab:ros2_pipeline_fps}{{4.11}{31}{Final \gls {ros2} pipeline throughput on the \gls {jetson} Orin Nano after the ROI-mask refactor, measured with \texttt {ros2 topic hz}.\relax }{table.caption.37}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.12}{\ignorespaces Typical node timing ranges for the final \gls {ros2} runtime experiments.\relax }}{31}{table.caption.38}\protected@file@percent }
+\newlabel{tab:ros2_pipeline_timing}{{4.12}{31}{Typical node timing ranges for the final \gls {ros2} runtime experiments.\relax }{table.caption.38}{}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {5}Discussion}{32}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -220,31 +222,43 @@
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{app:maskrcnn_checkpoints}{{A}{39}{Supplementary model evaluations}{appendix.A}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {A.1}Mask R-CNN checkpoint progression during annotation support}{39}{section.A.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces Held-out test-set performance of the annotation-support \gls {maskrcnn} checkpoints as the training set grew during the annotation process.\relax }}{39}{table.caption.38}\protected@file@percent }
-\newlabel{tab:maskrcnn_checkpoint_progression}{{A.1}{39}{Held-out test-set performance of the annotation-support \gls {maskrcnn} checkpoints as the training set grew during the annotation process.\relax }{table.caption.38}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces Held-out test-set performance of the annotation-support \gls {maskrcnn} checkpoints as the training set grew during the annotation process.\relax }}{39}{table.caption.40}\protected@file@percent }
+\newlabel{tab:maskrcnn_checkpoint_progression}{{A.1}{39}{Held-out test-set performance of the annotation-support \gls {maskrcnn} checkpoints as the training set grew during the annotation process.\relax }{table.caption.40}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {B}Supplementary dataset quality plots}{40}{appendix.B}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{app:dataset_quality_plots}{{B}{40}{Supplementary dataset quality plots}{appendix.B}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B.1}Image-level quality distributions}{40}{section.B.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {B.1}{\ignorespaces Distribution of the blur indicator computed from the training images. The spread confirms that the dataset contains both softer and sharper images instead of a single tightly controlled acquisition setting.\relax }}{40}{figure.caption.41}\protected@file@percent }
+\newlabel{fig:app_blur_distribution}{{B.1}{40}{Distribution of the blur indicator computed from the training images. The spread confirms that the dataset contains both softer and sharper images instead of a single tightly controlled acquisition setting.\relax }{figure.caption.41}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B.2}Spatial button distribution}{40}{section.B.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {B.2}{\ignorespaces Distribution of the mean grayscale intensity across the training images. The dataset spans a broad but still usable range of illumination conditions.\relax }}{41}{figure.caption.42}\protected@file@percent }
+\newlabel{fig:app_brightness_distribution}{{B.2}{41}{Distribution of the mean grayscale intensity across the training images. The dataset spans a broad but still usable range of illumination conditions.\relax }{figure.caption.42}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {B.3}{\ignorespaces Heatmap of annotated button-centroid locations in normalized image coordinates. Most button instances lie within a central field-of-view band, while edge-of-frame occurrences are less frequent.\relax }}{41}{figure.caption.43}\protected@file@percent }
+\newlabel{fig:app_button_centroid_heatmap}{{B.3}{41}{Heatmap of annotated button-centroid locations in normalized image coordinates. Most button instances lie within a central field-of-view band, while edge-of-frame occurrences are less frequent.\relax }{figure.caption.43}{}}
 \gdef \LT@i {\LT@entry 
     {1}{131.50148pt}\LT@entry 
     {1}{103.04872pt}\LT@entry 
     {1}{219.7052pt}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {B}\Gls {ros2} pipeline parameter reference}{40}{appendix.B}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {C}\Gls {ros2} pipeline parameter reference}{42}{appendix.C}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{app:ros2_params}{{B}{40}{\Gls {ros2} pipeline parameter reference}{appendix.B}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {B.1}YOLO inference node}{40}{section.B.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {B.1}{\ignorespaces Main parameters of \texttt  {yolo\_engine\_node}.\relax }}{40}{table.B.1}\protected@file@percent }
-\newlabel{tab:app_yolo_params}{{B.1}{40}{Main parameters of \texttt {yolo\_engine\_node}.\relax }{table.B.1}{}}
+\newlabel{app:ros2_params}{{C}{42}{\Gls {ros2} pipeline parameter reference}{appendix.C}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C.1}YOLO inference node}{42}{section.C.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {C.1}{\ignorespaces Main parameters of \texttt  {yolo\_engine\_node}.\relax }}{42}{table.C.1}\protected@file@percent }
+\newlabel{tab:app_yolo_params}{{C.1}{42}{Main parameters of \texttt {yolo\_engine\_node}.\relax }{table.C.1}{}}
 \gdef \LT@ii {\LT@entry 
     {1}{131.50148pt}\LT@entry 
     {1}{103.04872pt}\LT@entry 
     {1}{219.7052pt}}
-\@writefile{toc}{\contentsline {section}{\numberline {B.2}\Gls {ocr} inference node}{41}{section.B.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {B.2}{\ignorespaces Main parameters of \texttt  {ocr\_trt\_node}.\relax }}{41}{table.B.2}\protected@file@percent }
-\newlabel{tab:app_ocr_params}{{B.2}{41}{Main parameters of \texttt {ocr\_trt\_node}.\relax }{table.B.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {B.3}\Gls {adc}}{41}{section.B.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.2}\Gls {ocr} inference node}{43}{section.C.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {C.2}{\ignorespaces Main parameters of \texttt  {ocr\_trt\_node}.\relax }}{43}{table.C.2}\protected@file@percent }
+\newlabel{tab:app_ocr_params}{{C.2}{43}{Main parameters of \texttt {ocr\_trt\_node}.\relax }{table.C.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C.3}\Gls {adc}}{43}{section.C.3}\protected@file@percent }
 \gdef \LT@iii {\LT@entry 
     {1}{131.50148pt}\LT@entry 
     {1}{103.04872pt}\LT@entry 
     {1}{219.7052pt}}
-\@writefile{lot}{\contentsline {table}{\numberline {B.3}{\ignorespaces Main parameters of \texttt  {active\_data\_collector}.\relax }}{42}{table.B.3}\protected@file@percent }
-\newlabel{tab:app_adc_params}{{B.3}{42}{Main parameters of \texttt {active\_data\_collector}.\relax }{table.B.3}{}}
-\gdef \@abspage@last{51}
+\@writefile{lot}{\contentsline {table}{\numberline {C.3}{\ignorespaces Main parameters of \texttt  {active\_data\_collector}.\relax }}{44}{table.C.3}\protected@file@percent }
+\newlabel{tab:app_adc_params}{{C.3}{44}{Main parameters of \texttt {active\_data\_collector}.\relax }{table.C.3}{}}
+\gdef \@abspage@last{53}

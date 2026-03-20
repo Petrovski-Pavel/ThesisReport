@@ -4,9 +4,50 @@
 This chapter presents the quantitative results of the main perception components
 of the proposed elevator-interaction pipeline. It first reports the results of
 the \gls{yolo}-based button-instance segmentation system and then summarizes the
-\gls{ocr}-based button interpretation results. Unless stated otherwise, final
+\gls{ocr}-based button interpretation results. Final
 model comparisons are reported on held-out test sets, while model selection
 during training and hyperparameter tuning is based on the validation split.
+
+\section{Dataset quality results}
+\label{sec:dataset_quality_results}
+
+Before the main model comparison experiments, a brief dataset quality assessment
+was carried out on the training split to determine whether obvious image-quality
+problems justified dataset pruning. In total, 1403 training images containing
+13{,}309 annotated button instances were assessed. Table~\ref{tab:dataset_quality_summary}
+summarizes the main descriptive results.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Compact summary of the dataset quality assessment on the training split.}
+    \label{tab:dataset_quality_summary}
+    \small
+    \begin{tabular}{p{4.2cm}p{5.2cm}p{5.1cm}}
+        \toprule
+        Indicator & Summary values & Interpretation \\
+        \midrule
+        Blur indicator (variance of Laplacian) & p10 = 16.53, median = 77.91, p90 = 318.13 & The dataset contains both soft-focus and sharp images rather than a single narrow acquisition condition. \\
+        Mean grayscale intensity & p10 = 55.50, median = 107.11, p90 = 138.46 & Illumination varies noticeably, but most images remain within a usable brightness range. \\
+        Button size (equivalent diameter) & p01 = 19.32 px, p05 = 26.12 px, median = 55.98 px & Very small button instances exist, but most are still substantially larger than the lower extreme. \\
+        Button centroid region & $x \in [0.297, 0.711]$, $y \in [0.162, 0.886]$ for the 5--95\% range & Most annotated buttons appear in a central field-of-view band rather than at the extreme image borders. \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The assessment indicates that the dataset contains realistic variation in focus,
+lighting, scale, and framing, but not a dominant subset of clearly unusable
+images. Manual inspection of images flagged by the simple quality checks, as
+well as a small subset prioritized by low mean \gls{iou} or elevated
+false-positive and false-negative counts from a baseline model, mainly
+highlighted difficult yet valid samples, such as oblique viewpoints, small
+targets, and visually cluttered panels. The manual review further indicated
+that the annotations in these low-metric images generally matched the visible
+button instances and that the low model scores were primarily caused by sample
+difficulty rather than corrupted images or systematic annotation errors. For
+that reason, no general quality-based pruning rule was introduced, and the full
+training set was retained for the subsequent model-development stages.
+Supplementary plots from this assessment are provided in
+Appendix~\ref{app:dataset_quality_plots}.
 
 \section{YOLO hyperparameter tuning and evaluation}
 
@@ -62,23 +103,37 @@ $\mathrm{mAP}_{50\text{:}95}$ from 0.59645 to 0.63064 on validation, but this
 must be interpreted as a model-selection result rather than as final evidence of
 better generalization.
 
-Figures~\ref{fig:stage3_mask_map} and \ref{fig:stage3_val_seg_loss} show the two
-Stage 3 refinement runs. Their trajectories are nearly identical, indicating
-that the refinement stage was stable once the strongest Stage 2 configuration
-had been selected.
+Figures~\ref{fig:stage3_mask_map}, \ref{fig:stage3_val_seg_loss}, and
+\ref{fig:stage3_lr_pg0} show the corrected Stage 3 comparison between refinement
+from the strongest Stage 2 configuration (batch size 16, image size 768) and
+refinement from the second-best unique Stage 2 configuration (batch size 16,
+image size 640). The 768-pixel branch remains consistently stronger throughout
+training, reaching approximately 0.63 mask $\mathrm{mAP}_{50\text{:}95}$,
+whereas the 640-pixel branch stabilizes near 0.56. The corresponding validation
+segmentation loss is also lower for the 768-pixel branch, while the
+learning-rate curves are effectively identical. This indicates that the final
+performance difference is explained by the quality of the inherited Stage 2
+configuration rather than by a different optimization schedule.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_mAP50-95_M.png}
-    \caption{Stage 3 validation mask $\mathrm{mAP}_{50\text{:}95}$ for the two refinement runs. The runs followed nearly identical trajectories and converged to the same performance region.}
+    \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_mAP50-95__M.png}
+    \caption{Stage 3 validation mask $\mathrm{mAP}_{50\text{:}95}$ for refinement from the best Stage 2 768-pixel configuration and the second-best unique 640-pixel configuration. The 768-pixel branch remains clearly superior throughout training.}
     \label{fig:stage3_mask_map}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_seg_loss_val.png}
-    \caption{Stage 3 validation segmentation loss. After a steep initial decrease, the loss remained stable, indicating consistent convergence during refinement.}
+    \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_val_seg_loss.png}
+    \caption{Stage 3 validation segmentation loss for the two corrected refinement branches. The branch initialized from the stronger Stage 2 configuration maintains the lower validation loss.}
     \label{fig:stage3_val_seg_loss}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_lr_pg0.png}
+    \caption{Stage 3 learning-rate schedule (\texttt{lr/pg0}) for the two corrected refinement branches. Both runs follow essentially the same decay schedule, so the difference in final accuracy cannot be attributed to different learning-rate behavior.}
+    \label{fig:stage3_lr_pg0}
 \end{figure}
 
 \begin{table}[htbp]
@@ -156,7 +211,7 @@ but the final test-set ranking remained in favor of the baseline model.
 The final \gls{yolo} experiment addressed domain adaptation to the target
 university environment. The baseline checkpoint was fine-tuned on the original
 dataset augmented with 46 newly collected and annotated images from HAN
-University, Building 31. Table~\ref{tab:adc_original_test} shows that this
+University, R31. Table~\ref{tab:adc_original_test} shows that this
 adaptation step did not materially degrade performance on the original held-out
 test split: mask $\mathrm{mAP}_{50\text{:}95}$ remained effectively unchanged
 (0.58295 vs.\ 0.58293). The validation curve in

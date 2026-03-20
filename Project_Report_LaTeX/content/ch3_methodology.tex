@@ -144,66 +144,46 @@ consistent labeling across both the training and test sets.
 
 \section{Dataset quality assessment}
 
-A systematic dataset quality assessment was performed to check whether image-level
-quality issues could bias model learning.
+A brief dataset quality assessment was performed before the main training
+experiments to check whether the dataset contained a substantial subset of
+clearly unusable images. The assessment was intentionally limited to simple and
+easily interpretable checks so that the outcome could be justified without
+introducing an additional complex filtering pipeline.
 
-\subsection{Statistical quality metrics.}
-For every training image, the following metrics were computed:
+For each training image, two basic image-level indicators were computed:
 \begin{itemize}
-    \item \textbf{Sharpness}, estimated using the variance of the Laplacian:
-    \begin{equation}
-        \sigma^2_{\text{lap}} = \mathrm{Var}(\nabla^2 I)
-    \end{equation}
-    where $I$ is the grayscale image.
-    \item \textbf{Brightness}, defined as the mean grayscale intensity.
-    \item \textbf{Edge density}, defined as the fraction of pixels with gradient magnitude above the 90th percentile.
+    \item a blur indicator based on the variance of the Laplacian, used only as
+    a relative sharpness measure;
+    \item the mean grayscale intensity, used as a simple brightness measure.
 \end{itemize}
 
-The analysis did not reveal a severe low-quality subset that should be removed.
-Low-score images were often hard but valid samples, so no global quality-based pruning was applied.
+In addition, the existing instance annotations were used to derive basic
+geometry statistics, including the approximate button size in pixels, the
+relative image area occupied by button instances, and the normalized button
+location within the image. These geometry measurements were used to check
+whether the training set covered a realistic range of viewing distances and
+camera framing conditions.
 
-\subsection{Model-assisted image assessment.}
-
-In addition to image-level quality analysis, a model-assisted approach was used to identify potentially harmful training samples.
-
-\paragraph{Method.}
-A trained instance segmentation model was used to evaluate each training image individually.
-For each image, the following metrics were computed:
-\begin{itemize}
-    \item Mean Intersection over Union:
-    \begin{equation}
-        \mathrm{IoU} = \frac{|M_{\text{pred}} \cap M_{\text{gt}}|}{|M_{\text{pred}} \cup M_{\text{gt}}|}
-    \end{equation}
-    \item Mean detection confidence:
-    \begin{equation}
-        \bar{c} = \frac{1}{N} \sum_{i=1}^{N} p_i
-    \end{equation}
-    where $p_i$ is the softmax score of the $i$-th predicted instance.
-    \item Number of false positives and false negatives.
-\end{itemize}
-
-Images were ranked using a composite criterion favoring low \gls{iou}, high false positives, and high confidence incorrect predictions. Based on those criteria, a harm-score is measured,
-based on which training set images are filtered and the potentially harmful ones are selected for manual inspection.
-
-\paragraph{Inspection.}
-Manual inspection of the lowest-ranked samples revealed two categories:
-\begin{itemize}
-    \item Hard but valid images (extreme viewpoints, zoom levels, or geometric distortions).
-    \item Negative images without buttons, occasionally producing false positives.
-\end{itemize}
-
-After manual inspection, removing hard but valid examples reduced recall. In contrast, excluding a small number
-of clear false-positive-only negatives had only marginal effect. The final training policy therefore used the full
-dataset with minimal exclusions.
+The quantitative indicators were not used as automatic pruning rules. Instead,
+images with low sharpness values, very dark appearance, or unusual geometric
+properties were manually reviewed. A small subset of difficult images was also
+cross-checked with baseline model predictions to verify whether the apparent
+outliers reflected annotation problems or merely hard but valid examples. In
+this secondary check, images were prioritized for inspection when the baseline
+model produced low mean \gls{iou} values or elevated false-positive or
+false-negative counts. The flagged cases were then reviewed manually as a
+dataset sanity check. The descriptive outcomes of this assessment are reported
+in Section~\ref{sec:dataset_quality_results}.
 
 
 \section{Model architectures and training strategy}
 
-Two instance segmentation model families are employed in this project, each serving
-a distinct role within the overall perception pipeline. \gls{maskrcnn} is used as a
-high-accuracy reference model and as the backbone of the semi-automatic annotation
-workflow (Section~3.3), while \gls{yolo}v8-Seg is trained and evaluated as a
-deployment-oriented solution suitable for embedded hardware.
+Three model families are employed in this project, each serving a distinct role
+within the overall perception pipeline. \gls{maskrcnn} is used as an
+annotation-support model in the semi-automatic labeling workflow,
+\gls{yolo}v8-Seg is trained and evaluated as the deployment-oriented instance
+segmentation model, and the \gls{ocr} recognizer is used for semantic
+interpretation of the detected button crops.
 
 \subsection*{Experimental hardware and software environment}
 
@@ -240,8 +220,8 @@ annotation workflow is relevant to the main methodology.
 \subsection*{YOLOv8-Seg training}
 
 \gls{yolo}v8-Seg is trained using the Ultralytics framework with the pretrained
-\texttt{yolov8s-seg.pt} checkpoint. The initial baseline configuration was trained
-for 100 epochs with an input resolution of $640 \times 640$, dynamic batch sizing
+\texttt{yolov8s-seg.pt} checkpoint. The initial baseline configuration was
+scheduled for up to 100 epochs with an input resolution of $640 \times 640$, dynamic batch sizing
 (\texttt{batch=-1}), seed 123, warmup over 5 epochs, and early stopping patience
 of 10 epochs. The augmentation policy followed the standard Ultralytics recipe used
 throughout this study, including HSV perturbation, small geometric transformations,
@@ -358,17 +338,10 @@ deployment.
 For cropped-button recognition, a lightweight \gls{ocr} recognizer based on
 \texttt{PP-OCRv5\_mobile\_rec} was selected. This model was preferred because it is
 designed for efficient deployment and already provides a compact recognition
-backbone suitable for embedded hardware. In simplified form, the recognizer
-consists of a compact visual feature extractor, a sequence-modeling stage that
-arranges features in reading order, and a recognition head that predicts the final
-label string. In the selected configuration, the feature extractor is based on
-\texttt{PPLCNetV3} with scale 0.95, meaning that a slightly reduced-width version
-of the backbone is used to keep the model compact. The sequence-modeling stage is
-\texttt{SVTR}-based, and the recognition head combines \texttt{CTC} and
-\texttt{NRTR} objectives during training. This architecture is appropriate for the
-current task because button labels range from single digits and single letters to
-short strings such as \texttt{10}, \texttt{4A}, or \texttt{CLOSE}, while still
-requiring efficient inference on cropped inputs.
+backbone suitable for embedded hardware. In practical terms, the recognizer
+combines lightweight visual feature extraction, sequence modelling, and a string
+prediction head, which makes it suitable for button labels ranging from single
+characters to short strings such as \texttt{10}, \texttt{4A}, or \texttt{CLOSE}.
 
 Only the recognition component of the \gls{ocr} stack was used. The detection component
 of \gls{paddleocr} was intentionally omitted from the final recognition pipeline, because
@@ -383,18 +356,10 @@ The recognizer was initialized from the official pretrained English
 dataset. During training, each crop was resized to the fixed input resolution of
 $48 \times 320$ defined in the \gls{paddleocr} recognition configuration so that all
 samples reached the network with a consistent image height and width.
-Optimization was performed with Adam, cosine learning-rate
-scheduling, warmup in the early training phase, and L2 regularization. In this
-context, cosine learning-rate scheduling means that the step size starts
-relatively high and then decreases smoothly during training, allowing larger
-parameter updates in the early epochs and more conservative refinement in the
-later epochs.
-
-Recognition-specific data augmentation and multiscale sampling were enabled to
-improve robustness to appearance variation and to reduce overfitting. In
-practice, this prevents the recognizer from seeing each button crop in only one
-fixed presentation and improves tolerance to realistic differences in scale,
-contrast, blur, and local appearance.
+Optimization used Adam with cosine learning-rate scheduling, warmup, and L2
+regularization. Recognition-specific augmentation and multiscale sampling were
+enabled to improve robustness and reduce overfitting to a single visual
+presentation of the button crops.
 
 The implementation followed the standard \gls{paddleocr} training workflow. Rather than
 building a custom \gls{ocr} training loop from scratch, the official
@@ -504,28 +469,19 @@ used during training.
 
 \subsection{Evaluation protocol}
 
-For the \gls{yolo} experiments, validation metrics were used during training and
-hyperparameter tuning, while the final model comparisons were performed on a
-held-out test split that was not used for optimization. This distinction is
-important in the present work, because some tuned configurations achieved better
-validation performance without surpassing the baseline on the final test set.
-Accordingly, the results chapter distinguishes explicitly between validation-time
-model selection and held-out test-set benchmarking.
-
-The \gls{maskrcnn} checkpoint comparison in the appendix follows the same principle:
-all checkpoints are evaluated on the same held-out test annotations, allowing a
-fair comparison of the annotation-support model as the training set grew. Final
-\gls{ocr} benchmarking was likewise performed on a held-out test split using the
-official \gls{paddleocr} evaluation script. Together, these procedures form the
-basis for the quantitative comparisons presented in Chapter~\ref{ch:results}
-(\nameref{ch:results}).
+Across all models, validation data were used for model selection during training
+and tuning, while held-out test data were reserved for final reporting only. This
+applies to the \gls{yolo} segmentation experiments, the supplementary
+\gls{maskrcnn} checkpoint comparison, and the final \gls{ocr} benchmarking. The
+results chapter therefore distinguishes consistently between validation-time
+selection and held-out test-set evaluation.
 
 \section{Embedded deployment and optimization}
 
 \begin{wrapfigure}{r}{0.32\textwidth}
     \centering
     \vspace{-10pt}
-    \includegraphics[width=0.20\textwidth]{figures/methodology/Embedded_workflow.png}
+    \includegraphics[width=0.20\textwidth]{figures/methodology/TensorRT Workflow-2026-03-20-100105.png}
     \captionsetup{width=0.28\textwidth}
     \caption{Deployment and optimization workflow for models on \gls{jetson} Orin using \gls{onnx} and \gls{tensorrt}.}
     \label{fig:tensorrt_workflow}
@@ -545,8 +501,7 @@ directly on the target hardware to ensure compatibility with the device-specific
 \gls{gpu} architecture. \gls{fp16} precision was used to reduce memory footprint
 and improve inference speed.
 
-In this project, the intermediate \gls{onnx} models were not benchmarked as
-standalone deployment artifacts. Instead, the final \gls{tensorrt}
+The final \gls{tensorrt}
 \texttt{.engine} models were validated directly on the target device by running
 them on a subset of held-out test images and checking that the predictions were
 numerically sensible and visually consistent with the trained desktop models.
@@ -596,13 +551,16 @@ and allowed both runtime components to be benchmarked independently.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{figures/methodology/ros2_pipeline_mermaid_high.png}
+    \includegraphics[width=\textwidth]{figures/methodology/ros2_pipeline_mermaid_high.png}
     \caption{\Gls{ros2} runtime architecture used for deployment. The ZED X camera
     provides image, depth, and camera calibration topics to the \gls{yolo} node. The \gls{ocr}
     node enriches the geometric targets with text labels, and the active data
     collector stores accepted deployment samples for later retraining.}
     \label{fig:ros2_runtime_architecture}
 \end{figure}
+
+
+
 
 \begin{table}[htbp]
     \centering
