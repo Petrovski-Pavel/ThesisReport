@@ -4,3 +4,74 @@ Get rid of some dumb info in 4.3 ROS2 PP
 FIX Data quality assessment
 Finish Chapter 5 and 6
 
+
+
+THE ACRONYMS page is missing it is not shown in the report therefoer all links are not working....
+
+Disclaimer: Mention Codex as well and make both ChatGPT and codex links.
+
+Summary: Explain that this project is part of the CareBot Projects with collaboration with Ambyon. Make sure Ambyon link to the company is present.
+
+Summarry: Not complete, segmentation models are mentioned but not OCR model. Maybe the whole SUmmary needs re-writing.
+
+Content: Remove glossaries (aka acronym links) from titles of chapters and subchapters, because the contents look odd.
+
+3.5 Model Architecture and Training strategies maybe its better to split its content about Mask R-CNN, YOLO and OCR as subchapters so they are shown in the contents as well
+
+Chapter 4.3 About ocr maybe better to keep Stage 1 and Stage 2 under the same subchapter titled something like OCR Hyperparameter tuning for the sake of consistency with previous chapter about YOLO.
+
+Chapter 1 Introduction: The introduction sentence is not really informative, maybe we need to revise it.
+
+Chapter 1: Ambyon is mentioned but there is no link to their website.
+
+Chapter 3 Methodology: Introduction sentance says interaction point perception in hospital environments, but maybe its just better to somehow say that those elements are elevator buttons.
+
+Everywhere in the report, change HAN University Building 31 with HAN University R29.
+
+Figure 3.3 Goes a bit beyond the right side of the page, needs to be adjusted.
+
+I think it would be nice to add references to the websites of Ultalytics and PaddleOCR if there are such because we use them and they are mentioned a couple of times but there are no links.
+
+Chapter 3.6 Introuction mentions stuff about the YOLO and the Mask R-CNN model but nothing about OCR. Moreover, I am not sure if this is a proper introduction sentance to the subchapter. I am thinking that even using the text from 3.6.3 is better for introduction, and remove it as a subchapeter. What do you think? Lets assess this and come up with a solution.
+
+3.6.1 Please make sure this is the correct formula of mAP50:95 used by Ultralytics YOLO evaluation. Make sure the OCR mentioned evaluation formulas are also correct!!!
+
+CH 3.8.1 Mention that the Zed X camera is RGB-D and say that the JetPack version is 6.2.1
+
+Figure 3.6 explanation is too long. In my opinion the image is already explained above, the text of the figure should be something concise and short. This counts for all figures not only that one.
+
+Chapter 4.3.4 mentions Chapter 3 but its not a link
+Table 4.10 we have YOLO inference, YOLO wall tiem and OCR Latency, this should be a one currently the table does not make sense. It is mentioned in chapter 6.1 as well so change on both places, this is not OCR latency...
+
+CHapter 5 Intro sentance includes reference to chapter 4 which should be a link
+
+Chapter 5.2 second paragraph explaining the first sub question, the coice for Elevator buttons was also prioritized by Ambyon as well, this is important to be mentioned and is the prime factor why we focus on them.
+
+Chater 5.4 Limitations: One more limitation is that Currently ADC collects and filters data and creates ready-to-use annotations for YOLO and OCR updates, however, there is still a need for human in the loop to verify those results. Moreover, the cycle is not entirely closed as the SSH export of the images and annotations is manually done and there is no automation to connect the data to the CVAT tooling, all of this should be done manually at this point. The whole cycle from ready to use data to re-deploying model on the robot is not fully automated yet. This can be added to the recomendations.
+
+Missing introduction sentance to chapter 6
+
+Appendix C, there i some overlap when there is a long text from column to column. Long text showd be separated in two rows or shortened so tehre is no overlap and the text is clean and readable.
+
+
+** Bonus question: With our results of about 12FPS, is this real-time, actually what should be the FPS to say "our solution works in real-time" or this questions is not really accurate for the project?
+* Q: When the YOLO performs instance segmentation it returns values for each pixel with either 0 or 1 (1 denotes that those pixels belong to a button and 0 for those that are not buttons) right ?
+
+
+
+Check out the images of the dataset quality appendix: Explain them explain the values on both x and y.
+Checkout Chapter 3.4 check out the formulas and the explanation. I think model assisted assesment was used over the whole training dataset not just a susbet of it..
+Check out how Adam optimizer works, why is in the Mask R-CNN part shown as AdamW ?
+
+CH 3.8.2 "these inputs into button candidates that already include 2D local-
+ization, a representative image center, and an estimated 3D position or distance in the camera
+frame." I dont understand that part how are the 2 localization included, and what is the 3D estimated position or distance in the camera fram? I dont like this sentance its confusing in my opinion. The same explanation is in Table3.2 
+CH 3.8.3 What: perception nodes is a custom button-target message: this means? Why is it a custom button-target message and how is it defined and used in the pipeline ?
+
+Image topics use a best-effort, keep-last quality-of-service setting so that
+the pipeline always prefers recent sensor data over delayed frames. This one needs expanation as well
+
+In 3.8.3 Z(depth) formula i and j are not explained ...
+
+
+

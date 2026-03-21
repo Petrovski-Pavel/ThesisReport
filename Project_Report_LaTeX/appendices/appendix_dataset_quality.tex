@@ -12,8 +12,10 @@ material and are not required to follow the main argument of the report.
     \includegraphics[width=0.82\textwidth]
     {figures/appendices/01_blur_distribution.png}
     \caption{Distribution of the blur indicator computed from the training
-    images. The spread confirms that the dataset contains both softer and
-    sharper images instead of a single tightly controlled acquisition setting.}
+    images. The x-axis shows the variance of the Laplacian, used here as a
+    relative sharpness indicator: lower values correspond to blurrier images,
+    while higher values correspond to sharper images. The y-axis shows the
+    number of training images in each histogram bin.}
     \label{fig:app_blur_distribution}
 \end{figure}
 
@@ -22,8 +24,10 @@ material and are not required to follow the main argument of the report.
     \includegraphics[width=0.82\textwidth]
     {figures/appendices/05_brightness_distribution.png}
     \caption{Distribution of the mean grayscale intensity across the training
-    images. The dataset spans a broad but still usable range of illumination
-    conditions.}
+    images. The x-axis shows the average grayscale value per image on the
+    0--255 intensity scale, where lower values indicate darker images and
+    higher values indicate brighter images. The y-axis shows the number of
+    training images in each histogram bin.}
     \label{fig:app_brightness_distribution}
 \end{figure}
 
@@ -34,7 +38,11 @@ material and are not required to follow the main argument of the report.
     \includegraphics[width=0.82\textwidth]
     {figures/appendices/B_button_centroid_heatmap.png}
     \caption{Heatmap of annotated button-centroid locations in normalized image
-    coordinates. Most button instances lie within a central field-of-view band,
-    while edge-of-frame occurrences are less frequent.}
+    coordinates. The x-axis shows the horizontal centroid position normalized
+    by image width, with 0 at the left image border and 1 at the right border.
+    The y-axis shows the vertical centroid position normalized by image height,
+    with 0 at the top of the image and 1 at the bottom. The color intensity
+    represents how many annotated button instances fall into each
+    two-dimensional bin.}
     \label{fig:app_button_centroid_heatmap}
 \end{figure}

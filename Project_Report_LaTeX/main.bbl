@@ -57,6 +57,12 @@ Lin, T.-Y., Maire, M., Belongie, S., et~al. (2014).
 \newblock In {\em Proceedings of the European Conference on Computer Vision
   (ECCV)}, pages 740--755.
 
+\bibitem[Liu, 2022]{liu2022indoorscene}
+Liu, H. (2022).
+\newblock Indoor scene understanding for the visually impaired based on
+  semantic segmentation.
+\newblock Thesis. Figure 3.1 accessed via ResearchGate on 21 March 2026.
+
 \bibitem[Liu et~al., 2021]{liu2021elevator}
 Liu, J., Fang, Y., Zhu, D., Ma, N., Pan, J., and Meng, M. Q.-H. (2021).
 \newblock A large-scale dataset for benchmarking elevator button segmentation
@@ -88,6 +94,12 @@ Merkel, D. (2014).
 \newblock Docker: Lightweight linux containers for consistent development and
   deployment.
 \newblock {\em Linux Journal}, 2014(239).
+
+\bibitem[{PaddlePaddle Authors}, 2026]{paddleocrdocs2026}
+{PaddlePaddle Authors} (2026).
+\newblock Paddleocr documentation.
+\newblock \url{https://paddlepaddle.github.io/PaddleOCR/main/en/index.html}.
+\newblock Accessed 21 March 2026.
 
 \bibitem[Redmon et~al., 2016]{redmon2016yolo}
 Redmon, J., Divvala, S., Girshick, R., and Farhadi, A. (2016).
@@ -121,6 +133,12 @@ Tan, M. and Le, Q. (2019).
   networks.
 \newblock In {\em Proceedings of the International Conference on Machine
   Learning (ICML)}, pages 6105--6114.
+
+\bibitem[{Ultralytics}, 2026]{ultralyticsdocs2026}
+{Ultralytics} (2026).
+\newblock Ultralytics yolo documentation.
+\newblock \url{https://docs.ultralytics.com/}.
+\newblock Accessed 21 March 2026.
 
 \bibitem[Wang et~al., 2019]{wang2019indoorrobots}
 Wang, X., Luo, C., and Zhang, Y. (2019).

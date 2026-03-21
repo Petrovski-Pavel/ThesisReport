@@ -1,8 +1,9 @@
 
 \chapter{Introduction}
 
-This introduction includes the background information, problem definition, project objective and the
-research questions.
+This chapter introduces the project context, defines the perception problem
+addressed in this thesis, states the project objective and research questions,
+and outlines the remainder of the report.
 
 \section{Background}
 
@@ -18,9 +19,11 @@ Robotics in healthcare is moving from experimental pilots to practical deploymen
     \vspace{-8pt}
 \end{wrapfigure}
 
-Hospitals are typically multi-floor environments that rely on infrastructure such as elevators, automatic doors, and access-control systems. For a robot to move freely and perform tasks across different floors, it must be able to detect and interact with these human–machine interfaces, including elevator buttons and door panels. Reliable perception of such interaction elements is therefore a key capability for achieving truly autonomous navigation in hospital settings. Without this, robots remain confined to limited single-floor operation or require human assistance for vertical transport.
+Hospitals are typically multi-floor environments that rely on infrastructure such as elevators, automatic doors, and access-control systems. For a robot to move freely and perform tasks across different floors, it must be able to detect and interact with these human–machine interfaces, including elevator buttons and door panels. Reliable perception of such interaction elements is therefore a key capability for achieving truly autonomous navigation in hospital settings. Without this, robots remain confined to limited single-floor operation, require costly dedicated interfaces to doors or elevators, or depend on human assistance for vertical transport.
 
-At \textit{HAN Automotive Research}, the CareBot platform is being developed as an educational and research project that allows students and researchers to experiment with robotic perception, planning, and control in realistic environments. While not designed to replicate the Ambyon ONE robot, the CareBot in this project will be equipped with a similar sensor stack and processing unit, enabling realistic simulation of Ambyon’s operational conditions. The Ambyon ONE itself is a service robot currently under development by \textit{Ambyon}, a Dutch startup focused on robotics for healthcare and logistics applications.
+The Ambyon ONE is a service robot currently under development by \textit{Ambyon}, a Dutch startup focused on robotics for healthcare and logistics applications. Ambyon's strategy centers on developing robots that do not require infrastructural changes, positioning this as a key differentiating selling point for integration into existing hospital environments.
+
+At \textit{HAN Automotive Research}, the CareBot platform is being developed as an educational and research project that allows students and researchers to experiment with robotic perception, planning, and control in realistic environments. Within this thesis, the CareBot serves as an integration and test unit for applied research. While it is not intended to replicate the Ambyon ONE robot, it is equipped with a similar sensor stack and processing unit, enabling realistic simulation of Ambyon's operational conditions.
 
 The CareBot system uses an \gls{rgbd} camera and \gls{jetson} computing module to enable on-device perception suitable for real-time operation in clinical environments. A key research challenge is enabling the robot to accurately detect and classify interaction points such as elevator buttons, access readers, and door panels under varying lighting, reflections, occlusions, and diverse panel designs - while maintaining efficient performance within embedded hardware constraints.
 
@@ -38,7 +41,7 @@ Develop and validate an efficient and scalable computer-vision workflow that ena
 
 \section{Research Question(s)}
 \textbf{Main Research Question:} \\
-How can an efficient and scalable computer-vision workflow be designed and implemented to enable a service robot to detect and interpret human-interaction elements in hospital environments using embedded hardware?
+How can a computer-vision workflow be designed and implemented to enable a service robot to detect and interpret human-interaction elements in hospital environments using embedded hardware?
 
 \textbf{Sub-questions:}
 \begin{enumerate}
@@ -52,11 +55,18 @@ How can an efficient and scalable computer-vision workflow be designed and imple
 
 \section{Outline of the report}
 
-Chapter~1 introduces the background, motivation, and objectives of the project.
-Chapter~2 reviews relevant literature on interaction-point perception, instance
-segmentation, and embedded computer-vision systems. Chapter~3 describes the
-methodology, including dataset preparation, annotation strategy, model training,
-evaluation, and deployment considerations. Chapter~4 presents the experimental
-results and quantitative evaluation. Chapter~5 discusses the findings and their
-implications, and Chapter~6 concludes the report and outlines future work.
-
+Chapter~1 introduces the project background, problem definition, objective, and
+research questions. Chapter~2 reviews the literature relevant to
+interaction-point perception, including task formulation, public datasets,
+annotation strategies, model design, and embedded deployment constraints.
+Chapter~3 explains the methodology used in this thesis, including dataset
+selection and preparation, the annotation workflow, model training, evaluation,
+deployment, and the final \gls{ros2} pipeline design. Chapter~4 presents the
+results of the dataset-quality assessment, model training and tuning
+experiments, held-out test evaluations, and deployment benchmarks. Chapter~5
+interprets these results in relation to the research questions, discusses the
+main limitations, and considers implications for future robot deployment.
+Chapter~6 concludes the report and presents recommendations for future work. The
+appendices provide supplementary model evaluations, dataset-quality plots, the
+\gls{ai}-use disclosure, and additional technical details of the deployed
+pipeline.

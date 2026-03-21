@@ -1,4 +1,4 @@
-\chapter{\Gls{ros2} pipeline parameter reference}
+\chapter{ROS 2 pipeline parameter reference}
 \label{app:ros2_params}
 
 This appendix summarizes the main runtime parameters of the deployed
@@ -8,10 +8,13 @@ shown in the ``Default / configured value'' column correspond to the final thesi
 configuration where this was defined explicitly in the YAML files; otherwise the
 node's declared software default is reported.
 
+% Use a breakable monospace command inside table cells without affecting captions.
+\newcommand{\codepath}[1]{\path{#1}}
+
 \section{YOLO inference node}
 
 \small
-\begin{longtable}{p{4.2cm} p{3.2cm} p{7.3cm}}
+\begin{longtable}{>{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{7.1cm}}
 \caption{Main parameters of \texttt{yolo\_engine\_node}.}
 \label{tab:app_yolo_params}\\
 \toprule
@@ -22,42 +25,42 @@ node's declared software default is reported.
 \textbf{Parameter} & \textbf{Default / configured value} & \textbf{Purpose} \\
 \midrule
 \endhead
-\texttt{engine\_path} & launch-time path & Path to the \gls{tensorrt} \gls{yolo} engine. \\
-\texttt{image\_topic} & \texttt{/zed/zed\_node/rgb/color/rect/image} & Input image topic. \\
-\texttt{depth\_topic} & \texttt{/zed/zed\_node/depth/depth\_registered} & Input depth topic used for 3D projection. \\
-\texttt{camera\_info\_topic} & \texttt{/zed/zed\_node/rgb/color/rect/camera\_info} & Camera intrinsics topic. \\
-\texttt{detections\_topic} & \texttt{/detections} & Optional 2D detection topic retained for debugging. \\
-\texttt{targets\_3d\_topic} & \texttt{/button\_targets\_3d} & Main 3D target output topic. \\
-\texttt{conf} & 0.50 & Confidence threshold for accepted detections. \\
-\texttt{infer\_hz} & 8.0 & Timer frequency for inference callbacks. \\
-\texttt{enable\_distance\_estimation} & \texttt{true} & Enables depth-based 3D target estimation. \\
-\texttt{max\_depth\_age\_ms} & 150.0 & Maximum allowed age of buffered depth data. \\
-\texttt{min\_depth\_m} & 0.10 & Minimum accepted depth value. \\
-\texttt{max\_depth\_m} & 10.0 & Maximum accepted depth value. \\
-\texttt{min\_valid\_depth\_pixels} & 20 & Minimum number of valid masked depth pixels. \\
-\texttt{depth\_percentile} & 50.0 & Percentile used for representative target depth. \\
-\texttt{enable\_ocr} & \texttt{false} & Legacy inline \gls{ocr} mode; disabled in the split-node pipeline. \\
-\texttt{ocr\_engine\_path} & empty & Optional legacy inline \gls{ocr} engine path. \\
-\texttt{ocr\_input\_name} & \texttt{x} & Legacy inline \gls{ocr} input tensor name. \\
-\texttt{ocr\_charset\_path} & empty & Optional legacy inline \gls{ocr} character set path. \\
-\texttt{ocr\_input\_h} & 48 & Legacy inline \gls{ocr} input height. \\
-\texttt{ocr\_input\_w} & 320 & Legacy inline \gls{ocr} input width. \\
-\texttt{ocr\_min\_conf} & 0.60 & Legacy inline \gls{ocr} confidence threshold. \\
-\texttt{ocr\_max\_rois\_per\_frame} & 8 & Legacy inline \gls{ocr} ROI cap. \\
-\texttt{warmup\_runs} & 3 & Number of startup warmup inferences. \\
-\texttt{enable\_mask\_rle\_export} & \texttt{false} & Enables direct mask export for dataset collection. \\
-\texttt{publish\_debug\_image} & \texttt{true} & Enables publication of a visual debug image. \\
-\texttt{debug\_image\_topic} & \texttt{/yolo/debug\_image} & Debug image output topic. \\
-\texttt{enable\_perf\_logging} & \texttt{true} & Enables periodic runtime timing logs. \\
-\texttt{perf\_log\_every\_n} & 50 & Logging interval for performance statistics. \\
+\codepath{engine\_path} & launch-time path & Path to the \gls{tensorrt} \gls{yolo} engine. \\
+\codepath{image\_topic} & \codepath{/zed/zed\_node/rgb/color/rect/image} & Input image topic. \\
+\codepath{depth\_topic} & \codepath{/zed/zed\_node/depth/depth\_registered} & Input depth topic used for 3D projection. \\
+\codepath{camera\_info\_topic} & \codepath{/zed/zed\_node/rgb/color/rect/camera\_info} & Camera intrinsics topic. \\
+\codepath{detections\_topic} & \codepath{/detections} & Optional 2D detection topic retained for debugging. \\
+\codepath{targets\_3d\_topic} & \codepath{/button\_targets\_3d} & Main 3D target output topic. \\
+\codepath{conf} & 0.50 & Confidence threshold for accepted detections. \\
+\codepath{infer\_hz} & 8.0 & Timer frequency for inference callbacks. \\
+\codepath{enable\_distance\_estimation} & \codepath{true} & Enables depth-based 3D target estimation. \\
+\codepath{max\_depth\_age\_ms} & 150.0 & Maximum allowed age of buffered depth data. \\
+\codepath{min\_depth\_m} & 0.10 & Minimum accepted depth value. \\
+\codepath{max\_depth\_m} & 10.0 & Maximum accepted depth value. \\
+\codepath{min\_valid\_depth\_pixels} & 20 & Minimum number of valid masked depth pixels. \\
+\codepath{depth\_percentile} & 50.0 & Percentile used for representative target depth. \\
+\codepath{enable\_ocr} & \codepath{false} & Legacy inline \gls{ocr} mode; disabled in the split-node pipeline. \\
+\codepath{ocr\_engine\_path} & empty & Optional legacy inline \gls{ocr} engine path. \\
+\codepath{ocr\_input\_name} & \codepath{x} & Legacy inline \gls{ocr} input tensor name. \\
+\codepath{ocr\_charset\_path} & empty & Optional legacy inline \gls{ocr} character set path. \\
+\codepath{ocr\_input\_h} & 48 & Legacy inline \gls{ocr} input height. \\
+\codepath{ocr\_input\_w} & 320 & Legacy inline \gls{ocr} input width. \\
+\codepath{ocr\_min\_conf} & 0.60 & Legacy inline \gls{ocr} confidence threshold. \\
+\codepath{ocr\_max\_rois\_per\_frame} & 8 & Legacy inline \gls{ocr} ROI cap. \\
+\codepath{warmup\_runs} & 3 & Number of startup warmup inferences. \\
+\codepath{enable\_mask\_rle\_export} & \codepath{false} & Enables direct mask export for dataset collection. \\
+\codepath{publish\_debug\_image} & \codepath{true} & Enables publication of a visual debug image. \\
+\codepath{debug\_image\_topic} & \codepath{/yolo/debug\_image} & Debug image output topic. \\
+\codepath{enable\_perf\_logging} & \codepath{true} & Enables periodic runtime timing logs. \\
+\codepath{perf\_log\_every\_n} & 50 & Logging interval for performance statistics. \\
 \bottomrule
 \end{longtable}
 \normalsize
 
-\section{\Gls{ocr} inference node}
+\section{OCR inference node}
 
 \small
-\begin{longtable}{p{4.2cm} p{3.2cm} p{7.3cm}}
+\begin{longtable}{>{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{7.1cm}}
 \caption{Main parameters of \texttt{ocr\_trt\_node}.}
 \label{tab:app_ocr_params}\\
 \toprule
@@ -68,36 +71,36 @@ node's declared software default is reported.
 \textbf{Parameter} & \textbf{Default / configured value} & \textbf{Purpose} \\
 \midrule
 \endhead
-\texttt{image\_topic} & \texttt{/zed/zed\_node/rgb/color/rect/image} & Input image topic used for buffered crops. \\
-\texttt{targets\_topic\_in} & \texttt{/button\_targets\_3d} & Input topic from the \gls{yolo} node. \\
-\texttt{targets\_topic\_out} & \texttt{/button\_targets\_3d\_ocr} & Output topic with text-enriched targets. \\
-\texttt{debug\_image\_topic} & \texttt{/ocr/debug\_image} & Debug visualization topic. \\
-\texttt{ocr\_engine\_path} & launch-time path & Path to the \gls{tensorrt} \gls{ocr} engine. \\
-\texttt{ocr\_input\_name} & \texttt{x} & Name of the input tensor in the engine. \\
-\texttt{ocr\_charset\_path} & empty & Optional character set file path. \\
-\texttt{ocr\_input\_h} & 48 & Input crop height for recognition. \\
-\texttt{ocr\_input\_w} & 320 & Input crop width for recognition. \\
-\texttt{ocr\_min\_conf} & 0.60 & Minimum accepted text confidence. \\
-\texttt{ocr\_max\_rois\_per\_msg} & 8 & Maximum number of button crops processed per message. \\
-\texttt{warmup\_runs} & 3 & Number of startup warmup inferences. \\
-\texttt{max\_image\_age\_ms} & 220.0 & Maximum age of buffered image data matched to a target message. \\
-\texttt{image\_buffer\_size} & 30 & Number of recent images retained for matching. \\
-\texttt{publish\_debug\_image} & declared default \texttt{true} & Enables publication of the \gls{ocr} debug image. \\
-\texttt{enable\_perf\_logging} & declared default \texttt{true} & Enables periodic timing logs. \\
-\texttt{perf\_log\_every\_n} & declared default 50 & Logging interval for performance statistics. \\
-\texttt{enable\_fuzzy\_map} & \texttt{true} & Enables post-recognition vocabulary correction. \\
-\texttt{label\_vocab\_path} & configured file path & Path to known elevator button labels. \\
-\texttt{fuzzy\_max\_dist} & 1 & Maximum edit distance for fuzzy label correction. \\
-\texttt{fuzzy\_min\_len} & 3 & Minimum string length before fuzzy matching is applied. \\
-\texttt{fuzzy\_min\_score} & 0.0 & Minimum score required before fuzzy correction is considered. \\
+\codepath{image\_topic} & \codepath{/zed/zed\_node/rgb/color/rect/image} & Input image topic used for buffered crops. \\
+\codepath{targets\_topic\_in} & \codepath{/button\_targets\_3d} & Input topic from the \gls{yolo} node. \\
+\codepath{targets\_topic\_out} & \codepath{/button\_targets\_3d\_ocr} & Output topic with text-enriched targets. \\
+\codepath{debug\_image\_topic} & \codepath{/ocr/debug\_image} & Debug visualization topic. \\
+\codepath{ocr\_engine\_path} & launch-time path & Path to the \gls{tensorrt} \gls{ocr} engine. \\
+\codepath{ocr\_input\_name} & \codepath{x} & Name of the input tensor in the engine. \\
+\codepath{ocr\_charset\_path} & empty & Optional character set file path. \\
+\codepath{ocr\_input\_h} & 48 & Input crop height for recognition. \\
+\codepath{ocr\_input\_w} & 320 & Input crop width for recognition. \\
+\codepath{ocr\_min\_conf} & 0.60 & Minimum accepted text confidence. \\
+\codepath{ocr\_max\_rois\_per\_msg} & 8 & Maximum number of button crops processed per message. \\
+\codepath{warmup\_runs} & 3 & Number of startup warmup inferences. \\
+\codepath{max\_image\_age\_ms} & 220.0 & Maximum age of buffered image data matched to a target message. \\
+\codepath{image\_buffer\_size} & 30 & Number of recent images retained for matching. \\
+\codepath{publish\_debug\_image} & declared default \codepath{true} & Enables publication of the \gls{ocr} debug image. \\
+\codepath{enable\_perf\_logging} & declared default \codepath{true} & Enables periodic timing logs. \\
+\codepath{perf\_log\_every\_n} & declared default 50 & Logging interval for performance statistics. \\
+\codepath{enable\_fuzzy\_map} & \codepath{true} & Enables post-recognition vocabulary correction. \\
+\codepath{label\_vocab\_path} & configured file path & Path to known elevator button labels. \\
+\codepath{fuzzy\_max\_dist} & 1 & Maximum edit distance for fuzzy label correction. \\
+\codepath{fuzzy\_min\_len} & 3 & Minimum string length before fuzzy matching is applied. \\
+\codepath{fuzzy\_min\_score} & 0.0 & Minimum score required before fuzzy correction is considered. \\
 \bottomrule
 \end{longtable}
 \normalsize
 
-\section{\Gls{adc}}
+\section{Active Data Collector}
 
 \small
-\begin{longtable}{p{4.2cm} p{3.2cm} p{7.3cm}}
+\begin{longtable}{>{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{7.1cm}}
 \caption{Main parameters of \texttt{active\_data\_collector}.}
 \label{tab:app_adc_params}\\
 \toprule
@@ -108,43 +111,43 @@ node's declared software default is reported.
 \textbf{Parameter} & \textbf{Default / configured value} & \textbf{Purpose} \\
 \midrule
 \endhead
-\texttt{image\_topic} & \texttt{/zed/zed\_node/rgb/color/rect/image} & Input image topic. \\
-\texttt{targets\_topic} & \texttt{/button\_targets\_3d\_ocr} & Input target topic from the \gls{ocr} node. \\
-\texttt{dataset\_root} & configured dataset path & Root folder for collected sessions. \\
-\texttt{session\_name} & empty & Optional explicit session name. \\
-\texttt{save\_overlay\_image} & \texttt{true} & Saves an annotated overlay image for each accepted sample. \\
-\texttt{overlay\_font\_scale} & 0.30 & Font size used in overlay rendering. \\
-\texttt{overlay\_font\_thickness} & 1 & Font thickness used in overlay rendering. \\
-\texttt{max\_image\_age\_ms} & 250.0 & Maximum age of the buffered image matched to a target message. \\
-\texttt{image\_buffer\_size} & 40 & Number of recent images retained for timestamp matching. \\
-\texttt{enable\_perf\_logging} & declared default \texttt{true} & Enables periodic collector timing logs. \\
-\texttt{perf\_log\_every\_n} & declared default 20 & Logging interval for collector performance statistics. \\
-\texttt{min\_targets\_per\_frame} & 1 & Minimum number of accepted targets required for export. \\
-\texttt{min\_target\_score} & 0.45 & Minimum detector score for a target candidate. \\
-\texttt{require\_text} & \texttt{True} & Requires accepted \gls{ocr} output before export. \\
-\texttt{min\_text\_score} & 0.45 & Minimum accepted \gls{ocr} confidence. \\
-\texttt{min\_export\_interval\_sec} & 0.75 & Minimum time gap between accepted exports. \\
-\texttt{min\_bbox\_area\_pixels} & 100.0 & Minimum target bounding-box area. \\
-\texttt{min\_bbox\_short\_side\_pixels} & 10.0 & Minimum short side of the target box. \\
-\texttt{min\_image\_brightness} & 35.0 & Lower image brightness gate. \\
-\texttt{max\_image\_brightness} & 235.0 & Upper image brightness gate. \\
-\texttt{max\_saturated\_ratio} & 0.25 & Maximum saturated-pixel ratio. \\
-\texttt{enable\_sharpness\_gate} & \texttt{true} & Enables whole-image sharpness filtering. \\
-\texttt{min\_laplacian\_var} & 120.0 & Minimum whole-image Laplacian variance. \\
-\texttt{enable\_roi\_sharpness\_gate} & \texttt{true} & Enables target-ROI sharpness filtering. \\
-\texttt{min\_roi\_laplacian\_var} & 40.0 & Minimum ROI Laplacian variance. \\
-\texttt{enable\_stability\_gate} & \texttt{true} & Enables temporal stability filtering across frames. \\
-\texttt{stability\_required\_frames} & 3 & Number of supporting frames required for export. \\
-\texttt{stability\_iou\_threshold} & 0.40 & IoU threshold for matching targets across frames. \\
-\texttt{stability\_depth\_tolerance\_m} & 0.20 & Depth consistency threshold in meters. \\
-\texttt{stability\_track\_ttl\_sec} & 1.2 & Lifetime of a temporary stability track. \\
-\texttt{stability\_require\_ocr\_consistency} & \texttt{true} & Requires stable \gls{ocr} content across the track. \\
-\texttt{enable\_dedup} & \texttt{true} & Enables duplicate-frame rejection. \\
-\texttt{dedup\_hamming\_threshold} & 8 & Hamming threshold for duplicate detection. \\
-\texttt{dedup\_history\_size} & 50 & Number of recent accepted samples used for deduplication. \\
-\texttt{analysis\_ocr\_score\_threshold} & 0.60 & Threshold used for analysis-only \gls{ocr} statistics. \\
-\texttt{distance\_bin\_size\_m} & 0.25 & Bin size for distance-distribution statistics. \\
-\texttt{max\_analysis\_distance\_m} & 5.0 & Maximum distance included in exported analysis summaries. \\
+\codepath{image\_topic} & \codepath{/zed/zed\_node/rgb/color/rect/image} & Input image topic. \\
+\codepath{targets\_topic} & \codepath{/button\_targets\_3d\_ocr} & Input target topic from the \gls{ocr} node. \\
+\codepath{dataset\_root} & configured dataset path & Root folder for collected sessions. \\
+\codepath{session\_name} & empty & Optional explicit session name. \\
+\codepath{save\_overlay\_image} & \codepath{true} & Saves an annotated overlay image for each accepted sample. \\
+\codepath{overlay\_font\_scale} & 0.30 & Font size used in overlay rendering. \\
+\codepath{overlay\_font\_thickness} & 1 & Font thickness used in overlay rendering. \\
+\codepath{max\_image\_age\_ms} & 250.0 & Maximum age of the buffered image matched to a target message. \\
+\codepath{image\_buffer\_size} & 40 & Number of recent images retained for timestamp matching. \\
+\codepath{enable\_perf\_logging} & declared default \codepath{true} & Enables periodic collector timing logs. \\
+\codepath{perf\_log\_every\_n} & declared default 20 & Logging interval for collector performance statistics. \\
+\codepath{min\_targets\_per\_frame} & 1 & Minimum number of accepted targets required for export. \\
+\codepath{min\_target\_score} & 0.45 & Minimum detector score for a target candidate. \\
+\codepath{require\_text} & \codepath{True} & Requires accepted \gls{ocr} output before export. \\
+\codepath{min\_text\_score} & 0.45 & Minimum accepted \gls{ocr} confidence. \\
+\codepath{min\_export\_interval\_sec} & 0.75 & Minimum time gap between accepted exports. \\
+\codepath{min\_bbox\_area\_pixels} & 100.0 & Minimum target bounding-box area. \\
+\codepath{min\_bbox\_short\_side\_pixels} & 10.0 & Minimum short side of the target box. \\
+\codepath{min\_image\_brightness} & 35.0 & Lower image brightness gate. \\
+\codepath{max\_image\_brightness} & 235.0 & Upper image brightness gate. \\
+\codepath{max\_saturated\_ratio} & 0.25 & Maximum saturated-pixel ratio. \\
+\codepath{enable\_sharpness\_gate} & \codepath{true} & Enables whole-image sharpness filtering. \\
+\codepath{min\_laplacian\_var} & 120.0 & Minimum whole-image Laplacian variance. \\
+\codepath{enable\_roi\_sharpness\_gate} & \codepath{true} & Enables target-ROI sharpness filtering. \\
+\codepath{min\_roi\_laplacian\_var} & 40.0 & Minimum ROI Laplacian variance. \\
+\codepath{enable\_stability\_gate} & \codepath{true} & Enables temporal stability filtering across frames. \\
+\codepath{stability\_required\_frames} & 3 & Number of supporting frames required for export. \\
+\codepath{stability\_iou\_threshold} & 0.40 & IoU threshold for matching targets across frames. \\
+\codepath{stability\_depth\_tolerance\_m} & 0.20 & Depth consistency threshold in meters. \\
+\codepath{stability\_track\_ttl\_sec} & 1.2 & Lifetime of a temporary stability track. \\
+\codepath{stability\_require\_ocr\_consistency} & \codepath{true} & Requires stable \gls{ocr} content across the track. \\
+\codepath{enable\_dedup} & \codepath{true} & Enables duplicate-frame rejection. \\
+\codepath{dedup\_hamming\_threshold} & 8 & Hamming threshold for duplicate detection. \\
+\codepath{dedup\_history\_size} & 50 & Number of recent accepted samples used for deduplication. \\
+\codepath{analysis\_ocr\_score\_threshold} & 0.60 & Threshold used for analysis-only \gls{ocr} statistics. \\
+\codepath{distance\_bin\_size\_m} & 0.25 & Bin size for distance-distribution statistics. \\
+\codepath{max\_analysis\_distance\_m} & 5.0 & Maximum distance included in exported analysis summaries. \\
 \bottomrule
 \end{longtable}
 \normalsize

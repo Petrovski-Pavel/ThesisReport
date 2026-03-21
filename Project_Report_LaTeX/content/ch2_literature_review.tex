@@ -30,10 +30,11 @@ without relying on prior knowledge of the environment
 \citep{wang2019indoorrobots}.
 
 These findings indicate that interaction-point perception is a fine-grained
-vision problem in which individual interface elements must be localized
-accurately within visually dense scenes. This observation motivates the need for
-vision methods that go beyond coarse detection of panels or regions and instead
-support precise identification of individual interaction elements.
+vision problem in which individual button instances on a panel must be localized
+accurately within visually dense scenes.
+This observation motivates the need for vision methods that go beyond coarse
+detection of panels or regions and instead support precise identification of
+individual button instances.
 
 
 \section{Formulating interaction-point perception as a vision problem}
@@ -46,7 +47,8 @@ output, which directly affects suitability for robotic interaction.
 Image classification assigns a single label to an entire image and is therefore
 unsuitable for scenarios where multiple interaction elements appear simultaneously.
 Object detection extends this formulation by predicting bounding boxes and class
-labels for individual objects, in the case of the project those are elevator buttons. While detection-based approaches have been widely
+labels for individual objects; in this project, those objects correspond to
+individual button instances on an elevator panel. While detection-based approaches have been widely
 used for indoor perception tasks, bounding boxes provide only coarse spatial
 localization and do not capture the precise shape of interaction elements
 \citep{ren2015fasterrcnn,redmon2016yolo}.
@@ -63,16 +65,18 @@ enables precise localization, all pixels belonging to the same class are treated
 as a single region. As a result, semantic segmentation cannot distinguish between
 multiple instances of the same object class.
 
-For interaction-point perception, this limitation is critical. Elevator panels often
-contain many visually similar buttons, each corresponding to a distinct action.
-Semantic segmentation assigns the same class label to all pixels belonging to a
-given category and therefore cannot distinguish between multiple instances of the
-same object class \citep{long2015fcn,he2017maskrcnn}. As illustrated in
-Figure~\ref{fig:vision_task_comparison}, a semantic segmentation output would label
-all button pixels identically, without separating individual buttons. This lack of
-instance-level differentiation makes semantic segmentation unsuitable for
-downstream decision-making and physical interaction, where each button must be
-treated as a separate actionable element.
+For interaction-point perception, this limitation is critical. Elevator panels
+often contain many visually similar button instances, each corresponding to a
+distinct action \citep{bernard2020interfaces}. By definition, semantic
+segmentation assigns a class label to each pixel but does not separate
+same-class instances \citep{long2015fcn}, whereas instance segmentation
+predicts a separate mask for each detected instance \citep{he2017maskrcnn}.
+Figure~\ref{fig:vision_task_comparison} visualizes this distinction. For an
+elevator panel, a semantic segmentation output would therefore label button
+pixels by class without separating adjacent buttons into distinct actionable
+targets. This lack of instance-level differentiation makes semantic
+segmentation unsuitable for downstream decision-making and physical interaction,
+where each button must be treated as a separate actionable element.
 
 Instance segmentation extends semantic segmentation by jointly performing object
 detection and pixel-wise classification, producing a separate mask for each object
@@ -88,7 +92,7 @@ same class.
     \centering
     \includegraphics[width=0.9\textwidth]
     {figures/Comparison-of-image-classification-semantic-segmentation-and-semantic-instance.png}
-    \caption{Comparison of image classification, object detection, semantic segmentation, and instance segmentation.}
+    \caption{Comparison of image classification, object detection, semantic segmentation, and instance segmentation. Adapted from \citet{liu2022indoorscene}.}
     \label{fig:vision_task_comparison}
 \end{figure}
 Figure~\ref{fig:vision_task_comparison} illustrates the conceptual differences
@@ -122,10 +126,11 @@ literature, the corresponding semantic segmentation dataset is not publicly
 available at the time this project is made and therefore cannot be used.
 
 To enable instance-level interaction-point detection, this work reuses images from
-the IRSO 2018 dataset and replaces the original bounding box annotations with instance
-segmentation masks. Annotations are stored in the \gls{coco} format, which supports
-instance-level labeling and is widely used across computer vision frameworks,
-facilitating reuse and future extensions \citep{lin2014coco}.
+the IRSO 2018 dataset and replaces the original annotations, namely
+\gls{xml}-formatted bounding boxes and textual labels, with instance
+segmentation masks. The new annotations are stored in the \gls{coco} format,
+which supports instance-level labeling and is widely used across computer vision
+frameworks, facilitating reuse and future extensions \citep{lin2014coco}.
 
 \section{Model design principles, evaluation metrics, and semantic interpretation}
 

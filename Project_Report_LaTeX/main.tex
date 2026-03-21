@@ -56,6 +56,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{amsmath,amssymb}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{url}
@@ -63,7 +64,7 @@
 \usepackage[hidelinks]{hyperref}
 
 \usepackage[acronym,nomain,nonumberlist,toc]{glossaries}
-\makeglossaries
+\makenoidxglossaries
 \input{content/acronyms}
 \setglossarystyle{list}
 
@@ -130,7 +131,7 @@
 \input{content/summary}
 
 \glsaddall[types=\acronymtype]
-\printglossary[
+\printnoidxglossary[
   type=\acronymtype,
   title={Acronyms and Abbreviations},
   toctitle={Acronyms and Abbreviations}

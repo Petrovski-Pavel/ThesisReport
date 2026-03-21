@@ -39,11 +39,10 @@ summarizes the main descriptive results.
 The assessment indicates that the dataset contains realistic variation in focus,
 lighting, scale, and framing, but not a dominant subset of clearly unusable
 images. Manual inspection of images flagged by the simple quality checks, as
-well as a small subset prioritized by low mean \gls{iou} or elevated
-false-positive and false-negative counts from a baseline model, mainly
-highlighted difficult yet valid samples, such as oblique viewpoints, small
-targets, and visually cluttered panels. The manual review further indicated
-that the annotations in these low-metric images generally matched the visible
+well as images highlighted by the full-dataset model-assisted assessment,
+mainly highlighted difficult yet valid samples, such as oblique viewpoints,
+small targets, and visually cluttered panels. The manual review further
+indicated that the annotations in these low-metric images matched the visible
 button instances and that the low model scores were primarily caused by sample
 difficulty rather than corrupted images or systematic annotation errors. For
 that reason, no general quality-based pruning rule was introduced, and the full
@@ -57,7 +56,7 @@ Appendix~\ref{app:dataset_quality_plots}.
 
 The baseline \gls{yolo}v8-Seg model established the main reference point for all
 subsequent experiments. On the validation split,
-the best checkpoint was obtained at epoch 49. This model achieved a mask
+the best checkpoint was obtained at epoch 59. This model achieved a mask
 $\mathrm{mAP}_{50}$ of 0.93931 and a mask
 $\mathrm{mAP}_{50\text{:}95}$ of 0.59645, with mask precision and recall of
 0.90623 and 0.89947, respectively. These results confirmed that the initial
@@ -81,7 +80,7 @@ carried forward.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/stage1_yolo_trials_mAP50-95_M.png}
-    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the successful Stage 1 hyperparameter trials. Only a limited subset of the Stage 1 configurations produced stable non-zero segmentation performance and was considered for Stage 2.}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the successful Stage 1 hyperparameter trials.}
     \label{fig:stage1_mask_map}
 \end{figure}
 
@@ -95,7 +94,7 @@ Stage 3 refinement.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/stage2_yolo_valid_only_mAP_M.png}
-    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the successful unique Stage 2 capacity-tuning configurations. The best result was obtained with batch size 16 and image size 768, which was selected for Stage 3 refinement.}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the successful unique Stage 2 capacity-tuning configurations.}
     \label{fig:stage2_mask_map}
 \end{figure}
 
@@ -105,38 +104,32 @@ $\mathrm{mAP}_{50\text{:}95}$ from 0.59645 to 0.63064 on validation, but this
 must be interpreted as a model-selection result rather than as final evidence of
 better generalization.
 
-Figures~\ref{fig:stage3_mask_map}, \ref{fig:stage3_val_seg_loss}, and
-\ref{fig:stage3_lr_pg0} show the corrected Stage 3 comparison between refinement
-from the strongest Stage 2 configuration (batch size 16, image size 768) and
-refinement from the second-best unique Stage 2 configuration (batch size 16,
-image size 640). The 768-pixel branch remains consistently stronger throughout
-training, reaching approximately 0.63 mask $\mathrm{mAP}_{50\text{:}95}$,
-whereas the 640-pixel branch stabilizes near 0.56. The corresponding validation
-segmentation loss is also lower for the 768-pixel branch, while the
-learning-rate curves are effectively identical. This indicates that the final
-performance difference is explained by the quality of the inherited Stage 2
-configuration rather than by a different optimization schedule.
+Figures~\ref{fig:stage3_mask_map} and \ref{fig:stage3_val_seg_loss}
+show the corrected Stage 3 comparison between refinement from the strongest
+Stage 2 configuration (batch size 16, image size 768) and refinement from the
+second-best unique Stage 2 configuration (batch size 16, image size 640). The
+768-pixel branch remains consistently stronger throughout training, reaching
+approximately 0.63 mask $\mathrm{mAP}_{50\text{:}95}$, whereas the 640-pixel
+branch stabilizes near 0.56. The corresponding validation segmentation loss is
+also lower for the 768-pixel branch. Since both runs followed the same Stage 3
+refinement schedule, the final performance difference is attributed to the
+quality of the inherited Stage 2 configuration rather than to a scheduler
+change.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_mAP50-95__M.png}
-    \caption{Stage 3 validation mask $\mathrm{mAP}_{50\text{:}95}$ for refinement from the best Stage 2 768-pixel configuration and the second-best unique 640-pixel configuration. The 768-pixel branch remains clearly superior throughout training.}
+    \caption{Stage 3 validation mask $\mathrm{mAP}_{50\text{:}95}$ for the two refinement branches.}
     \label{fig:stage3_mask_map}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_val_seg_loss.png}
-    \caption{Stage 3 validation segmentation loss for the two corrected refinement branches. The branch initialized from the stronger Stage 2 configuration maintains the lower validation loss.}
+    \caption{Stage 3 validation segmentation loss for the two refinement branches.}
     \label{fig:stage3_val_seg_loss}
 \end{figure}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_lr_pg0.png}
-    \caption{Stage 3 learning-rate schedule (\texttt{lr/pg0}) for the two corrected refinement branches. Both runs follow essentially the same decay schedule, so the difference in final accuracy cannot be attributed to different learning-rate behavior.}
-    \label{fig:stage3_lr_pg0}
-\end{figure}
 
 \begin{table}[htbp]
     \centering
@@ -204,16 +197,16 @@ but the final test-set ranking remained in favor of the baseline model.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/yolo26_mAP50-95_M.png}
-    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the two YOLO26 training runs. The longer 180-epoch run improved over the shorter run, but the resulting model still did not surpass the YOLOv8 baseline on the held-out test set.}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the two YOLO26 training runs.}
     \label{fig:yolo26_mask_map}
 \end{figure}
 
-\subsection{Environment-specific fine-tuning with \gls{adc} data}
+\subsection{Environment-specific fine-tuning with ADC data}
 
 The final \gls{yolo} experiment addressed domain adaptation to the target
 university environment. The baseline checkpoint was fine-tuned on the original
 dataset augmented with 46 newly collected and annotated images from HAN
-University, Building 31. Table~\ref{tab:adc_original_test} shows that this
+University R29. Table~\ref{tab:adc_original_test} shows that this
 adaptation step did not materially degrade performance on the original held-out
 test split: mask $\mathrm{mAP}_{50\text{:}95}$ remained effectively unchanged
 (0.58295 vs.\ 0.58293). The validation curve in
@@ -237,7 +230,7 @@ Figure~\ref{fig:adc_finetune_mask_map} is consistent with this observation.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/yolo_adc_fine_tune_mAP50-95_M.png}
-    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ during \gls{adc}-based fine-tuning. The curve remains close to the baseline validation range, which aligns with the near-identical performance observed on the original held-out test split.}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ during \gls{adc}-based fine-tuning.}
     \label{fig:adc_finetune_mask_map}
 \end{figure}
 
@@ -272,7 +265,7 @@ most practically valuable improvement was achieved through environment-specific
 fine-tuning with \gls{adc} data, which substantially increased performance on the
 target deployment domain while preserving performance on the original dataset.
 
-\section{\Gls{ocr} hyperparameter tuning and evaluation}
+\section{OCR hyperparameter tuning and evaluation}
 
 The \gls{ocr} experiments focused on improving cropped-button recognition while keeping
 the recognizer lightweight enough for later embedded deployment. As in the
@@ -280,7 +273,9 @@ the recognizer lightweight enough for later embedded deployment. As in the
 validation split, and the final comparison between \gls{ocr} candidates was performed on
 the held-out \gls{ocr} test set.
 
-\subsection{Stage 1: epoch selection}
+\subsection{OCR hyperparameter tuning}
+
+\subsubsection{Stage 1: epoch selection}
 
 The first \gls{ocr} tuning stage varied only the number of training epochs while keeping
 the optimizer configuration fixed. The main objective of this stage was to
@@ -302,9 +297,7 @@ does not suggest a qualitatively different convergence regime.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/stage1_ocr_train_loss.png}
-    \caption{Stage 1 \gls{ocr} training loss for the epoch-selection runs. Most of the
-    optimization progress occurs before the 50-epoch mark, which supports the
-    decision to use 50 epochs for the subsequent optimizer sweep.}
+    \caption{Stage 1 \gls{ocr} training loss for the epoch-selection runs.}
     \label{fig:ocr_stage1_loss}
 \end{figure}
 
@@ -324,7 +317,7 @@ does not suggest a qualitatively different convergence regime.
     \end{tabular}
 \end{table}
 
-\subsection{Stage 2: learning rate and weight decay sweep}
+\subsubsection{Stage 2: learning rate and weight decay sweep}
 
 After fixing the training budget at 50 epochs, a second tuning stage evaluated a
 narrow optimizer sweep over learning rate and weight decay. Four configurations
@@ -353,19 +346,14 @@ strongest normalized edit-distance curve.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/stage2_ocr_eval_acc.png}
-    \caption{Stage 2 \gls{ocr} evaluation accuracy for the learning-rate and
-    weight-decay sweep. The configuration with learning rate
-    $3 \times 10^{-4}$ and weight decay $3 \times 10^{-5}$ achieved the best
-    validation accuracy.}
+    \caption{Stage 2 \gls{ocr} validation accuracy for the learning-rate and weight-decay sweep.}
     \label{fig:ocr_stage2_acc}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.82\textwidth]{figures/results/stage2_ocr_eval_norm_edit_dis.png}
-    \caption{Stage 2 \gls{ocr} normalized edit distance for the learning-rate and
-    weight-decay sweep. The best-performing configuration also achieved the
-    highest normalized edit-distance score.}
+    \caption{Stage 2 \gls{ocr} normalized edit distance for the learning-rate and weight-decay sweep.}
     \label{fig:ocr_stage2_ned}
 \end{figure}
 
@@ -386,15 +374,14 @@ strongest normalized edit-distance curve.
     \end{tabular}
 \end{table}
 
-\subsection{Final \gls{ocr} benchmark}
+\subsection{Final OCR benchmark}
 
 The final \gls{ocr} benchmark compared the original fine-tuned recognizer against the
 best-performing stage-2 configuration on the held-out \gls{ocr} test set. The results
 are shown in Table~\ref{tab:ocr_final_benchmark}. The stage-2 model outperformed
 the initial \gls{ocr} model on both recognition-quality metrics. Test accuracy improved
 from 0.81635 to 0.83486, while normalized edit distance improved from 0.85574 to
-0.87190. In addition, the measured evaluation throughput increased slightly from
-805.68 to 817.71 samples per second.
+0.87190.
 
 Taken together, these results show that the \gls{ocr} hyperparameter tuning process
 produced a real improvement rather than only a validation-specific gain. Unlike
@@ -421,7 +408,7 @@ complete perception pipeline.
 
 \subsection{Model hardware optimization results}
 
-As described in Chapter~3, the final \gls{yolo} and \gls{ocr} models were
+As described in Chapter~\ref{ch:methodology}, the final \gls{yolo} and \gls{ocr} models were
 exported to \gls{tensorrt} for optimized execution on the \gls{jetson} platform.
 To verify the effect of this export step, a compact benchmark was performed on
 the held-out test image \texttt{367.jpg}. For \gls{yolo}, the comparison used the
@@ -431,7 +418,7 @@ For \gls{ocr}, the comparison used the Paddle inference model and the exported
 
 \begin{table}[htbp]
     \centering
-    \caption{Single-image model hardware optimization benchmark on test image \texttt{367.jpg}. For \gls{ocr}, the reported latency is average time per single button crop.}
+    \caption{Single-image model hardware optimization benchmark on test image \texttt{367.jpg}.}
     \label{tab:model_hw_optimization}
     \small
     \begin{tabular}{lccc}
@@ -455,7 +442,7 @@ regions in the test image. These results support the use of \gls{tensorrt}
 export as an important deployment optimization step before integrating the models
 into the full \gls{ros2} pipeline.
 
-\section{\Gls{ros2} pipeline performance}
+\section{ROS 2 pipeline performance}
 
 After the final \gls{yolo} and \gls{ocr} models were exported to \gls{tensorrt}, the complete
 perception stack was evaluated on the \gls{jetson} Orin Nano in its deployed \gls{ros2}
@@ -545,7 +532,7 @@ Chapter~\ref{ch:methodology}.
 
 Figure~\ref{fig:ros2_pipeline_output_examples} illustrates the final deployed
 output of the integrated perception pipeline for an in-cabin elevator panel
-observed during live testing with the mobile cart in HAN University Building 31.
+observed during live testing with the mobile cart in HAN University R29.
 Both overlays are derived from the same accepted \texttt{/button\_targets\_3d\_ocr}
 message set, but visualize different aspects of the final result. The first view
 emphasizes the segmentation masks, representative button centers, and estimated
@@ -563,7 +550,7 @@ labels, and the corresponding \gls{yolo} confidence scores.
         \centering
         \includegraphics[width=\linewidth]{figures/conclusion/1773668101805465000_bbox_label.jpg}
     \end{minipage}
-    \caption{End-to-end visualization of the final deployed \gls{ros2} perception output for a representative in-cabin elevator panel. Left: yellow predicted masks with red crosses marking the representative button centers used for depth projection, together with blue distance annotations. Right: green bounding boxes with recognized button labels and \gls{yolo} confidence scores. Together, the two views show how the final \texttt{/button\_targets\_3d\_ocr} output combines geometric localization and semantic interpretation.}
+    \caption{Representative end-to-end output of the final deployed \gls{ros2} perception pipeline for an in-cabin elevator panel.}
     \label{fig:ros2_pipeline_output_examples}
 \end{figure}
 

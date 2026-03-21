@@ -1,10 +1,12 @@
 \chapter{Discussion}
 \label{ch:discussion}
 
-This chapter interprets the results presented in Chapter~4 and relates them to
+This chapter interprets the results presented in Chapter~\ref{ch:results} and relates them to
 the project objective of developing an efficient and scalable computer-vision
 workflow for robot interaction with elevator infrastructure on embedded
-hardware.
+hardware. Taken together, the implemented stages instantiate the main loop
+outlined earlier in Figure~\ref{fig:scalable_workflow}: data collection,
+annotation support, retraining, deployment, and environment-specific refinement.
 
 \section{Interpretation of the main findings}
 
@@ -25,7 +27,7 @@ conditions. This is an important result because it shows that, for this task, a
 carefully chosen and well-understood baseline can be more valuable than adopting
 a newer architecture without a clear deployment benefit. The most practically
 useful \gls{yolo} improvement came from environment-specific fine-tuning with
-\gls{adc} data from HAN University, Building 31, which substantially improved
+\gls{adc} data from HAN University R29, which substantially improved
 performance in the target environment while preserving the original-domain
 performance.
 
@@ -49,17 +51,19 @@ combination of model export, message-design decisions, and workload placement.
 
 \section{Relation to the research questions}
 
-The results provide a coherent answer to the main research question. An
-efficient and scalable computer-vision workflow for hospital interaction-point
-perception can be designed by using instance segmentation for button localization,
-crop-based \gls{ocr} for semantic interpretation, \gls{tensorrt} export for
-embedded execution, and an \gls{ros2}-based split-node architecture for modular
-runtime integration.
+The results provide a coherent answer to the main research question. A
+computer-vision workflow for hospital elevator-button perception can be designed
+by using instance segmentation for button localization, crop-based \gls{ocr} for
+semantic interpretation, \gls{tensorrt} export for embedded execution, and an
+\gls{ros2}-based split-node architecture for modular runtime integration.
 
 The first sub-question concerned the relevant human-interaction points in
 hospital environments. The project focused on elevator buttons and related panel
 interfaces because they are a concrete and operationally critical interaction
-class for multi-floor service-robot mobility. This focus proved appropriate: the
+class for multi-floor service-robot mobility. This focus was also aligned with
+Ambyon's immediate deployment priorities, which made elevator-button perception
+the most relevant and highest-value interaction target for the present project.
+This focus proved appropriate: the
 task is sufficiently challenging to expose problems of detection, segmentation,
 recognition, and embedded deployment, while still being narrow enough to support
 a complete workflow.
@@ -123,6 +127,14 @@ Fourth, the report currently emphasizes perception and runtime integration rathe
 than downstream manipulation or actuation. The system produces 3D button targets
 and button labels, but the full closed-loop robot interaction behavior lies
 beyond the present project scope.
+
+Fifth, the current \gls{adc} closes the loop only partially. It can collect,
+filter, and store samples in a format that is already useful for later \gls{yolo}
+and \gls{ocr} updates, but there is still a human in the loop for verification.
+In addition, export from the robot, transfer of the dataset session, integration
+with the \gls{cvat} tooling, and redeployment of updated models are not yet
+fully automated. The improvement cycle is therefore structured, but not yet
+fully closed end to end.
 
 \section{Implications for future robot deployment}
 

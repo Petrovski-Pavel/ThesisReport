@@ -2,10 +2,10 @@
 \label{ch:methodology}
 
 This chapter describes the methodology used to develop a computer-vision pipeline
-for interaction-point perception in hospital environments. The project is conducted
-with the objective of building a scalable and deployment-oriented perception system
-that can be iteratively improved across different hospital settings and reused
-within a robot fleet.
+for detecting and interpreting elevator buttons in hospital environments. The
+project is conducted with the objective of building a scalable and
+deployment-oriented perception system that can be iteratively improved across
+different hospital settings and reused within a robot fleet.
 
 \section{Overview of the proposed perception pipeline}
 
@@ -21,6 +21,14 @@ interaction-point perception and collects visual data during operation. Selected
 data can be transferred to an offboard system, where annotations may be reviewed,
 corrected, or extended before retraining the perception models. The updated models
 are then redeployed to the robot and become the new default for continued operation.
+
+In the intended long-term improvement loop, not every collected sample is sent
+back for review. Instead, the offboard feedback stage is intended to prioritize
+informative cases, such as medium-confidence detections, repeated false
+positives, or scenes in which instance localization and semantic interpretation
+disagree. This keeps the retraining cycle selective and makes the continuous
+improvement concept in Figure~\ref{fig:scalable_workflow} operational rather
+than purely conceptual.
 
 This workflow enables gradual adaptation to new hospital environments and allows
 knowledge acquired in one deployment to be reused and refined in subsequent
@@ -41,6 +49,12 @@ with dataset selection and preparation.
 \section{Dataset selection and preparation}
 \label{sec:dataset_selection}
 
+Within the overall workflow shown in Figure~\ref{fig:scalable_workflow}, this
+section covers the preparation steps that precede the first model-training
+phase. Before any segmentation or recognition model can be trained, the source
+dataset must be selected, split, reformatted, and extended where needed for the
+later deployment setting.
+
 This project uses the elevator-panel dataset released by \citet{liu2021elevator}.
 For this thesis, the working dataset comprised approximately 2000 images, split
 into 1122 training images, 281 validation images, and 602 held-out test images.
@@ -54,7 +68,7 @@ were stored in \gls{coco}-style \gls{json} and then converted to the label forma
 required by \gls{yolo}-based segmentation training.
 
 In the later deployment-oriented adaptation stage, the dataset was extended with
-46 additional images collected in HAN University Building 31, the pilot
+46 additional images collected in HAN University R29, the pilot
 environment for robot deployment testing. These images were added only after the
 baseline and hyperparameter tuning stages, so that the initial \gls{yolo}
 experiments remained directly comparable with the original benchmark setting.
@@ -115,10 +129,9 @@ Figure~\ref{fig:annotation_workflow}.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.3\textwidth]{figures/methodology/Docker_CVAT_Nuclio.png}
-    \caption{Semi-automatic annotation workflow on a Windows host using \gls{wsl} and
-    Docker. \gls{cvat} sends images to a Nuclio function running \gls{maskrcnn}, which returns
-    polygon instance annotations derived from predicted binary masks.}
+    \includegraphics[width=1.15\textwidth]{figures/methodology/Docker_CVAT_Nuclio.png}
+    \caption{Semi-automatic annotation workflow on a Windows host using \gls{wsl},
+    Docker, \gls{cvat}, and Nuclio.}
     \label{fig:annotation_workflow}
 \end{figure}
 
@@ -131,9 +144,16 @@ progressively improved pre-annotations and reduced manual correction effort. A
 quantitative comparison of these annotation-support checkpoints on the held-out
 test set is provided in Appendix~\ref{app:maskrcnn_checkpoints}.
 
-All automatically generated annotations were also manually reviewed and corrected when needed to
-ensure accurate instance boundaries, correct separation of adjacent buttons, and
-consistent labeling across both the training and test sets.
+All automatically generated annotations were also manually reviewed and corrected
+when needed to ensure accurate instance boundaries, correct separation of
+adjacent buttons, and consistent labeling across both the training and test
+sets. This manual verification step was retained because fully automatic
+acceptance would have been faster, but it would also have propagated model
+mistakes into the training data, especially for touching buttons, incomplete or missed
+masks. A fully manual workflow, by
+contrast, would have offered maximum control at substantially much higher annotation
+time and lower scalability. The chosen hybrid approach therefore balanced
+annotation efficiency with dataset quality.
 
 \begin{figure}[htbp]
     \centering
@@ -146,14 +166,12 @@ consistent labeling across both the training and test sets.
 
 A brief dataset quality assessment was performed before the main training
 experiments to check whether the dataset contained a substantial subset of
-clearly unusable images. The assessment was intentionally limited to simple and
-easily interpretable checks so that the outcome could be justified without
-introducing an additional complex filtering pipeline.
+clearly unusable images.
 
 For each training image, two basic image-level indicators were computed:
 \begin{itemize}
     \item a blur indicator based on the variance of the Laplacian, used only as
-    a relative sharpness measure;
+    a relative sharpness measure.
     \item the mean grayscale intensity, used as a simple brightness measure.
 \end{itemize}
 
@@ -166,14 +184,15 @@ camera framing conditions.
 
 The quantitative indicators were not used as automatic pruning rules. Instead,
 images with low sharpness values, very dark appearance, or unusual geometric
-properties were manually reviewed. A small subset of difficult images was also
-cross-checked with baseline model predictions to verify whether the apparent
-outliers reflected annotation problems or merely hard but valid examples. In
-this secondary check, images were prioritized for inspection when the baseline
-model produced low mean \gls{iou} values or elevated false-positive or
-false-negative counts. The flagged cases were then reviewed manually as a
-dataset sanity check. The descriptive outcomes of this assessment are reported
-in Section~\ref{sec:dataset_quality_results}.
+properties were manually reviewed. In addition, a model-assisted assessment was
+run over the full training split using a baseline instance-segmentation model.
+For every training image, the model produced per-image mean \gls{iou},
+false-positive count, and false-negative count. These metrics were used to
+identify the lowest-\gls{iou} and highest-error cases for manual inspection.
+The model-assisted pass therefore covered the complete training set, while the
+manual review focused on the most difficult cases highlighted by these
+per-image metrics. The descriptive outcomes of this assessment are reported in
+Section~\ref{sec:dataset_quality_results}.
 
 
 \section{Model architectures and training strategy}
@@ -185,18 +204,16 @@ annotation-support model in the semi-automatic labeling workflow,
 segmentation model, and the \gls{ocr} recognizer is used for semantic
 interpretation of the detected button crops.
 
-\subsection*{Experimental hardware and software environment}
+\subsection{Experimental hardware and software environment}
 
 All models training experiments reported in this thesis were executed
 on the same workstation. The host system ran Ubuntu 22.04.5 LTS with Linux kernel
-6.8.0-90. The machine was equipped with an AMD Ryzen 9 9950X 16-core processor,
-176~GiB of system memory, and an NVIDIA GeForce RTX 4090 graphics card with
+6.8.0-90. The machine was equipped with an AMD Ryzen 9 9950X 16-core processor and an NVIDIA GeForce RTX 4090 graphics card with
 24~GiB of \gls{vram}. The training software environment used Python 3.10.12 and
 PyTorch 2.5.1 compiled against CUDA 12.1. This configuration provided the
-computational platform for the baseline training, hyperparameter tuning, \gls{ocr}
-fine-tuning, and the comparative evaluation runs discussed in Chapters~3 and~4.
+computational platform for the baseline training, hyperparameter tuning and the comparative evaluation runs discussed in Chapters~3 and~4.
 
-\subsection*{Common training strategy}
+\subsection{Common training strategy}
 
 All trainable vision models were fine-tuned from pretrained weights rather than
 trained from scratch. Across the experiments, the train/validation split was used
@@ -205,7 +222,7 @@ for final comparison only. This separation was especially important in the
 \gls{yolo} experiments, where the best validation model did not always remain the
 best model on the final test set.
 
-\subsection*{Mask R-CNN training}
+\subsection{Mask R-CNN training}
 
 \gls{maskrcnn} was used only as an annotation-support model within the
 semi-automatic \gls{cvat} workflow. The model was trained with a custom
@@ -215,11 +232,17 @@ stages, the training setup remained based on transfer learning, AdamW
 optimization, and validation-loss-driven checkpoint selection. The exact
 checkpoint progression and its held-out test performance are summarized in
 Appendix~\ref{app:maskrcnn_checkpoints}; only the role of \gls{maskrcnn} in the
-annotation workflow is relevant to the main methodology.
+annotation workflow is relevant to the main methodology. These choices were kept
+stable rather than re-optimized at every retraining stage because the goal of
+\gls{maskrcnn} in this project was to provide progressively better
+pre-annotations as the dataset grew, not to serve as the final deployment
+benchmark. Transfer learning reduced the amount of annotated data required
+before useful masks became available, while AdamW and validation-loss-based
+checkpointing favored stable convergence during the early low-data stages.
 
-\subsection*{YOLOv8-Seg training}
+\subsection{YOLOv8-Seg training}
 
-\gls{yolo}v8-Seg is trained using the Ultralytics framework with the pretrained
+\gls{yolo}v8-Seg is trained using the Ultralytics framework \citep{ultralyticsdocs2026} with the pretrained
 \texttt{yolov8s-seg.pt} checkpoint. The initial baseline configuration was
 scheduled for up to 100 epochs with an input resolution of $640 \times 640$, dynamic batch sizing
 (\texttt{batch=-1}), seed 123, warmup over 5 epochs, and early stopping patience
@@ -233,6 +256,16 @@ to determine whether performance could be improved in a more systematic and
 reproducible way. All tuning runs were logged and tracked in \gls{wandb}, which was
 used to store the hyperparameter configurations, training curves, and validation
 metrics of individual experiments.
+
+The baseline settings were chosen as a pragmatic starting point rather than as a
+claim of prior optimality. The $640 \times 640$ input size was selected as a
+practical compromise between preserving small button detail and keeping training
+and inference costs aligned with the intended embedded deployment path. Dynamic
+batch sizing was used to maximize available \gls{gpu} memory without manually
+re-tuning the batch size for each augmentation-heavy run. Warmup and early
+stopping were included to stabilize optimization and avoid wasting compute once
+validation performance plateaued. These choices were therefore defensible, but
+still empirical enough to justify the structured tuning procedure that follows.
 
 The three stages of the hyperparameter tuning procedure are summarized in
 Table~\ref{tab:yolo_hparam_tuning}. The table is intended to provide a compact
@@ -277,7 +310,7 @@ were performed: a comparison with YOLO26-small and a domain-adaptation
 fine-tuning run using the mixed dataset that included images collected in the
 target deployment environment.
 
-\subsection*{Loss functions and optimization objectives}
+\subsection{Loss functions and optimization objectives}
 
 Both instance segmentation models are trained by minimizing a composite loss
 function that jointly optimizes object classification, localization, and mask
@@ -316,7 +349,7 @@ Despite architectural differences, both models optimize comparable objectives,
 enabling consistent evaluation of segmentation accuracy and computational
 efficiency across reference and deployment-oriented architectures.
 
-\subsection*{\gls{ocr}-based button interpretation}
+\subsection{OCR-based button interpretation}
 
 Following instance segmentation, the detected button regions are passed to a
 semantic interpretation stage. Segmented button instances are cropped and processed
@@ -336,7 +369,8 @@ deployment.
 
 \noindent\textbf{Recognition model architecture.}
 For cropped-button recognition, a lightweight \gls{ocr} recognizer based on
-\texttt{PP-OCRv5\_mobile\_rec} was selected. This model was preferred because it is
+\gls{paddleocr} \citep{paddleocrdocs2026} was selected. The deployed recognizer uses
+the \texttt{PP-OCRv5\_mobile\_rec} model. This model was preferred because it is
 designed for efficient deployment and already provides a compact recognition
 backbone suitable for embedded hardware. In practical terms, the recognizer
 combines lightweight visual feature extraction, sequence modelling, and a string
@@ -361,7 +395,7 @@ regularization. Recognition-specific augmentation and multiscale sampling were
 enabled to improve robustness and reduce overfitting to a single visual
 presentation of the button crops.
 
-The implementation followed the standard \gls{paddleocr} training workflow. Rather than
+The implementation followed the standard \gls{paddleocr} training workflow \citep{paddleocrdocs2026}. Rather than
 building a custom \gls{ocr} training loop from scratch, the official
 \texttt{tools/train.py} and \texttt{tools/eval.py} scripts provided by the
 \gls{paddleocr} framework were used directly. Project-specific experiments were
@@ -371,7 +405,7 @@ experiments.
 
 Model selection followed a two-stage hyperparameter tuning procedure. The first
 stage varied only the total number of epochs while keeping the baseline optimizer
-settings fixed. Epoch budgets of 30, 50, 60, and 80 were evaluated in order to
+settings fixed. Epoch budgets of 30, 50 an 60 were evaluated in order to
 determine whether the original 60-epoch recipe was necessary. This stage showed
 that the model reached its best validation performance before epoch 50 and that
 training beyond this point produced negligible gain. The second stage therefore
@@ -386,27 +420,25 @@ choices, and validation metrics could be compared systematically.
 
 \section{Evaluation metrics}
 
-The quantitative evaluation in this project follows the metrics produced by the
-training and validation toolchains that were actually used in the experiments.
-For the \gls{yolo}-based instance-segmentation models, the primary metric is mask
-\gls{map} under the \gls{coco} protocol, because the target task is instance
-segmentation rather than bounding-box detection alone. For completeness, the
-corresponding box metrics are also reported. The \gls{maskrcnn} annotation-support
-model was evaluated separately on the same held-out test split, but this
+The evaluation in this project follows the metric outputs of the training and
+validation toolchains used in the experiments. \gls{yolo}-based segmentation is
+reported with \gls{coco}-style box and mask metrics, while the \gls{ocr}
+recognizer is reported with exact-match accuracy and normalized edit distance.
+Validation data were used for model selection and tuning, and held-out test
+data were reserved for final reporting. The \gls{maskrcnn} annotation-support
 comparison is included only as supplementary material in
-Appendix~\ref{app:maskrcnn_checkpoints}, since \gls{maskrcnn} was not selected as
-the deployment model.
+Appendix~\ref{app:maskrcnn_checkpoints}.
 
-\subsection{\gls{yolo} segmentation metrics under the \gls{coco} protocol}
+\subsection{YOLO segmentation metrics under the COCO protocol}
 
 The \gls{yolo} experiments report the standard Ultralytics/\gls{coco} validation
 and test metrics for both bounding boxes and segmentation masks. The main metric
-used for model selection is mask \glsentryshort{map}@[0.50:0.95], written in the
-training logs as \texttt{metrics/mAP50-95(M)}. This metric averages \gls{ap} over
+used for model selection is mask \glsentryshort{map}@[0.50:0.95]. This metric averages \gls{ap} over
 \gls{iou} thresholds from 0.50 to 0.95 in increments of 0.05 and is the most
 representative single indicator of segmentation quality. In addition,
 \texttt{metrics/mAP50(M)} is reported to show performance at the less strict 0.50
-\gls{iou} threshold.
+\gls{iou} threshold. This reporting convention follows the standard COCO-style
+Ultralytics metrics interface \citep{lin2014coco,ultralyticsdocs2026}.
 
 \begin{equation}
 \mathrm{Precision} = \frac{TP}{TP + FP}, \qquad
@@ -428,7 +460,7 @@ to distinguish localization quality from mask quality. However, when ranking
 segmentation models in this report, mask \glsentryshort{map}@[0.50:0.95] remains
 the primary comparison criterion.
 
-\subsection{\gls{ocr} accuracy and normalized edit distance}
+\subsection{OCR accuracy and normalized edit distance}
 
 The \gls{ocr} recognition models are evaluated using exact-match accuracy and
 normalized edit distance. Exact-match accuracy is the fraction of button crops for
@@ -465,18 +497,9 @@ During \gls{ocr} tuning, validation accuracy was treated as the primary model-se
 metric, while normalized edit distance was used as a secondary quality indicator.
 Final \gls{ocr} benchmarking was then performed on the held-out \gls{ocr} test split using the
 official \gls{paddleocr} evaluation script with the same configuration family as
-used during training.
+used during training \citep{paddleocrdocs2026}.
 
-\subsection{Evaluation protocol}
-
-Across all models, validation data were used for model selection during training
-and tuning, while held-out test data were reserved for final reporting only. This
-applies to the \gls{yolo} segmentation experiments, the supplementary
-\gls{maskrcnn} checkpoint comparison, and the final \gls{ocr} benchmarking. The
-results chapter therefore distinguishes consistently between validation-time
-selection and held-out test-set evaluation.
-
-\clearpage
+%\clearpage
 \section{Embedded deployment and optimization}
 
 \begin{wrapfigure}{r}{0.32\textwidth}
@@ -484,16 +507,18 @@ selection and held-out test-set evaluation.
     \vspace{-10pt}
     \includegraphics[width=0.20\textwidth]{figures/methodology/TensorRT Workflow-2026-03-20-100105.png}
     \captionsetup{width=0.28\textwidth}
-    \caption{Deployment and optimization workflow for models on \gls{jetson} Orin using \gls{onnx} and \gls{tensorrt}.}
+    \caption{Jetson deployment workflow via \gls{onnx} and \gls{tensorrt}.}
     \label{fig:tensorrt_workflow}
     \vspace{-10pt}
 \end{wrapfigure}
 
 
-To enable real-time execution on embedded hardware, and wrap up step 1 of the workflow strategy in Figure~\ref{fig:scalable_workflow}, trained models are optimized
-and deployed on a \gls{jetson} Orin platform. The deployment workflow is designed
-to be identical for both the instance segmentation model and the \gls{ocr}-based button
-classification model.
+To enable real-time execution on embedded hardware, the trained models are
+optimized and deployed on a \gls{jetson} Orin platform. This section corresponds
+to the deployment branch of the target workflow introduced in
+Figure~\ref{fig:scalable_workflow}. The deployment workflow is designed to be
+identical for both the instance segmentation model and the \gls{ocr}-based
+button classification model.
 
 Models are first trained in PyTorch, exported to the Open Neural Network Exchange
 (\gls{onnx}) \citep{onnx2019} format, and then converted on the \gls{jetson} Orin
@@ -517,7 +542,7 @@ Figure~\ref{fig:tensorrt_workflow}. This approach ensures a consistent and effic
 deployment pipeline and enables fair evaluation of different model architectures
 under identical runtime constraints.
 
-\section{ROS2 pipeline architecture}
+\section{ROS 2 pipeline architecture}
 
 After deployment-oriented model selection, the \gls{tensorrt} engines were integrated into
 a modular \gls{ros2} pipeline on the target robot computer. This stage links
@@ -526,11 +551,12 @@ deployment data collection.
 
 \subsection{Deployment platform}
 
-The runtime pipeline was executed on an \gls{jetson} Orin Nano running Ubuntu 22.04.5 LTS and \gls{ros2} Humble. The
-device uses NVIDIA Linux for Tegra release \texttt{R36.4.7} with Linux kernel
-\texttt{5.15.148-tegra}. \gls{tensorrt}~10.7.0 was used for optimized inference. Visual
-input was provided by a Stereolabs ZED X camera connected through a ZED Link Duo
-capture card, using ZED SDK~5.2.1.
+The runtime pipeline was executed on an \gls{jetson} Orin Nano running Ubuntu
+22.04.5 LTS and \gls{ros2} Humble. The device used JetPack~6.2.1,
+corresponding to NVIDIA Linux for Tegra release \texttt{R36.4.7} with Linux
+kernel \texttt{5.15.148-tegra}. \gls{tensorrt}~10.7.0 was used for optimized
+inference. Visual input was provided by a Stereolabs ZED X \gls{rgbd} camera
+connected through a ZED Link Duo capture card, using ZED SDK~5.2.1.
 
 \subsection{Node responsibilities and outputs}
 
@@ -555,10 +581,9 @@ and allowed both runtime components to be benchmarked independently.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/methodology/COCO Segmentation Pipeline-2026-03-20-142622.png}
-    \caption{\Gls{ros2} runtime architecture used for deployment. The ZED X camera
-    provides color, depth, and calibration data to the \gls{yolo} node. The \gls{ocr}
-    node enriches the geometric button candidates with recognized text, and the
-    active data collector stores accepted deployment samples for later retraining.}
+    \caption{Deployed ROS 2 runtime architecture with the ZED X \glsentryshort{rgbd}
+    camera, \glsentryshort{yolo} node, \glsentryshort{ocr} node, and active
+    data collector.}
     \label{fig:ros2_runtime_architecture}
 \end{figure}
 
