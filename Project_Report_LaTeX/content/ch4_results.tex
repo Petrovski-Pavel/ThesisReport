@@ -257,6 +257,21 @@ performance.
     \end{tabular}
 \end{table}
 
+A complementary apples-to-apples replay experiment was then performed on one
+recorded university bag so that the baseline and \gls{adc}-fine-tuned \gls{yolo}
+engines processed the same camera frames. In this controlled comparison, the
+retrained model produced detections in more unique frames (295 vs.\ 237),
+more frames with valid depth estimates (288 vs.\ 231), and a higher mean
+target confidence (0.8422 vs.\ 0.8184). Aggregate distance statistics changed
+only modestly, with nearly unchanged mean and slightly higher median and
+90th-percentile depth values. However, qualitative inspection of matched replay
+frames showed that some individual button instances were recognized at
+substantially larger distances than with the baseline model, in several cases by
+more than a factor of two. This replay result complements the held-out test-set
+results by showing that \gls{adc}-based retraining improved deployment
+robustness and confidence on the actual target environment, even when the mean
+distance statistics changed only slightly.
+
 Overall, the \gls{yolo} results show three main findings. First, the baseline
 \gls{yolo}v8-Seg model was already strong and difficult to surpass on the general
 elevator test set. Second, staged hyperparameter tuning improved validation
@@ -427,7 +442,7 @@ For \gls{ocr}, the comparison used the Paddle inference model and the exported
         \midrule
         \glsentryshort{yolo} inference [ms/image] & 36.46 & 24.43 & 1.49$\times$ \\
         \glsentryshort{yolo} wall time [ms/image] & 64.19 & 64.52 & 1.00$\times$ \\
-        \glsentryshort{ocr} latency [ms/crop] & 167.72 & 10.29 & 16.30$\times$ \\
+        \glsentryshort{ocr} wall time [ms/crop] & 167.72 & 10.29 & 16.30$\times$ \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -436,9 +451,7 @@ The \gls{yolo} result shows that \gls{tensorrt} reduced the forward-pass time
 substantially, even though the total offline single-image wall time remained
 almost unchanged because preprocessing and postprocessing still contributed a
 large fraction of the runtime. The \gls{ocr} result is more direct: the
-\gls{tensorrt} engine reduced average latency from 167.72~ms to 10.29~ms per
-button crop while preserving the same accepted predictions on all five button
-regions in the test image. These results support the use of \gls{tensorrt}
+\gls{tensorrt} engine reduced average per-crop wall time from 167.72~ms to 10.29~ms while preserving the same accepted predictions on all five button regions in the test image. These results support the use of \gls{tensorrt}
 export as an important deployment optimization step before integrating the models
 into the full \gls{ros2} pipeline.
 

@@ -151,3 +151,79 @@ node's declared software default is reported.
 \bottomrule
 \end{longtable}
 \normalsize
+
+
+\section{Example final pipeline output}
+\label{app:ros2_pipeline_example}
+
+This section provides one concrete example of the final deployed pipeline output.
+The image corresponds to the university replay experiment used in Chapter~\ref{ch:results}.
+Figure~\ref{fig:app_pipeline_example} shows the same frame rendered in two ways:
+a bounding-box and label view, and a center-and-distance view with the predicted
+segmentation masks. The abridged \texttt{/button\_targets\_3d\_ocr} message for the same frame timestamp is shown directly below the figure.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/appendices/ros2_pipeline_example_bbox_label.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/appendices/ros2_pipeline_example_center_distance.jpg}
+    \end{minipage}
+    \caption{Example final pipeline output for frame timestamp \texttt{1773668101805465000}. Left: bounding boxes with recognized button labels and detector confidence. Right: predicted masks, representative button centers, and depth estimates.}
+    \label{fig:app_pipeline_example}
+\end{figure}
+
+\noindent\textbf{Abridged \texttt{/button\_targets\_3d\_ocr} message for the frame shown in Figure~\ref{fig:app_pipeline_example}.}
+
+\begin{verbatim}
+header_stamp_ns: 1773668101805465000
+frame_id: zed_left_camera_frame_optical
+num_targets: 7
+
+targets:
+  - label: "ALARM"
+    yolo_score: 0.893
+    ocr_score: 0.958
+    depth_m: 0.340
+    center_3d_m: [-0.045, 0.005, 0.340]
+
+  - label: "OPEN"
+    yolo_score: 0.890
+    ocr_score: 0.959
+    depth_m: 0.320
+    center_3d_m: [0.036, -0.001, 0.320]
+
+  - label: "CLOSE"
+    yolo_score: 0.884
+    ocr_score: 0.952
+    depth_m: 0.332
+    center_3d_m: [-0.006, 0.004, 0.332]
+
+  - label: "2"
+    yolo_score: 0.863
+    ocr_score: 1.000
+    depth_m: 0.327
+    center_3d_m: [-0.003, -0.129, 0.327]
+
+  - label: "1"
+    yolo_score: 0.863
+    ocr_score: 0.999
+    depth_m: 0.331
+    center_3d_m: [-0.005, -0.089, 0.331]
+
+  - label: "0"
+    yolo_score: 0.862
+    ocr_score: 0.997
+    depth_m: 0.324
+    center_3d_m: [-0.004, -0.045, 0.324]
+
+  - label: "3"
+    yolo_score: 0.854
+    ocr_score: 1.000
+    depth_m: 0.327
+    center_3d_m: [-0.003, -0.170, 0.327]
+\end{verbatim}

@@ -565,8 +565,9 @@ node, an \gls{ocr} inference node, and an \gls{adc}. As illustrated in
 Figure~\ref{fig:ros2_runtime_architecture}, the camera provides the color image,
 registered depth image, and calibration data required for geometric perception.
 The \texttt{yolo\_engine\_node} converts these inputs into button candidates that
-already include 2D localization, a representative image center, and an estimated
-3D position or distance in the camera frame. The \texttt{ocr\_trt\_node} then adds
+already include image-plane localization through a mask and bounding box, a
+representative center pixel, and a depth-based camera-relative target estimate.
+The \texttt{ocr\_trt\_node} then adds
 semantic information by assigning the recognized button text and its confidence
 to each accepted candidate. Finally, the \gls{adc} receives the enriched button
 candidates together with the camera image and stores only those samples that pass
@@ -597,7 +598,7 @@ and allowed both runtime components to be benchmarked independently.
         \textbf{Node} & \textbf{Outputs used downstream} & \textbf{Role in the pipeline} \\
         \midrule
         \texttt{zed\_wrapper} & Color images, registered depth images, and camera calibration data & Provides the synchronized sensor streams used by the perception pipeline. \\
-        \texttt{yolo\_engine\_node} & Button candidates with 2D localization, representative image centers, detection scores, and estimated 3D positions/distances & Runs \gls{tensorrt} instance segmentation, filters detections, and performs depth-based spatial projection. \\
+        \texttt{yolo\_engine\_node} & Button candidates with mask- and bounding-box-based image localization, representative center pixels, detection scores, and depth-based camera-relative target estimates & Runs \gls{tensorrt} instance segmentation, filters detections, and performs depth-based spatial projection. \\
         \texttt{ocr\_trt\_node} & OCR-enriched button candidates with recognized text and text confidence, in addition to the geometric fields from the \gls{yolo} stage & Crops button regions from the current image and adds semantic label information to the accepted button candidates. \\
         \texttt{data\_collector} & Curated deployment samples containing images, annotations, and session metadata & Stores accepted field samples for later dataset expansion and model retraining. \\
         \bottomrule
@@ -606,11 +607,14 @@ and allowed both runtime components to be benchmarked independently.
 
 \subsection{Distance estimation and collector design}
 
-The internal interface between the perception nodes is a custom button-target
-message that carries the geometric output of the \gls{yolo} stage and, after the
-\gls{ocr} step, the recognized button text and text score. Image topics use a
-best-effort, keep-last quality-of-service setting so that the pipeline always
-prefers recent sensor data over delayed frames.
+The internal interface between the perception nodes is a custom ROS
+button-target message, defined for this project to bundle the geometric output
+of the \gls{yolo} stage and, after the \gls{ocr} step, the recognized button
+text and text score. Image topics use a
+best-effort, keep-last quality-of-service policy so that the pipeline
+prioritizes the newest available camera frames. In practice, occasional frame
+drops are acceptable because processing delayed images would be less useful than
+continuing with recent sensor data.
 
 Within the \texttt{yolo\_engine\_node}, target depth is estimated only from valid
 depth pixels that fall inside the predicted segmentation mask. Let $\mathcal{V}$
@@ -626,8 +630,9 @@ Using a percentile-based estimate rather than a plain mean reduces sensitivity t
 outliers caused by missing returns and reflective elevator surfaces.
 
 The representative image location is also derived from the valid masked depth
-pixels. In the current implementation, the pixel coordinates are taken as the
-median valid depth location:
+pixels. Here, $i$ denotes the image row index and $j$ denotes the image column
+index in the depth image. In the current implementation, the pixel coordinates
+are taken as the median valid depth location:
 \begin{equation}
 u = \mathrm{median}\left(\{j \mid (i,j)\in \mathcal{V}\}\right), \qquad
 v = \mathrm{median}\left(\{i \mid (i,j)\in \mathcal{V}\}\right).
