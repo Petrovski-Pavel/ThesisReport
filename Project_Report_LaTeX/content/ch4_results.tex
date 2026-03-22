@@ -264,15 +264,20 @@ recorded university bag so that the baseline and \gls{adc}-fine-tuned \gls{yolo}
 engines processed the same camera frames. In this controlled comparison, the
 retrained model produced detections in more unique frames (295 vs.\ 237),
 more frames with valid depth estimates (288 vs.\ 231), and a higher mean
-target confidence (0.8422 vs.\ 0.8184). Aggregate distance statistics changed
-only modestly, with nearly unchanged mean and slightly higher median and
-90th-percentile depth values. However, qualitative inspection of matched replay
-frames showed that some individual button instances were recognized at
-substantially larger distances than with the baseline model, in several cases by
-more than a factor of two. This replay result complements the held-out test-set
-results by showing that \gls{adc}-based retraining improved deployment
-robustness and confidence on the actual target environment, even when the mean
-distance statistics changed only slightly.
+target confidence (0.8422 vs.\ 0.8184). The meaningful distance statistics also
+remained favorable: the mean valid-target distance stayed close to the baseline
+(0.6776~m vs.\ 0.6975~m), while the median distance increased slightly
+(0.5843~m vs.\ 0.5594~m) and the 90th-percentile distance also increased
+slightly (0.8310~m vs.\ 0.7955~m). Maximum-distance values are not reported
+here because the farthest outliers included implausible depth estimates that did
+not correspond to real button observations. However, qualitative inspection of
+matched replay frames still showed that some individual button instances were
+recognized at substantially larger distances than with the baseline model, in
+several cases by more than a factor of two. This replay result complements the
+held-out test-set results by showing that \gls{adc}-based retraining improved
+deployment robustness and confidence on the actual target environment, while
+maintaining comparable overall distance performance and improving some
+individual long-range detections.
 
 Overall, the \gls{yolo} results show three main findings. First, the baseline
 \gls{yolo}v8-Seg model was already strong and difficult to surpass on the general
