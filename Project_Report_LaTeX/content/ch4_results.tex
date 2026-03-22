@@ -54,7 +54,7 @@ Appendix~\ref{app:dataset_quality_plots}.
 
 \subsection{Baseline YOLOv8-Seg performance}
 
-The baseline \gls{yolo}v8-Seg model established the main reference point for all
+The baseline YOLOv8-Seg small model established the main reference point for all
 subsequent experiments. On the validation split,
 the best checkpoint was obtained at epoch 59. This model achieved a mask
 $\mathrm{mAP}_{50}$ of 0.93931 and a mask
@@ -155,10 +155,10 @@ change.
         \toprule
         Model & Image size & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
         \midrule
-        Baseline YOLOv8-Seg & 640 & 0.92819 & 0.73744 & 0.87603 & 0.90832 \\
-        Stage 3 tuned YOLOv8-Seg & 640 & 0.91706 & 0.68829 & 0.86839 & 0.88443 \\
-        Baseline YOLOv8-Seg & 768 & 0.92638 & 0.74752 & 0.86778 & 0.92329 \\
-        Stage 3 tuned YOLOv8-Seg & 768 & 0.92719 & 0.71985 & 0.87399 & 0.90724 \\
+        Baseline YOLOv8-Seg & 640 & 0.91921 & 0.58295 & 0.86835 & 0.89896 \\
+        Stage 3 tuned YOLOv8-Seg & 640 & 0.91075 & 0.55729 & 0.86537 & 0.87685 \\
+        Baseline YOLOv8-Seg & 768 & 0.92384 & 0.62325 & 0.86577 & 0.91939 \\
+        Stage 3 tuned YOLOv8-Seg & 768 & 0.92479 & 0.60845 & 0.87224 & 0.90581 \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -167,7 +167,9 @@ The held-out test comparison in Table~\ref{tab:yolo_tuning_test_results} does
 not support replacing the baseline checkpoint with the Stage 3 model. The tuning
 procedure improved validation performance, but the baseline remained better on
 the final test set and was therefore retained as the reference model for later
-deployment-oriented experiments.
+deployment-oriented experiments within the YOLO family. A supplementary
+cross-architecture comparison against the final \gls{maskrcnn} checkpoint is
+reported in Appendix~\ref{app:yolo_vs_maskrcnn}.
 
 \subsection{Comparison with YOLO26}
 
@@ -545,7 +547,10 @@ Chapter~\ref{ch:methodology}.
 
 Figure~\ref{fig:ros2_pipeline_output_examples} illustrates the final deployed
 output of the integrated perception pipeline for an in-cabin elevator panel
-observed during live testing with the mobile cart in HAN University R29.
+observed during live testing with the mobile cart in HAN University R29. A
+fuller appendix example of the same type of final output, including the abridged
+\texttt{/button\_targets\_3d\_ocr} message, is provided in
+Appendix~\ref{app:ros2_pipeline_example}.
 Both overlays are derived from the same accepted \texttt{/button\_targets\_3d\_ocr}
 message set, but visualize different aspects of the final result. The first view
 emphasizes the segmentation masks, representative button centers, and estimated

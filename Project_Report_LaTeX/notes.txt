@@ -41,7 +41,9 @@ CH 3.8.1 Mention that the Zed X camera is RGB-D and say that the JetPack version
 Figure 3.6 explanation is too long. In my opinion the image is already explained above, the text of the figure should be something concise and short. This counts for all figures not only that one.
 
 Chapter 4.3.4 mentions Chapter 3 but its not a link
-Table 4.10 we have YOLO inference, YOLO wall tiem and OCR Latency, this should be a one currently the table does not make sense. It is mentioned in chapter 6.1 as well so change on both places, this is not OCR latency...
+
+
+***Table 4.10 we have YOLO inference, YOLO wall tiem and OCR Latency, this should be a one currently the table does not make sense. It is mentioned in chapter 6.1 as well so change on both places, this is not OCR latency...
 
 CHapter 5 Intro sentance includes reference to chapter 4 which should be a link
 
@@ -73,5 +75,16 @@ the pipeline always prefers recent sensor data over delayed frames. This one nee
 
 In 3.8.3 Z(depth) formula i and j are not explained ...
 
+
+---------------
+Dataset quality appendix first graph is very odd and is not really understandable. Better not include it.
+
+In the report it is not mentioned tht the YOLO model is yolo v8 small segmentation model.
+
+We need to add the formula for calculating the button center
+The h-param tuning for OCR can be presented in a table same as the YOLO
+Chapter 4.4.1 qualitive end-to-end should also point to the Appendix where we have the final results about the pipelne with the full output of button_targets_3d_ocr
+
+we should mention the mean target distance and confidence score and add it in the conclusion especially the distance, this is important!
 
 

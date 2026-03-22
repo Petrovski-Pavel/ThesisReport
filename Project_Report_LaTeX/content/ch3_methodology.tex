@@ -22,13 +22,15 @@ data can be transferred to an offboard system, where annotations may be reviewed
 corrected, or extended before retraining the perception models. The updated models
 are then redeployed to the robot and become the new default for continued operation.
 
-In the intended long-term improvement loop, not every collected sample is sent
-back for review. Instead, the offboard feedback stage is intended to prioritize
-informative cases, such as medium-confidence detections, repeated false
-positives, or scenes in which instance localization and semantic interpretation
-disagree. This keeps the retraining cycle selective and makes the continuous
-improvement concept in Figure~\ref{fig:scalable_workflow} operational rather
-than purely conceptual.
+In the implemented improvement loop, not every observed frame is exported for
+later review. Instead, the \gls{adc} applies quality gates and stores only
+frames that contain accepted button targets with sufficient detector confidence,
+sufficient \gls{ocr} confidence, and compliance with the additional export
+constraints described later in this chapter, such as image-quality, stability,
+and de-duplication checks. The offboard review stage therefore starts from a
+filtered set of high-value samples rather than from the full camera stream,
+which makes the improvement loop in Figure~\ref{fig:scalable_workflow} an
+implemented data-collection process rather than only a conceptual workflow.
 
 This workflow enables gradual adaptation to new hospital environments and allows
 knowledge acquired in one deployment to be reused and refined in subsequent
@@ -136,7 +138,7 @@ Figure~\ref{fig:annotation_workflow}.
 \end{figure}
 
 To support iterative improvement, the dataset was annotated in batches of
-approximately 150 images. After each batch, the model was retrained using the
+approximately 150 images. After each three batches, the model was retrained using the
 newly annotated data and reused for subsequent annotation rounds. Model checkpoints
 were created after approximately 90, 449, and 900 annotated images, followed by a
 final checkpoint trained on the full 1400-image training split. This enabled
@@ -242,7 +244,7 @@ checkpointing favored stable convergence during the early low-data stages.
 
 \subsection{YOLOv8-Seg training}
 
-\gls{yolo}v8-Seg is trained using the Ultralytics framework \citep{ultralyticsdocs2026} with the pretrained
+The YOLOv8-Seg small model is trained using the Ultralytics framework \citep{ultralyticsdocs2026} with the pretrained
 \texttt{yolov8s-seg.pt} checkpoint. The initial baseline configuration was
 scheduled for up to 100 epochs with an input resolution of $640 \times 640$, dynamic batch sizing
 (\texttt{batch=-1}), seed 123, warmup over 5 epochs, and early stopping patience
@@ -317,6 +319,7 @@ function that jointly optimizes object classification, localization, and mask
 prediction. Although \gls{maskrcnn} and \gls{yolo}v8-Seg differ architecturally, their
 optimization objectives are conceptually aligned.
 
+
 \noindent\textbf{Mask R-CNN.}
 The training objective of \gls{maskrcnn} is defined as a multi-task loss composed of
 three terms \citep{he2017maskrcnn}:
@@ -330,6 +333,7 @@ where $\mathcal{L}_{\text{cls}}$ denotes the classification loss, implemented as
 categorical cross-entropy; $\mathcal{L}_{\text{box}}$ represents bounding-box
 regression using the smooth $L_1$ loss; and $\mathcal{L}_{\text{mask}}$ is a
 pixel-wise binary cross-entropy loss applied to each predicted instance mask.
+
 
 \noindent\textbf{YOLOv8-Seg.}
 \gls{yolo}v8-Seg integrates detection and segmentation into a single-stage architecture.
@@ -367,6 +371,7 @@ bounded crop around a single button and predicts the button's semantic label. Th
 reduces computational cost and makes the \gls{ocr} stage more suitable for embedded
 deployment.
 
+
 \noindent\textbf{Recognition model architecture.}
 For cropped-button recognition, a lightweight \gls{ocr} recognizer based on
 \gls{paddleocr} \citep{paddleocrdocs2026} was selected. The deployed recognizer uses
@@ -383,6 +388,7 @@ button localization was already solved upstream by the instance segmentation mod
 This avoids redundant computation and makes the \gls{ocr} stage conceptually cleaner:
 segmentation localizes the button instance, and \gls{ocr} interprets that localized
 instance.
+
 
 \noindent\textbf{Fine-tuning strategy.}
 The recognizer was initialized from the official pretrained English
@@ -403,20 +409,25 @@ defined through \gls{yaml} configuration files and command-line overrides, in th
 using configuration-driven training through Ultralytics for the \gls{yolo}
 experiments.
 
-Model selection followed a two-stage hyperparameter tuning procedure. The first
-stage varied only the total number of epochs while keeping the baseline optimizer
-settings fixed. Epoch budgets of 30, 50 an 60 were evaluated in order to
-determine whether the original 60-epoch recipe was necessary. This stage showed
-that the model reached its best validation performance before epoch 50 and that
-training beyond this point produced negligible gain. The second stage therefore
-fixed the epoch budget at 50 and performed a narrow sweep over optimizer
-hyperparameters, primarily learning rate and weight decay. The main configurations
-tested were $\{3 \times 10^{-4}, 5 \times 10^{-4}, 7 \times 10^{-4}\}$ for the
-initial learning rate and $\{1 \times 10^{-5}, 3 \times 10^{-5}\}$ for weight
-decay, while warmup was adjusted conservatively between 3 and 5 epochs. All \gls{ocr}
-tuning runs were logged in \gls{wandb} so that training curves, hyperparameter
-choices, and validation metrics could be compared systematically.
+The \gls{ocr} tuning procedure is summarized in Table~\ref{tab:ocr_hparam_tuning}.
+Stage 1 was used to determine an appropriate epoch budget, while Stage 2 fixed
+that budget and performed a narrow optimizer sweep. All \gls{ocr} tuning runs
+were logged in \gls{wandb} so that training curves, hyperparameter choices, and
+validation metrics could be compared systematically.
 
+\begin{table}[htbp]
+    \centering
+    \caption{Overview of the staged \glsentryshort{ocr} hyperparameter tuning procedure.}
+    \label{tab:ocr_hparam_tuning}
+    \begin{tabular}{p{1.6cm} p{3.8cm} p{4.5cm} p{3.0cm} p{3.3cm}}
+        \toprule
+        Stage & Purpose & Parameters varied & Training budget & Selection criterion \\
+        \midrule
+        Stage 1 & Epoch selection under fixed baseline optimizer settings & Epochs $\in \{30, 50, 60\}$ & One run per epoch budget & Best evaluation accuracy, supported by normalized edit distance \\
+        Stage 2 & Narrow optimizer sweep at the selected epoch budget & Learning rate, weight decay, and warmup & Fixed at 50 epochs & Best evaluation accuracy, supported by normalized edit distance \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \section{Evaluation metrics}
 
@@ -506,8 +517,8 @@ used during training \citep{paddleocrdocs2026}.
     \centering
     \vspace{-10pt}
     \includegraphics[width=0.20\textwidth]{figures/methodology/TensorRT Workflow-2026-03-20-100105.png}
-    \captionsetup{width=0.28\textwidth}
-    \caption{Jetson deployment workflow via \gls{onnx} and \gls{tensorrt}.}
+    \captionsetup{width=0.2\textwidth}
+    \caption{Jetson deployment workflow.}
     \label{fig:tensorrt_workflow}
     \vspace{-10pt}
 \end{wrapfigure}

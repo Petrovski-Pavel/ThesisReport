@@ -1,5 +1,6 @@
 
 \chapter{Introduction}
+\label{ch:introduction}
 
 This chapter introduces the project context, defines the perception problem
 addressed in this thesis, states the project objective and research questions,
@@ -45,28 +46,29 @@ How can a computer-vision workflow be designed and implemented to enable a servi
 
 \textbf{Sub-questions:}
 \begin{enumerate}
-    \item What are the relevant human–interaction points in hospital environments that should be detected and classified by the computer-vision workflow?
+    \item What are the relevant human-interaction points in hospital environments that should be detected and classified by the computer-vision workflow?
     \item What computer-vision methods and model architectures are most suitable for detecting and classifying human-interaction elements in service-robot environments?
     \item How can a high-quality dataset be designed and constructed for achieving robust model performance?
     \item Which model-optimization techniques support real-time inference on embedded hardware while preserving detection accuracy?
-    \item How can the workflow support scalable and efficient model improvements, including potential data collection and retraining during deployment?
+    \item How can the workflow support scalable model improvements, including potential data collection and retraining during deployment?
 \end{enumerate}
 
 
 \section{Outline of the report}
 
-Chapter~1 introduces the project background, problem definition, objective, and
-research questions. Chapter~2 reviews the literature relevant to
-interaction-point perception, including task formulation, public datasets,
-annotation strategies, model design, and embedded deployment constraints.
-Chapter~3 explains the methodology used in this thesis, including dataset
-selection and preparation, the annotation workflow, model training, evaluation,
-deployment, and the final \gls{ros2} pipeline design. Chapter~4 presents the
-results of the dataset-quality assessment, model training and tuning
-experiments, held-out test evaluations, and deployment benchmarks. Chapter~5
-interprets these results in relation to the research questions, discusses the
-main limitations, and considers implications for future robot deployment.
-Chapter~6 concludes the report and presents recommendations for future work. The
-appendices provide supplementary model evaluations, dataset-quality plots, the
-\gls{ai}-use disclosure, and additional technical details of the deployed
-pipeline.
+Chapter~\ref{ch:introduction} introduces the project background, problem
+definition, objective, and research questions. Chapter~\ref{ch:literature}
+reviews the literature relevant to interaction-point perception, including task
+formulation, public datasets, annotation strategies, model design, and embedded
+deployment constraints. Chapter~\ref{ch:methodology} explains the methodology
+used in this thesis, including dataset selection and preparation, the
+annotation workflow, model training, evaluation, deployment, and the final
+\gls{ros2} pipeline design. Chapter~\ref{ch:results} presents the results of
+the dataset-quality assessment, model training and tuning experiments,
+held-out test evaluations, and deployment benchmarks.
+Chapter~\ref{ch:discussion} interprets these results in relation to the
+research questions, discusses the main limitations, and considers implications
+for future robot deployment. Chapter~\ref{ch:conclusions} concludes the report
+and presents recommendations for future work. The appendices provide
+supplementary model evaluations, dataset-quality plots, the \gls{ai}-use
+disclosure, and additional technical details of the deployed pipeline.
