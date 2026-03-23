@@ -56,7 +56,7 @@ Appendix~\ref{app:dataset_quality_plots}.
 
 The baseline YOLOv8-Seg small model established the main reference point for all
 subsequent experiments. On the validation split,
-the best checkpoint was obtained at epoch 59. This model achieved a mask
+the best checkpoint was obtained at epoch 49. This model achieved a mask
 $\mathrm{mAP}_{50}$ of 0.93931 and a mask
 $\mathrm{mAP}_{50\text{:}95}$ of 0.59645, with mask precision and recall of
 0.90623 and 0.89947, respectively. These results confirmed that the initial
@@ -208,11 +208,12 @@ but the final test-set ranking remained in favor of the baseline model.
 The final \gls{yolo} experiment addressed domain adaptation to the target
 university environment. The baseline checkpoint was fine-tuned on the original
 dataset augmented with 46 newly collected and annotated images from HAN
-University R29. Table~\ref{tab:adc_original_test} shows that this
-adaptation step did not materially degrade performance on the original held-out
-test split: mask $\mathrm{mAP}_{50\text{:}95}$ remained effectively unchanged
-(0.58295 vs.\ 0.58293). The validation curve in
-Figure~\ref{fig:adc_finetune_mask_map} is consistent with this observation.
+University R29. These images were split into 32 training images, 7 validation
+images, and 7 held-out environment-specific test images. Table~\ref{tab:adc_original_test}
+shows that this adaptation step did not materially degrade performance on the original
+held-out test split: mask $\mathrm{mAP}_{50\text{:}95}$ remained effectively unchanged
+(0.58295 vs.\ 0.58293). The validation curve in Figure~\ref{fig:adc_finetune_mask_map}
+is consistent with this observation.
 
 \begin{table}[htbp]
     \centering
@@ -262,22 +263,23 @@ performance.
 A complementary apples-to-apples replay experiment was then performed on one
 recorded university bag so that the baseline and \gls{adc}-fine-tuned \gls{yolo}
 engines processed the same camera frames. In this controlled comparison, the
-retrained model produced detections in more unique frames (295 vs.\ 237),
-more frames with valid depth estimates (288 vs.\ 231), and a higher mean
-target confidence (0.8422 vs.\ 0.8184). The meaningful distance statistics also
-remained favorable: the mean valid-target distance stayed close to the baseline
-(0.6776~m vs.\ 0.6975~m), while the median distance increased slightly
-(0.5843~m vs.\ 0.5594~m) and the 90th-percentile distance also increased
-slightly (0.8310~m vs.\ 0.7955~m). Maximum-distance values are not reported
+retrained model detected buttons in more replayed frames (295 vs.\ 237), and
+more of those detections could be paired with valid depth estimates (288 vs.\ 231).
+The retrained model also achieved a higher mean target confidence (0.8422 vs.\ 0.8184).
+Distance-related statistics remained broadly comparable: the mean valid-target distance
+stayed close to the baseline (0.6776~m vs.\ 0.6975~m), while the median distance
+increased slightly (0.5843~m vs.\ 0.5594~m) and the 90th-percentile distance also
+increased slightly (0.8310~m vs.\ 0.7955~m). Maximum-distance values are not reported
 here because the farthest outliers included implausible depth estimates that did
-not correspond to real button observations. However, qualitative inspection of
-matched replay frames still showed that some individual button instances were
-recognized at substantially larger distances than with the baseline model, in
-several cases by more than a factor of two. This replay result complements the
-held-out test-set results by showing that \gls{adc}-based retraining improved
-deployment robustness and confidence on the actual target environment, while
-maintaining comparable overall distance performance and improving some
-individual long-range detections.
+not correspond to real button observations. Qualitative inspection of matched replay
+frames also showed individual cases in which the retrained model detected buttons at
+substantially larger distances than the baseline model. For example, one repeatedly
+inspected button was detected at approximately 0.75~m rather than about 0.35~m.
+However, these case-specific improvements should be interpreted separately from the
+aggregate replay statistics, which indicate only modest overall distance improvement.
+This replay result complements the held-out test-set results by showing that
+\gls{adc}-based retraining improved deployment robustness and confidence on the actual
+target environment, while maintaining broadly comparable overall distance behavior.
 
 Overall, the \gls{yolo} results show three main findings. First, the baseline
 \gls{yolo}v8-Seg model was already strong and difficult to surpass on the general
@@ -440,7 +442,7 @@ For \gls{ocr}, the comparison used the Paddle inference model and the exported
 
 \begin{table}[htbp]
     \centering
-    \caption{Single-image model hardware optimization benchmark on test image \texttt{367.jpg}.}
+    \caption{Illustrative single-image hardware optimization micro-benchmark on test image \texttt{367.jpg}.}
     \label{tab:model_hw_optimization}
     \small
     \begin{tabular}{lccc}
@@ -458,9 +460,13 @@ The \gls{yolo} result shows that \gls{tensorrt} reduced the forward-pass time
 substantially, even though the total offline single-image wall time remained
 almost unchanged because preprocessing and postprocessing still contributed a
 large fraction of the runtime. The \gls{ocr} result is more direct: the
-\gls{tensorrt} engine reduced average per-crop wall time from 167.72~ms to 10.29~ms while preserving the same accepted predictions on all five button regions in the test image. These results support the use of \gls{tensorrt}
-export as an important deployment optimization step before integrating the models
-into the full \gls{ros2} pipeline.
+\gls{tensorrt} engine reduced average per-crop wall time from 167.72~ms to
+10.29~ms while preserving the same accepted predictions on all five button
+regions in the test image. As a single-image micro-benchmark, this result is
+illustrative rather than a substitute for the broader ROS~2 pipeline timing
+measurements reported later in this chapter. It nevertheless supports the use of
+\gls{tensorrt} export as an important deployment optimization step before
+integrating the models into the full \gls{ros2} pipeline.
 
 \section{ROS 2 pipeline performance}
 
