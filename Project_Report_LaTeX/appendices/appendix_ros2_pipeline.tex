@@ -153,6 +153,50 @@ node's declared software default is reported.
 \normalsize
 
 
+
+\section{Detailed runtime timing breakdown}
+\label{app:ros2_pipeline_timing_detail}
+
+For readers interested in more detailed node-level runtime information beyond
+Table~\ref{tab:ros2_pipeline_timing}, Table~\ref{tab:app_live_runtime_breakdown}
+reports the stage-level timing ranges measured for the final live-camera runtime
+configuration with \glsentryshort{ocr} capped to four \glsentryshort{roi}s.
+
+The stage labels in the table correspond to the following execution boundaries:
+\begin{itemize}
+    \item \textbf{\texttt{cv\_bridge}}: conversion from the incoming image message to an OpenCV image.
+    \item \textbf{\texttt{pre}}: preprocessing before the \glsentryshort{tensorrt} engine call.
+    \item \textbf{\texttt{infer}}: measured \glsentryshort{tensorrt} inference time.
+    \item \textbf{\texttt{depth}}: the mask-guided depth and representative-center estimation block in the \glsentryshort{yolo} node.
+    \item \textbf{\texttt{loop}}: the per-target processing loop in the \glsentryshort{yolo} node.
+    \item \textbf{\texttt{post}}: postprocessing after network output decoding and before publication.
+    \item \textbf{\texttt{publish}}: publication of the output message.
+    \item \textbf{\texttt{total}}: complete node callback time for that processing cycle.
+\end{itemize}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Detailed stage-level timing ranges for the final live-camera runtime configuration with \glsentryshort{ocr} capped to four \glsentryshort{roi}s.}
+    \label{tab:app_live_runtime_breakdown}
+    \small
+    \begin{tabular}{lcc}
+        \toprule
+        Stage & \glsentryshort{yolo} [ms] & \glsentryshort{ocr} [ms] \\
+        \midrule
+        \texttt{cv\_bridge} & 0.6--1.0 & 0.8--1.1 \\
+        \texttt{pre} & 0.3 & 1.3--1.6 \\
+        \texttt{infer} & 40.8--43.5 & 25.6--26.7 \\
+        \texttt{depth} & 5.3--7.0 & --- \\
+        \texttt{loop} & 19.8--23.6 & --- \\
+        \texttt{post} & 27.9--32.6 & 0.4--0.5 \\
+        \texttt{publish} & 1.2--1.3 & 0.5--0.7 \\
+        \texttt{total} & 70.4--77.8 & 33.0--35.2 \\
+        Processed ROIs & --- & 4.0 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
 \section{Example final pipeline output}
 \label{app:ros2_pipeline_example}
 
