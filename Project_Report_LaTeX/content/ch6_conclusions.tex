@@ -23,7 +23,7 @@ The main conclusions are as follows.
 
 \begin{enumerate}
     \item Instance segmentation is an effective method for elevator-button perception because it supports both accurate 2D localization and mask-based depth estimation for 3D target generation.
-    \item The baseline \gls{yolo}v8-Seg model was the strongest deployment candidate among the evaluated detector variants. Hyperparameter tuning improved validation performance, but not the final held-out test ranking.
+    \item The baseline \gls{yolo}v8s segmentation model was the strongest deployment candidate among the evaluated detector variants. Hyperparameter tuning improved validation performance, but not the final held-out test ranking.
     \item Environment-specific fine-tuning with \gls{adc} data from HAN University R29 produced the most practically valuable \gls{yolo} improvement, substantially increasing target-domain performance while preserving original-domain performance. In the controlled university replay experiment, the retrained model also produced more detected frames, more valid-depth frames, and a higher mean target confidence (0.8422 vs.\ 0.8184). Mean valid-target distance remained comparable to the baseline (0.6776~m vs.\ 0.6975~m), while the median and 90th-percentile distances increased slightly (0.5843~m vs.\ 0.5594~m and 0.8310~m vs.\ 0.7955~m, respectively), although several matched button instances were still observed at much larger distances than with the baseline model.
     \item The selected stage-2 \gls{ocr} model improved held-out recognition quality and formed a suitable semantic interpretation stage for the full pipeline.
     \item \gls{tensorrt} export was beneficial for both deployed models. The effect was moderate but clear for \gls{yolo} inference time, and very strong for \gls{ocr} per-crop wall time.
@@ -50,7 +50,6 @@ development of the system.
     \item Perform real robot trials in hospital-like and, when possible, actual hospital environments so that the perception pipeline can be validated under realistic operational constraints and new deployment data can be collected systematically.
     \item Replace the current Jetson microSD-based storage setup with an SSD-based configuration to improve robustness for logging, dataset export, and long deployment sessions.
     \item Reimplement runtime-critical \gls{ros2} nodes in C++ where appropriate, since the current Python implementation is practical for development but likely leaves performance headroom on the embedded platform.
-    \item Investigate whether task-specific filtering or ranking strategies can further reduce unnecessary \gls{ocr} workload without harming end-to-end recognition quality.
     \item Evaluate the pipeline on additional embedded platforms to determine how transferable the optimization choices are beyond the current \gls{jetson}-based setup.
     \item Integrate the perception pipeline with downstream robot action modules so that the 3D target estimates can be validated in full interaction tasks rather than perception-only experiments.
 \end{enumerate}

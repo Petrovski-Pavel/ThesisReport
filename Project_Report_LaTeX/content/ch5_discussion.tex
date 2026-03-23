@@ -2,7 +2,7 @@
 \label{ch:discussion}
 
 This chapter interprets the results presented in Chapter~\ref{ch:results} and relates them to
-the project objective of developing an efficient and scalable computer-vision
+the project objective of developing a scalable computer-vision
 workflow for robot interaction with elevator infrastructure on embedded
 hardware. Taken together, the implemented stages instantiate the main loop
 outlined earlier in Figure~\ref{fig:scalable_workflow}: data collection,
@@ -19,7 +19,7 @@ Instead, the most effective workflow emerged from a sequence of engineering
 decisions that balanced perception quality, deployment constraints, and future
 scalability.
 
-For \gls{yolo}, the baseline \gls{yolo}v8-Seg model remained the most reliable
+For \gls{yolo}, the baseline \gls{yolo}v8s segmentation model remained the most reliable
 choice for deployment. Hyperparameter tuning improved validation performance, but
 those gains did not translate into a better final held-out test model. Likewise,
 YOLO26-small did not outperform the baseline under the same evaluation
@@ -112,9 +112,7 @@ example, the single-image framework-to-\gls{tensorrt} comparison is useful for
 illustrating acceleration trends, but it is not by itself a complete deployment
 benchmark. Likewise, some distance-related \gls{yolo} improvements were most
 clearly observed in field behavior and specific replay analyses rather than in a
-single universal summary metric. For this reason, the confidence and coverage
-improvements are stronger conclusions than any claim of a general doubling of
-recognition range.
+single universal summary metric.
 
 Third, the project was executed on a single embedded platform and camera setup.
 The \gls{jetson} Orin Nano and Stereolabs ZED X are representative for the

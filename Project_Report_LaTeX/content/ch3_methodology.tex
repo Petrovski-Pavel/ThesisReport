@@ -202,7 +202,7 @@ Section~\ref{sec:dataset_quality_results}.
 Three model families are employed in this project, each serving a distinct role
 within the overall perception pipeline. \gls{maskrcnn} is used as an
 annotation-support model in the semi-automatic labeling workflow,
-\gls{yolo}v8-Seg is trained and evaluated as the deployment-oriented instance
+\gls{yolo}v8s segmentation is trained and evaluated as the deployment-oriented instance
 segmentation model, and the \gls{ocr} recognizer is used for semantic
 interpretation of the detected button crops.
 
@@ -212,7 +212,7 @@ All models training experiments reported in this thesis were executed
 on the same workstation. The host system ran Ubuntu 22.04.5 LTS with Linux kernel
 6.8.0-90. The machine was equipped with an AMD Ryzen 9 9950X 16-core processor and an NVIDIA GeForce RTX 4090 graphics card with
 24~GiB of \gls{vram}. The training software environment used Python 3.10.12 and
-PyTorch 2.5.1 compiled against CUDA 12.1. This configuration provided the
+PyTorch 2.5.1 compiled against \gls{cuda} 12.1. This configuration provided the
 computational platform for the baseline training, hyperparameter tuning and the comparative evaluation runs discussed in Chapters~3 and~4.
 
 \subsection{Common training strategy}
@@ -239,12 +239,12 @@ stable rather than re-optimized at every retraining stage because the goal of
 \gls{maskrcnn} in this project was to provide progressively better
 pre-annotations as the dataset grew, not to serve as the final deployment
 benchmark. Transfer learning reduced the amount of annotated data required
-before useful masks became available, while AdamW and validation-loss-based
+before useful masks became available, while Adam optimization and validation-loss-based
 checkpointing favored stable convergence during the early low-data stages.
 
-\subsection{YOLOv8-Seg training}
+\subsection{YOLOv8s segmentation training}
 
-The YOLOv8-Seg small model is trained using the Ultralytics framework \citep{ultralyticsdocs2026} with the pretrained
+The \gls{yolo}v8s segmentation model is trained using the Ultralytics framework \citep{ultralyticsdocs2026} with the pretrained
 \texttt{yolov8s-seg.pt} checkpoint. The initial baseline configuration was
 scheduled for up to 100 epochs with an input resolution of $640 \times 640$, dynamic batch sizing
 (\texttt{batch=-1}), seed 123, warmup over 5 epochs, and early stopping patience
@@ -276,7 +276,7 @@ accompanying text explains the rationale behind each stage.
 
 \begin{table}[htbp]
     \centering
-    \caption{Three-stage hyperparameter tuning procedure for \gls{yolo}v8-Seg.}
+    \caption{Three-stage hyperparameter tuning procedure for \gls{yolo}v8s segmentation.}
     \label{tab:yolo_hparam_tuning}
     \small
     \begin{tabular}{p{0.12\textwidth} p{0.27\textwidth} p{0.22\textwidth} p{0.17\textwidth} p{0.12\textwidth}}
@@ -316,7 +316,7 @@ target deployment environment.
 
 Both instance segmentation models are trained by minimizing a composite loss
 function that jointly optimizes object classification, localization, and mask
-prediction. Although \gls{maskrcnn} and \gls{yolo}v8-Seg differ architecturally, their
+prediction. Although \gls{maskrcnn} and \gls{yolo}v8s segmentation differ architecturally, their
 optimization objectives are conceptually aligned.
 
 
@@ -335,8 +335,8 @@ regression using the smooth $L_1$ loss; and $\mathcal{L}_{\text{mask}}$ is a
 pixel-wise binary cross-entropy loss applied to each predicted instance mask.
 
 
-\noindent\textbf{YOLOv8-Seg.}
-\gls{yolo}v8-Seg integrates detection and segmentation into a single-stage architecture.
+\noindent\textbf{YOLOv8s segmentation.}
+\gls{yolo}v8s segmentation integrates detection and segmentation into a single-stage architecture.
 The total training loss is expressed as a weighted sum of classification,
 localization, and segmentation losses \citep{jocher2023yolov8}:
 \begin{equation}
@@ -405,7 +405,7 @@ The implementation followed the standard \gls{paddleocr} training workflow \cite
 building a custom \gls{ocr} training loop from scratch, the official
 \texttt{tools/train.py} and \texttt{tools/eval.py} scripts provided by the
 \gls{paddleocr} framework were used directly. Project-specific experiments were
-defined through \gls{yaml} configuration files and command-line overrides, in the same spirit as
+defined through \gls{yaml} configuration files, in the same spirit as
 using configuration-driven training through Ultralytics for the \gls{yolo}
 experiments.
 
@@ -571,7 +571,7 @@ connected through a ZED Link Duo capture card, using ZED SDK~5.2.1.
 
 \subsection{Node responsibilities and outputs}
 
-The deployed runtime graph consists of the ZED camera driver, a \gls{yolo} inference
+The deployed pipeline consists of the ZED camera driver, a \gls{yolo} inference
 node, an \gls{ocr} inference node, and an \gls{adc}. As illustrated in
 Figure~\ref{fig:ros2_runtime_architecture}, the camera provides the color image,
 registered depth image, and calibration data required for geometric perception.
@@ -586,7 +586,7 @@ the deployment quality gates.
 
 The split-node design was chosen deliberately. Earlier experiments showed that
 placing \gls{yolo} and \gls{ocr} \gls{tensorrt} inference in a single Python process increased the
-risk of CUDA-context conflicts and made the system harder to debug. Separating the
+risk of \gls{cuda}-context conflicts and made the system harder to debug. Separating the
 geometric perception stage from the semantic recognition stage improved modularity
 and allowed both runtime components to be benchmarked independently.
 
@@ -618,7 +618,7 @@ and allowed both runtime components to be benchmarked independently.
 
 \subsection{Distance estimation and collector design}
 
-The internal interface between the perception nodes is a custom ROS
+The internal interface between the perception nodes is a custom \gls{ros}
 button-target message, defined for this project to bundle the geometric output
 of the \gls{yolo} stage and, after the \gls{ocr} step, the recognized button
 text and text score. Image topics use a
@@ -656,7 +656,7 @@ as
 x = \frac{(u-c_x)z}{f_x}, \qquad
 y = \frac{(v-c_y)z}{f_y}.
 \end{equation}
-This projection step provides the spatial button target used by downstream robotic
+This projection step provides the button target that can be used by downstream robotic
 modules and by the \gls{adc}.
 
 To support iterative improvement after deployment, the \gls{adc} stores

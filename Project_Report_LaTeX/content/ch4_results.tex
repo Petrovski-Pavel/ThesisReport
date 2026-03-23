@@ -52,9 +52,9 @@ Appendix~\ref{app:dataset_quality_plots}.
 
 \section{YOLO hyperparameter tuning and evaluation}
 
-\subsection{Baseline YOLOv8-Seg performance}
+\subsection{Baseline YOLOv8s segmentation performance}
 
-The baseline YOLOv8-Seg small model established the main reference point for all
+The baseline \gls{yolo}v8s segmentation model established the main reference point for all
 subsequent experiments. On the validation split,
 the best checkpoint was obtained at epoch 49. This model achieved a mask
 $\mathrm{mAP}_{50}$ of 0.93931 and a mask
@@ -133,32 +133,32 @@ change.
 
 \begin{table}[htbp]
     \centering
-    \caption{Best validation results of the baseline and tuned \gls{yolo}v8-Seg models.}
+    \caption{Best validation results of the baseline and tuned \gls{yolo}v8s segmentation models.}
     \label{tab:yolo_tuning_results}
     \small
     \begin{tabular}{lccccc}
         \toprule
         Model & Best epoch & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
         \midrule
-        Baseline YOLOv8-Seg & 49 & 0.93931 & 0.59645 & 0.90623 & 0.89947 \\
-        Stage 3 tuned YOLOv8-Seg & 120 & 0.94268 & 0.63064 & 0.90150 & 0.90810 \\
+        Baseline YOLOv8s segmentation & 49 & 0.93931 & 0.59645 & 0.90623 & 0.89947 \\
+        Stage 3 tuned YOLOv8s segmentation & 120 & 0.94268 & 0.63064 & 0.90150 & 0.90810 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
 \begin{table}[htbp]
     \centering
-    \caption{Held-out test-set comparison between the baseline and the selected Stage 3 tuned \gls{yolo}v8-Seg model.}
+    \caption{Held-out test-set comparison between the baseline and the selected Stage 3 tuned \gls{yolo}v8s segmentation model.}
     \label{tab:yolo_tuning_test_results}
     \small
     \begin{tabular}{lccccc}
         \toprule
         Model & Image size & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
         \midrule
-        Baseline YOLOv8-Seg & 640 & 0.91921 & 0.58295 & 0.86835 & 0.89896 \\
-        Stage 3 tuned YOLOv8-Seg & 640 & 0.91075 & 0.55729 & 0.86537 & 0.87685 \\
-        Baseline YOLOv8-Seg & 768 & 0.92384 & 0.62325 & 0.86577 & 0.91939 \\
-        Stage 3 tuned YOLOv8-Seg & 768 & 0.92479 & 0.60845 & 0.87224 & 0.90581 \\
+        Baseline YOLOv8s segmentation & 640 & 0.91921 & 0.58295 & 0.86835 & 0.89896 \\
+        Stage 3 tuned YOLOv8s segmentation & 640 & 0.91075 & 0.55729 & 0.86537 & 0.87685 \\
+        Baseline YOLOv8s segmentation & 768 & 0.92384 & 0.62325 & 0.86577 & 0.91939 \\
+        Stage 3 tuned YOLOv8s segmentation & 768 & 0.92479 & 0.60845 & 0.87224 & 0.90581 \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -174,23 +174,23 @@ reported in Appendix~\ref{app:yolo_vs_maskrcnn}.
 \subsection{Comparison with YOLO26}
 
 YOLO26-small was evaluated under comparable training conditions to check whether
-the newer architecture could outperform the \gls{yolo}v8-Seg baseline. As shown
+the newer architecture could outperform the \gls{yolo}v8s segmentation baseline. As shown
 in Table~\ref{tab:yolo26_comparison}, it did not. The longer 180-epoch YOLO26
 run improved its validation curve slightly (Figure~\ref{fig:yolo26_mask_map}),
 but the final test-set ranking remained in favor of the baseline model.
 
 \begin{table}[htbp]
     \centering
-    \caption{Test-set comparison between the baseline \gls{yolo}v8-Seg model and YOLO26-small.}
+    \caption{Test-set comparison between the baseline \gls{yolo}v8s segmentation model and YOLO26-small.}
     \label{tab:yolo26_comparison}
     \small
     \begin{tabular}{lccccc}
         \toprule
         Model & Image size & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
         \midrule
-        YOLOv8-Seg baseline & 640 & 0.91921 & 0.58295 & 0.86835 & 0.89896 \\
+        YOLOv8s segmentation baseline & 640 & 0.91921 & 0.58295 & 0.86835 & 0.89896 \\
         YOLO26-small & 640 & 0.91209 & 0.57538 & 0.87300 & 0.89879 \\
-        YOLOv8-Seg baseline & 768 & 0.92384 & 0.62325 & 0.86577 & 0.91939 \\
+        YOLOv8s segmentation baseline & 768 & 0.92384 & 0.62325 & 0.86577 & 0.91939 \\
         YOLO26-small & 768 & 0.92596 & 0.61689 & 0.88408 & 0.91326 \\
         \bottomrule
     \end{tabular}
@@ -204,11 +204,14 @@ but the final test-set ranking remained in favor of the baseline model.
 \end{figure}
 
 \subsection{Environment-specific fine-tuning with ADC data}
+\label{sec:adc_finetuning_results}
 
 The final \gls{yolo} experiment addressed domain adaptation to the target
 university environment. The baseline checkpoint was fine-tuned on the original
 dataset augmented with 46 newly collected and annotated images from HAN
-University R29. These images were split into 32 training images, 7 validation
+University R29. These images were collected and annotated by the \gls{adc}
+and were then manually reviewed and adjusted where needed before training.
+These images were split into 32 training images, 7 validation
 images, and 7 held-out environment-specific test images. Table~\ref{tab:adc_original_test}
 shows that this adaptation step did not materially degrade performance on the original
 held-out test split: mask $\mathrm{mAP}_{50\text{:}95}$ remained effectively unchanged
@@ -224,8 +227,8 @@ is consistent with this observation.
         \toprule
         Model & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
         \midrule
-        Baseline YOLOv8-Seg & 0.91921 & 0.58295 & 0.86835 & 0.89896 \\
-        \glsentryshort{adc} fine-tuned YOLOv8-Seg & 0.91912 & 0.58293 & 0.88043 & 0.90050 \\
+        Baseline YOLOv8s segmentation & 0.91921 & 0.58295 & 0.86835 & 0.89896 \\
+        \glsentryshort{adc} fine-tuned YOLOv8s segmentation & 0.91912 & 0.58293 & 0.88043 & 0.90050 \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -254,35 +257,55 @@ performance.
         \toprule
         Model & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Mask precision & Mask recall \\
         \midrule
-        Baseline YOLOv8-Seg & 0.53520 & 0.12290 & 0.61209 & 0.70136 \\
-        \glsentryshort{adc} fine-tuned YOLOv8-Seg & 0.99500 & 0.50463 & 1.00000 & 0.99712 \\
+        Baseline YOLOv8s segmentation & 0.53520 & 0.12290 & 0.61209 & 0.70136 \\
+        \glsentryshort{adc} fine-tuned YOLOv8s segmentation & 0.99500 & 0.50463 & 1.00000 & 0.99712 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-A complementary apples-to-apples replay experiment was then performed on one
-recorded university bag so that the baseline and \gls{adc}-fine-tuned \gls{yolo}
-engines processed the same camera frames. In this controlled comparison, the
-retrained model detected buttons in more replayed frames (295 vs.\ 237), and
-more of those detections could be paired with valid depth estimates (288 vs.\ 231).
-The retrained model also achieved a higher mean target confidence (0.8422 vs.\ 0.8184).
-Distance-related statistics remained broadly comparable: the mean valid-target distance
-stayed close to the baseline (0.6776~m vs.\ 0.6975~m), while the median distance
-increased slightly (0.5843~m vs.\ 0.5594~m) and the 90th-percentile distance also
-increased slightly (0.8310~m vs.\ 0.7955~m). Maximum-distance values are not reported
-here because the farthest outliers included implausible depth estimates that did
-not correspond to real button observations. Qualitative inspection of matched replay
-frames also showed individual cases in which the retrained model detected buttons at
-substantially larger distances than the baseline model. For example, one repeatedly
-inspected button was detected at approximately 0.75~m rather than about 0.35~m.
-However, these case-specific improvements should be interpreted separately from the
-aggregate replay statistics, which indicate only modest overall distance improvement.
-This replay result complements the held-out test-set results by showing that
-\gls{adc}-based retraining improved deployment robustness and confidence on the actual
-target environment, while maintaining broadly comparable overall distance behavior.
+To complement the held-out image-based evaluation, an additional university-elevator
+run was recorded as a \gls{ros2} bag so that the baseline and \gls{adc}-fine-tuned
+\gls{yolo} engines could be compared on the same live camera input sequence.
+Table~\ref{tab:adc_replay_comparison} summarizes this replay-based comparison.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Replay-based comparison on the same recorded \gls{ros2} bag from the university elevator environment.}
+    \label{tab:adc_replay_comparison}
+    \small
+    \begin{tabular}{lcc}
+        \toprule
+        Metric & Baseline model & \glsentryshort{adc} fine-tuned model \\
+        \midrule
+        Frames with detected buttons & 237 & 295 \\
+        Frames with detected buttons and valid depth & 231 & 288 \\
+        Mean target confidence & 0.8184 & 0.8422 \\
+        Mean valid-target distance [m] & 0.6975 & 0.6776 \\
+        Median valid-target distance [m] & 0.5594 & 0.5843 \\
+        90th-percentile valid-target distance [m] & 0.7955 & 0.8310 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The replay results show that the retrained model detected buttons in more frames,
+and that more of those detections could be paired with valid depth estimates.
+The retrained model also achieved a higher mean target confidence. Distance-related
+statistics remained broadly comparable overall: the mean valid-target distance stayed
+close to the baseline, while the median and 90th-percentile distances increased
+slightly. Maximum-distance values are not reported here because the farthest outliers
+included implausible depth estimates that did not correspond to real button
+observations. Qualitative inspection of matched replay frames also showed individual
+cases in which the retrained model detected buttons at substantially larger distances
+than the baseline model. For example, one repeatedly inspected button was detected at
+approximately 0.75~m rather than about 0.35~m. However, these case-specific
+improvements should be interpreted separately from the aggregate replay statistics,
+which indicate only modest overall distance improvement. This replay result strengthens
+the held-out test-set findings by showing that \gls{adc}-based retraining improved
+deployment robustness and confidence in the target environment while maintaining
+broadly comparable overall distance behavior.
 
 Overall, the \gls{yolo} results show three main findings. First, the baseline
-\gls{yolo}v8-Seg model was already strong and difficult to surpass on the general
+\gls{yolo}v8s segmentation model was already strong and difficult to surpass on the general
 elevator test set. Second, staged hyperparameter tuning improved validation
 performance but did not fundamentally change the final model ranking. Third, the
 most practically valuable improvement was achieved through environment-specific
@@ -435,7 +458,8 @@ complete perception pipeline.
 As described in Chapter~\ref{ch:methodology}, the final \gls{yolo} and \gls{ocr} models were
 exported to \gls{tensorrt} for optimized execution on the \gls{jetson} platform.
 To verify the effect of this export step, a compact benchmark was performed on
-the held-out test image \texttt{367.jpg}. For \gls{yolo}, the comparison used the
+the held-out test image \texttt{367.jpg}, which is included in
+Appendix~\ref{app:benchmark_image_367}. For \gls{yolo}, the comparison used the
 PyTorch checkpoint and the exported \gls{tensorrt} engine on the same full image.
 For \gls{ocr}, the comparison used the Paddle inference model and the exported
 \gls{tensorrt} engine on the five annotated button crops from the same image.
@@ -517,7 +541,8 @@ The timing breakdown confirms that the final system bottleneck is not the \gls{t
 forward pass alone, but the combined cost of segmentation postprocessing, depth
 estimation, and \gls{ocr} execution inside the live \gls{ros2} graph. Table~\ref{tab:ros2_pipeline_timing}
 shows typical timing ranges of the \gls{yolo} and \gls{ocr} nodes for the three runtime
-configurations. In collector mode, the YOLO node required approximately
+configurations. A more detailed stage-level breakdown of the final runtime configuration is
+provided in Appendix~\ref{app:ros2_pipeline_timing_detail}. In collector mode, the YOLO node required approximately
 81--91~ms per callback and the \gls{ocr} node 79--95~ms. Removing the collector while
 keeping \gls{ocr} uncapped reduced the practical throughput penalty of data export but
 still required roughly 11 processed \gls{ocr} regions per message, which kept \gls{ocr} total
@@ -558,7 +583,10 @@ Chapter~\ref{ch:methodology}.
 
 Figure~\ref{fig:ros2_pipeline_output_examples} illustrates the final deployed
 output of the integrated perception pipeline for an in-cabin elevator panel
-observed during live testing with the mobile cart in HAN University R29. A
+observed during live testing with the mobile cart in HAN University R29. The
+illustrated frames come from the same \gls{ros2} bag sequence used for the
+baseline-versus-\gls{adc}-fine-tuned \gls{yolo} replay comparison in
+Section~\ref{sec:adc_finetuning_results}. A
 fuller appendix example of the same type of final output, including the abridged
 \texttt{/button\_targets\_3d\_ocr} message, is provided in
 Appendix~\ref{app:ros2_pipeline_example}.

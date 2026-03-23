@@ -40,11 +40,11 @@ instances, thereby reducing the manual correction burden in later annotation
 rounds.
 
 
-\section{Baseline YOLOv8-Seg versus final Mask R-CNN}
+\section{Baseline YOLOv8s segmentation versus final Mask R-CNN}
 \label{app:yolo_vs_maskrcnn}
 
 A direct cross-architecture comparison was performed between the baseline
-\gls{yolo}v8-Seg checkpoint and the final 1400-image \gls{maskrcnn}
+\gls{yolo}v8s segmentation checkpoint and the final 1400-image \gls{maskrcnn}
 checkpoint on the original held-out elevator test split. Official mask
 $\mathrm{mAP}_{50}$ and $\mathrm{mAP}_{50\text{:}95}$ values were taken from the
 respective test-set evaluation pipelines. In addition, a direct replay
@@ -54,7 +54,7 @@ recall, and average inference time per image.
 
 \begin{table}[htbp]
     \centering
-    \caption{Supplementary comparison between the baseline \gls{yolo}v8-Seg and
+    \caption{Supplementary comparison between the baseline \gls{yolo}v8s segmentation and
     the final annotation-support \gls{maskrcnn} checkpoint on the original held-out
     test split.}
     \label{tab:yolo_vs_maskrcnn_original_test}
@@ -62,7 +62,7 @@ recall, and average inference time per image.
         \toprule
         Model & Mask $\mathrm{mAP}_{50}$ & Mask $\mathrm{mAP}_{50\text{:}95}$ & Precision* & Recall* & Time [s/image]* & FPS* \\
         \midrule
-        Baseline YOLOv8-Seg & 0.9192 & 0.5829 & 0.8787 & 0.9063 & 0.0091 & 109.40 \\
+        Baseline YOLOv8s segmentation & 0.9192 & 0.5829 & 0.8787 & 0.9063 & 0.0091 & 109.40 \\
         Final Mask R-CNN & 0.8990 & 0.7000 & 0.7578 & 0.9547 & 0.0196 & 51.03 \\
         \bottomrule
     \end{tabular}
@@ -70,11 +70,11 @@ recall, and average inference time per image.
 
 The comparison shows a split result. The final \gls{maskrcnn} checkpoint achieved
 higher official mask AP on the original test split, whereas the baseline
-\gls{yolo}v8-Seg model provided substantially higher thresholded precision and
+\gls{yolo}v8s segmentation model provided substantially higher thresholded precision and
 roughly twice the throughput in the direct replay experiment. \Gls{maskrcnn}
 also retained higher thresholded recall. This supports the role division used in
 this project: \gls{maskrcnn} was valuable as an offline annotation-support model,
-while \gls{yolo}v8-Seg remained the preferred deployment-oriented detector due to
+while \gls{yolo}v8s segmentation remained the preferred deployment-oriented detector due to
 its runtime efficiency and simpler integration into the embedded perception
 pipeline.
 
@@ -82,3 +82,19 @@ pipeline.
 identical test images at confidence threshold 0.5 and greedy IoU matching at
 0.5; they are therefore supplementary to the official AP metrics rather than a
 replacement for them.
+
+\section{Reference image for the hardware optimization benchmark}
+\label{app:benchmark_image_367}
+
+Figure~\ref{fig:benchmark_image_367} shows the held-out test image used for the
+single-image hardware optimization micro-benchmark in Section~\ref{tab:model_hw_optimization}.
+It is included here so that readers can inspect the elevator-panel scene on which
+the PyTorch/Paddle and \gls{tensorrt} inference times were compared.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.55\textwidth]{figures/results/367.jpg}
+    \caption{Held-out test image \texttt{367.jpg} used in the hardware optimization micro-benchmark.}
+    \label{fig:benchmark_image_367}
+\end{figure}
+
