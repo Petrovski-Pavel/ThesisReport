@@ -66,7 +66,9 @@
 \usepackage[acronym,nomain,nonumberlist,toc]{glossaries}
 \makenoidxglossaries
 \input{content/acronyms}
-\setglossarystyle{list}
+\setglossarystyle{long}
+\renewcommand*{\glsgroupskip}{}
+\setlength{\glsdescwidth}{0.78\textwidth}
 
 
 \usepackage{wrapfig}
@@ -163,6 +165,7 @@
 
 % ---------- Appendices ----------
 \appendix
+\input{appendices/appendix_hparam_tuning}
 \input{appendices/appendix_extra}
 \input{appendices/appendix_dataset_quality}
 \input{appendices/appendix_ai}

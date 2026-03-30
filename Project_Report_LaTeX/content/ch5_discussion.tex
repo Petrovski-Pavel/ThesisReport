@@ -5,14 +5,15 @@ This chapter interprets the results presented in Chapter~\ref{ch:results} and re
 the project objective of developing a scalable computer-vision
 workflow for robot interaction with elevator infrastructure on embedded
 hardware. Taken together, the implemented stages instantiate the main loop
-outlined earlier in Figure~\ref{fig:scalable_workflow}: data collection,
-annotation support, retraining, deployment, and environment-specific refinement.
+outlined earlier in the workflow-and-architecture overview in
+Figure~\ref{fig:scalable_workflow}: data collection, annotation support,
+retraining, deployment, and environment-specific refinement.
 
 \section{Interpretation of the main findings}
 
 The main outcome of this project is that a practical embedded perception
 workflow can be achieved by combining instance-segmentation-based button
-detection, crop-based \gls{ocr}, and a modular \gls{ros2} runtime pipeline. The
+detection, crop-based \gls{ocr}, and a modular \gls{ros} runtime pipeline. The
 results show that the strongest overall system did not come from selecting the
 newest model architecture or from maximizing validation performance in isolation.
 Instead, the most effective workflow emerged from a sequence of engineering
@@ -21,13 +22,15 @@ scalability.
 
 For \gls{yolo}, the baseline \gls{yolo}v8s segmentation model remained the most reliable
 choice for deployment. Hyperparameter tuning improved validation performance, but
-those gains did not translate into a better final held-out test model. Likewise,
-YOLO26-small did not outperform the baseline under the same evaluation
-conditions. This is an important result because it shows that, for this task, a
+those gains did not translate into a better final held-out test model. A
+plausible explanation is that the tuning process optimized more strongly for the
+validation split, while the baseline configuration generalized slightly better
+to unseen test images. Likewise, YOLO26-small did not outperform the baseline
+under the same evaluation conditions. This is an important result because it shows that, for this task, a
 carefully chosen and well-understood baseline can be more valuable than adopting
 a newer architecture without a clear deployment benefit. The most practically
 useful \gls{yolo} improvement came from environment-specific fine-tuning with
-\gls{adc} data from HAN University R29, which substantially improved
+\gls{adc} data from Han Building R29, which substantially improved
 performance in the target environment while preserving the original-domain
 performance.
 
@@ -38,7 +41,7 @@ to the initial recognizer. In contrast to the \gls{yolo} tuning results, the
 performance. This suggests that the \gls{ocr} stage was more sensitive to
 optimization settings in a way that remained meaningful at test time.
 
-At system level, the deployed \gls{ros2} pipeline demonstrates that model
+At system level, the deployed \gls{ros} pipeline demonstrates that model
 quality alone is not sufficient for real-time embedded performance. The final
 pipeline throughput depended strongly on how much non-inference work remained in
 the runtime path. The shift from full-image mask export to compact ROI-local mask
@@ -55,14 +58,13 @@ The results provide a coherent answer to the main research question. A
 computer-vision workflow for hospital elevator-button perception can be designed
 by using instance segmentation for button localization, crop-based \gls{ocr} for
 semantic interpretation, \gls{tensorrt} export for embedded execution, and an
-\gls{ros2}-based split-node architecture for modular runtime integration.
+\gls{ros}-based split-node architecture for modular runtime integration.
 
 The first sub-question concerned the relevant human-interaction points in
 hospital environments. The project focused on elevator buttons and related panel
 interfaces because they are a concrete and operationally critical interaction
 class for multi-floor service-robot mobility. This focus was also aligned with
-Ambyon's immediate deployment priorities, which made elevator-button perception
-the most relevant and highest-value interaction target for the present project.
+Ambyon's immediate deployment priorities, which made elevator-button perception relevant and high value interaction target for the present project.
 This focus proved appropriate: the
 task is sufficiently challenging to expose problems of detection, segmentation,
 recognition, and embedded deployment, while still being narrow enough to support
@@ -140,8 +142,17 @@ Despite these limitations, the project has clear practical implications. The
 results suggest that a service robot does not require a monolithic perception
 stack to achieve useful embedded performance. A modular pipeline with explicit
 message interfaces can be easier to tune, benchmark, and extend. This is
-particularly important for educational and research robots such as CareBot, where
+particularly important for educational and research robots such as CareBOTS, where
 iterative development and subsystem replacement are expected.
+
+A further practical deployment consideration is model licensing. The \gls{yolo}
+framework used in this project is distributed by Ultralytics under the AGPL-3.0
+open-source license, with separate commercial licensing options for enterprise
+use. In contrast, PaddleOCR and Torchvision are distributed under the more
+permissive Apache 2.0 and BSD-3-Clause licenses, respectively. Although
+licensing did not affect the technical validity of the experiments reported
+here, it should be considered in any future transition from research
+prototyping to commercial or operational deployment.
 
 The project also suggests that deployment data should be treated as a core part
 of the system design rather than as an afterthought. The inclusion of the
@@ -150,10 +161,3 @@ same runtime system used in deployment can collect higher-value examples for the
 next training cycle. This closes an important loop between experimentation,
 deployment, and future model improvement.
 
-Overall, the project shows that the combination of instance segmentation,
-task-specific \gls{ocr}, \gls{tensorrt} acceleration, and structured deployment
-data collection provides a credible foundation for later integration into a more
-complete autonomous hospital robot. The next decisive step is therefore not only
-more perception benchmarking, but real robot testing in hospital-like or actual
-hospital environments, where the perception output can be validated in the full
-navigation-and-interaction loop.

@@ -15,7 +15,7 @@ Robotics in healthcare is moving from experimental pilots to practical deploymen
     \vspace{-8pt}
     \captionsetup{width=0.34\textwidth}
     \includegraphics[width=0.45\textwidth]{figures/carebot.jpg}
-    \caption{CareBot prototype at HAN Automotive Research}
+    \caption{CareBOTS prototype at HAN Automotive Research}
     \label{fig:prototyperobot}
     \vspace{-8pt}
 \end{wrapfigure}
@@ -24,18 +24,17 @@ Hospitals are typically multi-floor environments that rely on infrastructure suc
 
 The Ambyon ONE is a service robot currently under development by \textit{Ambyon}, a Dutch startup focused on robotics for healthcare and logistics applications. Ambyon's strategy centers on developing robots that do not require infrastructural changes, positioning this as a key differentiating selling point for integration into existing hospital environments.
 
-At \textit{HAN Automotive Research}, the CareBot platform is being developed as an educational and research project that allows students and researchers to experiment with robotic perception, planning, and control in realistic environments. Within this thesis, the CareBot serves as an integration and test unit for applied research. While it is not intended to replicate the Ambyon ONE robot, it is equipped with a similar sensor stack and processing unit, enabling realistic simulation of Ambyon's operational conditions.
+At \textit{HAN Automotive Research}, the CareBOTS platform is used for the integration and testing of intermediate deliverables from multiple HAN research activities within the broader CareBOTS project. Within this thesis, the platform serves as the integration and test unit for the proposed perception pipeline. While it is not intended to replicate the Ambyon ONE robot, it is equipped with a similar sensor stack and processing unit, enabling realistic simulation of Ambyon's operational conditions.
 
-The CareBot system uses an \gls{rgbd} camera and \gls{jetson} computing module to enable on-device perception suitable for real-time operation in clinical environments. A key research challenge is enabling the robot to accurately detect and classify interaction points such as elevator buttons, access readers, and door panels under varying lighting, reflections, occlusions, and diverse panel designs - while maintaining efficient performance within embedded hardware constraints.
+The CareBOTS system uses an \gls{rgbd} camera and \gls{jetson} computing module to enable on-device perception suitable for real-time operation in clinical environments. A key research challenge is enabling the robot to accurately detect and classify interaction points such as elevator buttons, access readers, and door panels under varying lighting, reflections, occlusions, and diverse panel designs - while maintaining efficient performance within embedded hardware constraints.
 
-This project contributes to that research direction by designing and evaluating a scalable computer-vision workflow for interaction-point detection on embedded systems. The work includes dataset creation, model design and optimisation, evaluation on prototype hardware, and preparation for future extensions. The resulting system will serve as a foundation for autonomous hospital mobility and support the development of assistive robotic technologies.
+This project contributes to that research direction by designing and evaluating a scalable computer-vision workflow for elevator-button detection and interpretation on embedded systems. The work includes dataset creation, model design and optimisation, evaluation on prototype hardware, and preparation for future extensions. The resulting system will serve as a foundation for autonomous hospital mobility and support the development of assistive robotic technologies.
 
 %---------------------------------------------------------------
 
 \section{Problem Definition}
 % The Ambyon ONE robot currently lacks a robust and efficient perception system capable of reliably detecting and localizing human-interaction elements such as elevator buttons, door panels, and access systems in hospital environments in real time on Jetson-class embedded hardware, under variable conditions and panel layouts.
-The Ambyon ONE robot currently lacks a reliable computer-vision system to detect and recognize human-interaction elements (e.g., elevator and door control interfaces) in hospital environments, preventing autonomous navigation and interaction with building infrastructure.
-
+The Ambyon ONE robot currently lacks a reliable computer-vision system to detect, interpret, and localize elevator buttons in hospital environments under embedded-hardware constraints, preventing autonomous interaction with building infrastructure.
 \section{Project Objective}
 % Develop and validate an efficient and scalable computer vision workflow that enables the Ambyon ONE robot to autonomously detect and classify human-interaction elements in hospital environments using embedded hardware.
 Develop and validate an efficient and scalable computer-vision workflow that enables a service-robot platform to autonomously detect and classify human-interaction elements in hospital environments using embedded hardware.
@@ -63,7 +62,7 @@ formulation, public datasets, annotation strategies, model design, and embedded
 deployment constraints. Chapter~\ref{ch:methodology} explains the methodology
 used in this thesis, including dataset selection and preparation, the
 annotation workflow, model training, evaluation, deployment, and the final
-\gls{ros2} pipeline design. Chapter~\ref{ch:results} presents the results of
+\gls{ros} pipeline design. Chapter~\ref{ch:results} presents the results of
 the dataset-quality assessment, model training and tuning experiments,
 held-out test evaluations, and deployment benchmarks.
 Chapter~\ref{ch:discussion} interprets these results in relation to the

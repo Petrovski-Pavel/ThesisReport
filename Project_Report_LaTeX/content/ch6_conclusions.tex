@@ -15,7 +15,7 @@ achieved for the targeted elevator-interaction use case.
 The project demonstrates that a practical embedded perception workflow can be
 constructed from four main components: a strong instance-segmentation baseline
 for button localization, a crop-based \gls{ocr} stage for button interpretation,
-\gls{tensorrt} export for hardware-efficient inference, and a modular \gls{ros2}
+\gls{tensorrt} export for hardware-efficient inference, and a modular \gls{ros}
 pipeline that integrates detection, 3D projection, text recognition, and
 deployment data collection.
 
@@ -24,10 +24,10 @@ The main conclusions are as follows.
 \begin{enumerate}
     \item Instance segmentation is an effective method for elevator-button perception because it supports both accurate 2D localization and mask-based depth estimation for 3D target generation.
     \item The baseline \gls{yolo}v8s segmentation model was the strongest deployment candidate among the evaluated detector variants. Hyperparameter tuning improved validation performance, but not the final held-out test ranking.
-    \item Environment-specific fine-tuning with \gls{adc} data from HAN University R29 produced the most practically valuable \gls{yolo} improvement, substantially increasing target-domain performance while preserving original-domain performance. In the controlled university replay experiment, the retrained model also produced more detected frames, more valid-depth frames, and a higher mean target confidence (0.8422 vs.\ 0.8184). Mean valid-target distance remained comparable to the baseline (0.6776~m vs.\ 0.6975~m), while the median and 90th-percentile distances increased slightly (0.5843~m vs.\ 0.5594~m and 0.8310~m vs.\ 0.7955~m, respectively), although several matched button instances were still observed at much larger distances than with the baseline model.
+    \item Environment-specific fine-tuning with \gls{adc} data from Han Building R29 produced the most practically valuable \gls{yolo} improvement, substantially increasing target-domain performance while preserving original-domain performance. In the controlled university replay experiment, the retrained model also produced more detected frames, more valid-depth frames, and a higher mean target confidence (0.8422 vs.\ 0.8184). Mean valid-target distance remained comparable to the baseline (0.6776~m vs.\ 0.6975~m), while the median and 90th-percentile distances increased slightly (0.5843~m vs.\ 0.5594~m and 0.8310~m vs.\ 0.7955~m, respectively), although several matched button instances were still observed at much larger distances than with the baseline model.
     \item The selected stage-2 \gls{ocr} model improved held-out recognition quality and formed a suitable semantic interpretation stage for the full pipeline.
     \item \gls{tensorrt} export was beneficial for both deployed models. The effect was moderate but clear for \gls{yolo} inference time, and very strong for \gls{ocr} per-crop wall time.
-    \item The final \gls{ros2} pipeline achieved practical embedded runtime performance on the \gls{jetson} Orin Nano, with the best measured configuration operating at about 13.1~\gls{fps} and the collector-enabled configuration remaining usable at about 10~\gls{fps}.
+    \item The final \gls{ros} pipeline achieved practical embedded runtime performance on the \gls{jetson} Orin Nano, with the best measured configuration operating at about 13.1~\gls{fps} (approximately 76~ms/frame) and the collector-enabled configuration remaining usable at about 10~\gls{fps} (approximately 100~ms/frame).
     \item Scalability is supported not only by model architecture choices, but also by the inclusion of the \gls{adc}, which enables structured deployment-time data collection for future retraining.
 \end{enumerate}
 
@@ -35,7 +35,7 @@ Taken together, these conclusions answer the main research question: a practical
 computer-vision workflow for elevator-button perception can be achieved on
 embedded hardware by combining segmentation-based detection, task-specific
 recognition, deployment-oriented optimization, and iterative deployment data
-collection within a modular \gls{ros2} architecture.
+collection within a modular \gls{ros} architecture.
 
 \section{Recommendations}
 
@@ -49,7 +49,7 @@ development of the system.
     \item Automate the improvement cycle further by reducing manual steps between \gls{adc} export, annotation verification, training, and redeployment, so that future model updates require less manual coordination.
     \item Perform real robot trials in hospital-like and, when possible, actual hospital environments so that the perception pipeline can be validated under realistic operational constraints and new deployment data can be collected systematically.
     \item Replace the current Jetson microSD-based storage setup with an SSD-based configuration to improve robustness for logging, dataset export, and long deployment sessions.
-    \item Reimplement runtime-critical \gls{ros2} nodes in C++ where appropriate, since the current Python implementation is practical for development but likely leaves performance headroom on the embedded platform.
+    \item Reimplement runtime-critical \gls{ros} nodes in C++ where appropriate, since the current Python implementation is practical for development but likely leaves performance headroom on the embedded platform.
     \item Evaluate the pipeline on additional embedded platforms to determine how transferable the optimization choices are beyond the current \gls{jetson}-based setup.
     \item Integrate the perception pipeline with downstream robot action modules so that the 3D target estimates can be validated in full interaction tasks rather than perception-only experiments.
 \end{enumerate}
@@ -61,5 +61,5 @@ elevator infrastructure in hospital-like environments. More broadly, it shows
 that robust embedded perception is not achieved by model selection alone. The
 best results emerged from treating dataset design, model choice, runtime
 architecture, and deployment data collection as one connected system. That
-systems perspective is likely to remain essential as the CareBot platform evolves
+systems perspective is likely to remain essential as the CareBOTS platform evolves
 toward more complete autonomous operation in real healthcare environments.

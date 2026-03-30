@@ -1,0 +1,46 @@
+\chapter{Supplementary hyperparameter tuning curves}
+\label{app:hparam_tuning}
+
+\section{YOLO hyperparameter tuning curves}
+\label{app:yolo_hparam_curves}
+
+This appendix collects supporting \gls{yolo} hyperparameter-tuning figures that
+were removed from the main results chapter to keep the core model-selection
+narrative concise.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage1_yolo_trials_mAP50-95_M.png}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the successful Stage 1 hyperparameter trials.}
+    \label{fig:stage1_mask_map}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage3_yolo_val_seg_loss.png}
+    \caption{Stage 3 validation segmentation loss for the two refinement branches.}
+    \label{fig:stage3_val_seg_loss}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/yolo26_mAP50-95_M.png}
+    \caption{Validation mask $\mathrm{mAP}_{50\text{:}95}$ for the two YOLO26 training runs.}
+    \label{fig:yolo26_mask_map}
+\end{figure}
+
+\section{OCR hyperparameter tuning curves}
+\label{app:ocr_hparam_curves}
+
+This appendix collects supporting \gls{ocr} hyperparameter-tuning curves that
+complement the main validation-accuracy figure and the stage-summary tables in
+Chapter~\ref{ch:results}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{figures/results/stage2_ocr_eval_norm_edit_dis.png}
+    \caption{Stage 2 \gls{ocr} normalized edit distance for the learning-rate and weight-decay sweep.}
+    \label{fig:ocr_stage2_ned}
+\end{figure}
+
+\clearpage
