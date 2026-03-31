@@ -236,8 +236,12 @@ split was reserved for final comparison only.
 
 \gls{maskrcnn} was used only as an annotation-support model within the
 semi-automatic \gls{cvat} workflow. It was trained on \gls{coco}-formatted
-instance annotations and retrained iteratively as the annotated dataset grew.
-The checkpoint progression and held-out reference comparison are summarized in
+instance annotations and retrained iteratively as the annotated dataset grew
+from an initial manually labeled seed set to later larger annotation rounds.
+After each retraining stage, the best validation checkpoint was exported back to
+the \gls{cvat}--Nuclio pipeline so that automatic mask proposals for later
+images started from a stronger model and required less manual correction. The
+checkpoint progression and held-out reference comparison are summarized in
 Appendix~\ref{app:maskrcnn_checkpoints}, since only the role of
 \gls{maskrcnn} in the annotation workflow is relevant to the main methodology.
 

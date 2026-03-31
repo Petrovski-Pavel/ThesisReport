@@ -250,8 +250,10 @@ this recording, the mobile cart was moved relative to one outside panel containi
 only a single true \texttt{UP} button, so both detector versions could be evaluated
 on the same raw image stream under controlled conditions. Table~\ref{tab:adc_replay_comparison}
 reports the resulting filtered comparison, while Figure~\ref{fig:r29_yolo_old_vs_new_confidence_distance}
-shows the same experiment as confidence versus estimated distance. The plot
- makes the practical effect of the \glsentryshort{adc} fine-tuning visible:
+shows the same experiment as confidence versus estimated distance. A
+supplementary video reference for this controlled replay is provided in
+Appendix~\ref{app:rosbag_video_refs}. The plot makes the practical effect of
+the \glsentryshort{adc} fine-tuning visible:
 the fine-tuned model maintains denser detections toward the far end of the observed
 distance range. Moreover, a clear trend of confidence drop is observed as distance grows.
 
@@ -585,7 +587,8 @@ that deployment-style run. The plot makes explicit that high-confidence accepted
 detections are concentrated at shorter distances, while lower-confidence and more
 failure-prone cases occur as the target becomes more distant in the realistic
 university environment. A fuller supporting appendix analysis is provided in
-Appendix~\ref{app:adc_replay_appendix}.
+Appendix~\ref{app:adc_replay_appendix}, and a supplementary video reference for
+this replay is listed in Appendix~\ref{app:rosbag_video_refs}.
 
 Figure~\ref{fig:ros2_pipeline_output_examples} then illustrates the final deployed
 output of the integrated perception pipeline for an in-cabin elevator panel
