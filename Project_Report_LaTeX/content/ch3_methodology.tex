@@ -328,8 +328,11 @@ pixel-wise binary cross-entropy loss applied to each predicted instance mask.
 
 \noindent\textbf{YOLOv8s segmentation.}
 \gls{yolo}v8s segmentation integrates detection and segmentation into a single-stage architecture.
-The total training loss is expressed as a weighted sum of classification,
-localization, and segmentation losses \citep{jocher2023yolov8}:
+For comparison with \gls{maskrcnn}, the following expression presents a
+simplified conceptual decomposition of the YOLOv8 segmentation objective rather
+than the exact Ultralytics implementation. Its purpose here is to highlight the
+different role of weighted detection and segmentation terms in the single-stage
+YOLO formulation \citep{jocher2023yolov8}:
 \begin{equation}
 \mathcal{L}_{\text{YOLO}} =
 \lambda_{\text{cls}} \mathcal{L}_{\text{cls}} +
@@ -483,7 +486,7 @@ Final \gls{ocr} benchmarking was then performed on the held-out \gls{ocr} test s
 official \gls{paddleocr} evaluation script with the same configuration family as
 used during training \citep{paddleocrdocs2026}.
 
-\clearpage
+%\clearpage
 \section{Embedded deployment and optimization}
 
 \begin{wrapfigure}{r}{0.32\textwidth}

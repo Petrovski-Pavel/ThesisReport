@@ -133,12 +133,34 @@
 \addcontentsline{toc}{chapter}{Summary}
 \input{content/summary}
 
+\chapter*{Nomenclature}
+\addcontentsline{toc}{chapter}{Nomenclature}
+
+\section*{List of Symbols}
+\addcontentsline{toc}{section}{List of Symbols}
+\noindent
+\begin{tabular}{@{}p{0.22\textwidth}p{0.72\textwidth}@{}}
+$\mathcal{L}$ & composite training loss \\
+$\lambda$ & weighting coefficient for YOLO loss terms \\
+$TP$, $FP$, $FN$ & true positives, false positives, and false negatives \\
+$N$ & number of samples \\
+$\hat{y}_i$, $y_i$ & predicted and ground-truth OCR labels for sample $i$ \\
+$\mathcal{V}$ & set of valid depth pixels inside the predicted segmentation mask \\
+$u$, $v$ & image coordinates of the target center \\
+$x$, $y$, $z$ & estimated 3D target coordinates \\
+$f_x$, $f_y$ & camera focal lengths in pixels \\
+$c_x$, $c_y$ & camera principal-point coordinates \\
+\end{tabular}
+
+\section*{Acronyms}
+\addcontentsline{toc}{section}{Acronyms}
 \glsaddall[types=\acronymtype]
+{\renewcommand*{\glossarysection}[2][]{%
+}%
 \printnoidxglossary[
   type=\acronymtype,
-  title={Nomenclature},
-  toctitle={Nomenclature}
-]
+  title={}
+]}
 \clearpage
 
 
@@ -169,7 +191,6 @@
 \input{appendices/appendix_extra}
 \input{appendices/appendix_adc_replay_experiments}
 \input{appendices/appendix_dataset_quality}
-\input{appendices/appendix_ai}
 \input{appendices/appendix_ros2_pipeline}
 
 \end{document}

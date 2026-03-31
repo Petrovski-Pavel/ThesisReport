@@ -1,12 +1,10 @@
 \chapter{Results}
 \label{ch:results}
 
-This chapter presents the quantitative and qualitative results obtained for the
-proposed elevator-interaction pipeline. It first summarizes the dataset quality
-assessment, then reports the results of the \gls{yolo}-based button-instance
-segmentation system and the \gls{ocr}-based button interpretation module,
-followed by hardware-optimization benchmarks and integrated \gls{ros} pipeline
-results.
+This chapter presents the quantitative and qualitative results for the
+proposed elevator-interaction pipeline, covering dataset quality,
+\gls{yolo}-based segmentation, \gls{ocr}-based interpretation, hardware
+optimization, and integrated \gls{ros} runtime performance.
 
 \section{Dataset quality results}
 \label{sec:dataset_quality_results}
@@ -627,8 +625,8 @@ corresponding \gls{yolo} confidence scores.
     \label{fig:reviewed_detection_confidence_distance}
 \end{figure}
 
-This example makes the final system output more explicit than throughput tables
-alone. Instead of exposing only intermediate detections, the deployed pipeline
-produces a task-oriented target representation that already combines 2D button
+This example makes the final system output more explicit than throughput
+tables alone by showing that the deployed pipeline already combines 2D button
 localization, a representative image center for depth projection, semantic text
-interpretation, and an estimated spatial distance for downstream robot use.
+interpretation, and estimated spatial distance in one task-oriented target
+representation.

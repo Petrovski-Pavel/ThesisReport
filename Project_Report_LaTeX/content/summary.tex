@@ -1,19 +1,31 @@
-This report presents work carried out within the CareBOTS projects at HAN
-University of Applied Sciences in collaboration with
-\href{https://ambyon.care}{Ambyon}. The project addresses the need for reliable
-robot perception of elevator buttons in hospital environments, where autonomous
-navigation across floors depends on accurate detection, interpretation, and
-spatial localization of panel interfaces.
+This report addresses the problem of autonomous service-robot interaction with
+elevator panels in hospital-like environments. For reliable multi-floor
+navigation, the robot must detect elevator buttons, interpret their labels, and
+estimate their spatial position under varying lighting conditions, viewpoints,
+and hardware constraints.
 
-This work develops a perception workflow for autonomous robot interaction with
-elevator panels under embedded-hardware constraints. The approach combines
-instance segmentation for button localization, optical character recognition for
-semantic interpretation, and iterative model improvement to support practical
-deployment in hospital-like environments.
+To address this problem, the project develops a modular perception pipeline that
+combines instance segmentation, optical character recognition, depth-based
+target localization, and deployment-oriented model optimization. The workflow
+also includes an Active Data Collector to support environment-specific data
+collection and later model improvement after deployment.
 
-The results show that the final system can combine button segmentation, text
-recognition, and depth-based target estimation in a modular embedded perception
-pipeline running on NVIDIA Jetson hardware. The project
-therefore delivers a practical foundation for elevator-button interaction on the
-CareBOTS platform and for future model improvement through deployment-time data
-collection and retraining.
+The results show that the baseline YOLOv8s segmentation model remained the most
+reliable choice on the held-out original test set, reaching a mask
+$\mathrm{mAP}_{50\text{:}95}$ of 0.58295 at 640-pixel evaluation. In the target
+university deployment environment, however, the best segmentation result was
+obtained after fine-tuning the YOLO model with environment-specific data
+collected through the ADC node, which increased mask
+$\mathrm{mAP}_{50\text{:}95}$ on the HAN Building R29 test split from 0.12290 to
+0.50389. OCR fine-tuning also improved button-label recognition on cropped
+button images. After TensorRT optimization and ROS integration on the NVIDIA
+Jetson Orin Nano, the final runtime pipeline achieved about 13.1 frames per
+second, corresponding to approximately 76 milliseconds per frame. With the
+collector enabled, the system still operated at about 10 frames per second, or
+roughly 100 milliseconds per frame.
+
+These results show that practical embedded perception for elevator-button
+interaction is feasible with a modular computer-vision workflow. The project
+therefore provides a concrete basis for future full-system elevator interaction
+and for continued improvement through deployment-time data collection and
+retraining.
