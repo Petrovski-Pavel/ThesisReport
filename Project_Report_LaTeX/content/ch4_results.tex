@@ -6,9 +6,7 @@ proposed elevator-interaction pipeline. It first summarizes the dataset quality
 assessment, then reports the results of the \gls{yolo}-based button-instance
 segmentation system and the \gls{ocr}-based button interpretation module,
 followed by hardware-optimization benchmarks and integrated \gls{ros} pipeline
-results. Final model comparisons are reported on held-out test sets, while model
-selection during training and hyperparameter tuning is based on the validation
-split.
+results.
 
 \section{Dataset quality results}
 \label{sec:dataset_quality_results}
@@ -45,7 +43,9 @@ Supplementary plots from this assessment are provided in
 Appendix~\ref{app:dataset_quality_plots}.
 
 \section{YOLO hyperparameter tuning and evaluation}
-
+This section presents the experimental results for the \gls{yolo}-based button-instance segmentation stage. 
+It first reports the baseline model performance, then summarizes the staged hyperparameter tuning experiments, 
+and finally evaluates the effect of environment specific fine-tuning with deployment collected \gls{adc} data.
 \subsection{Baseline YOLOv8s segmentation performance}
 
 The baseline \gls{yolo}v8s segmentation model established the main reference point for all
@@ -244,46 +244,62 @@ environment without sacrificing the original-domain test performance.
     \end{tabular}
 \end{table}
 
-To complement the held-out image-based evaluation, an additional university-elevator
-run was recorded as a \gls{ros} bag so that the baseline and \gls{adc}-fine-tuned
-\gls{yolo} engines could be compared on the same live camera input sequence.
-Table~\ref{tab:adc_replay_comparison} summarizes this replay-based comparison.
+To complement the held-out image-based evaluation, a controlled single-button
+experiment was performed on a \gls{ros} bag recorded in HAN Building R29. During
+this recording, the mobile cart was moved relative to one outside panel containing
+only a single true \texttt{UP} button, so both detector versions could be evaluated
+on the same raw image stream under controlled conditions. Table~\ref{tab:adc_replay_comparison}
+reports the resulting filtered comparison, while Figure~\ref{fig:r29_yolo_old_vs_new_confidence_distance}
+shows the same experiment as confidence versus estimated distance. The plot
+ makes the practical effect of the \glsentryshort{adc} fine-tuning visible:
+the fine-tuned model maintains denser detections toward the far end of the observed
+distance range. Moreover, a clear trend of confidence drop is observed as distance grows.
+
 
 \begin{table}[htbp]
     \centering
-    \caption{Replay-based comparison on the same recorded \gls{ros} bag from the university elevator environment.}
+    \caption{Controlled single-button replay comparison on the same recorded \gls{ros} bag from HAN Building R29.}
     \label{tab:adc_replay_comparison}
     \small
     \begin{tabular}{lcc}
         \toprule
         Metric & Baseline model & \glsentryshort{adc} fine-tuned model \\
         \midrule
-        Frames with detected buttons & 237 & 295 \\
-        Frames with detected buttons and valid depth & 231 & 288 \\
-        Mean target confidence & 0.8184 & 0.8422 \\
-        Mean valid-target distance [m] & 0.6975 & 0.6776 \\
-        Median valid-target distance [m] & 0.5594 & 0.5843 \\
-        90th-percentile valid-target distance [m] & 0.7955 & 0.8310 \\
+        Frames with detected buttons & 106 & 138 \\
+        Mean target confidence & 0.8074 & 0.8069 \\
+        Median target confidence & 0.8444 & 0.8423 \\
+        Mean valid-target distance [m] & 0.3527 & 0.4282 \\
+        Median valid-target distance [m] & 0.3308 & 0.4102 \\
+        Maximum valid-target distance [m] & 0.8761 & 0.8761 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-The replay results show that the retrained model detected buttons in more frames,
-and that more of those detections could be paired with valid depth estimates.
-The retrained model also achieved a higher mean target confidence. Distance-related
-statistics remained broadly comparable overall: the mean valid-target distance stayed
-close to the baseline, while the median and 90th-percentile distances increased
-slightly. Maximum-distance values are not reported here because the farthest outliers
-included implausible depth estimates that did not correspond to real button
-observations. Qualitative inspection of matched replay frames also showed individual
-cases in which the retrained model detected buttons at substantially larger distances
-than the baseline model. For example, one repeatedly inspected button was detected at
-approximately 0.75~m rather than about 0.35~m. However, these case-specific
-improvements should be interpreted separately from the aggregate replay statistics,
-which indicate only modest overall distance improvement. This replay result strengthens
-the held-out test-set findings by showing that \gls{adc}-based retraining improved
-deployment robustness and confidence in the target environment while maintaining
-broadly comparable overall distance behavior.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.78\textwidth]{figures/results/r29_yolo_old_vs_new_confidence_distance.png}
+    \caption{Controlled single-button replay result: confidence versus estimated distance for the baseline and \glsentryshort{adc}-fine-tuned \gls{yolo} models.}
+    \label{fig:r29_yolo_old_vs_new_confidence_distance}
+\end{figure}
+
+Manual review of the baseline-model outputs showed that all twelve detections above
+1.5~m were false positives. These detections were therefore excluded from the
+table, because otherwise the baseline model would appear to gain valid
+recognition distance from long-range hallucinations. After this correction, the
+confidence difference between the two models was small, but the \glsentryshort{adc}-fine-tuned
+model still produced more detected frames and longer mean and median valid-detection
+distances. Figure~\ref{fig:r29_yolo_old_vs_new_confidence_distance} reinforces this
+interpretation, because the baseline detections become visibly sparser as distance
+increases, whereas the \glsentryshort{adc}-fine-tuned model continues to produce detections
+more consistently. The controlled single-button experiment therefore supports the
+same practical conclusion as the image-based environment-specific test set:
+deployment-specific R29 data improved the robustness of the detector in the target
+environment.
+
+Appendix~\ref{app:adc_replay_appendix} reports two supplementary deployment analyses:
+the unfiltered single-button detector comparison, which makes the baseline model's long-range
+false-positive behavior explicit, and the combined \gls{yolo} and \gls{ocr} view of the same
+controlled run.
 
 Overall, the \gls{yolo} results show three main findings. First, the baseline
 \gls{yolo}v8s segmentation model was already strong and difficult to surpass on the general
@@ -447,26 +463,29 @@ For \gls{ocr}, the comparison used the Paddle inference model and the exported
         \toprule
         Model stage & Baseline backend & \glsentryshort{tensorrt} backend & Speedup \\
         \midrule
-        \glsentryshort{yolo} inference [ms/image] & 36.46 & 24.43 & 1.49$\times$ \\
-        \glsentryshort{yolo} wall time [ms/image] & 64.19 & 64.52 & 1.00$\times$ \\
+        \glsentryshort{yolo} inference [ms/image] & 30.29 & 17.86 & 1.70$\times$ \\
+        \glsentryshort{yolo} wall time [ms/image] & 44.66 & 38.98 & 1.15$\times$ \\
         \glsentryshort{ocr} wall time [ms/crop] & 167.72 & 10.29 & 16.30$\times$ \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-The \gls{yolo} result shows that \gls{tensorrt} reduced the forward-pass time
-substantially, even though the total offline single-image wall time remained
-almost unchanged because preprocessing and postprocessing still contributed a
-large fraction of the runtime. The \gls{ocr} result is more direct: the
-\gls{tensorrt} engine reduced average per-crop wall time from 167.72~ms to
-10.29~ms while preserving the same accepted predictions on all five button
-regions in the test image. As a single-image micro-benchmark, this result is
-illustrative rather than a substitute for the broader ROS~2 pipeline timing
+The updated \gls{yolo} micro-benchmark compares the original PyTorch checkpoint
+against the final deployment-oriented \gls{tensorrt} engine of the
+\glsentryshort{adc}-fine-tuned model. On the same held-out test image,
+\gls{tensorrt} reduced the mean measured \gls{yolo} inference time from
+30.29~ms/image to 17.86~ms/image, while the corresponding single-image wall time
+also improved from 44.66~ms/image to 38.98~ms/image. The \gls{ocr} result is
+more direct: the \gls{tensorrt} engine reduced average per-crop wall time from
+167.72~ms to 10.29~ms while preserving the same accepted predictions on all five
+button regions in the test image. As a single-image micro-benchmark, this result
+is illustrative rather than a substitute for the broader ROS~2 pipeline timing
 measurements reported later in this chapter. It nevertheless supports the use of
 \gls{tensorrt} export as an important deployment optimization step before
 integrating the models into the full \gls{ros} pipeline.
 
 \section{ROS pipeline performance}
+\label{sec:ros_pipeline_results}
 
 After the final \gls{yolo} and \gls{ocr} models were exported to \gls{tensorrt}, the complete
 perception stack was evaluated on the \gls{jetson} Orin Nano in its deployed \gls{ros}
@@ -558,20 +577,29 @@ Chapter~\ref{ch:methodology}.
 
 \subsection{Qualitative end-to-end pipeline output}
 
-Figure~\ref{fig:ros2_pipeline_output_examples} illustrates the final deployed
+To simulate realistic environment test, a longer and more diverse university
+elevator \gls{ros} bag was therefore collected and replayed and its detections were manually reviewed
+as true positives or false positives. Figure~\ref{fig:reviewed_detection_confidence_distance}
+shows the reviewed \gls{yolo} detection confidence versus estimated target distance for
+that deployment-style run. The plot makes explicit that high-confidence accepted
+detections are concentrated at shorter distances, while lower-confidence and more
+failure-prone cases occur as the target becomes more distant in the realistic
+university environment. A fuller supporting appendix analysis is provided in
+Appendix~\ref{app:adc_replay_appendix}.
+
+Figure~\ref{fig:ros2_pipeline_output_examples} then illustrates the final deployed
 output of the integrated perception pipeline for an in-cabin elevator panel
-observed during live testing with the mobile cart in Han Building R29. The
-illustrated frames come from the same \gls{ros} bag sequence used for the
-baseline-versus-\gls{adc}-fine-tuned \gls{yolo} replay comparison in
-Section~\ref{sec:adc_finetuning_results}. A
-fuller appendix example of the same type of final output, including the abridged
-\texttt{/button\_targets\_3d\_ocr} message, is provided in
-Appendix~\ref{app:ros2_pipeline_example}.
-Both overlays are derived from the same accepted \texttt{/button\_targets\_3d\_ocr}
-message set, but visualize different aspects of the final result. The first view
-emphasizes the segmentation masks, representative button centers, and estimated
-distance values, while the second view emphasizes bounding boxes, recognized
-labels, and the corresponding \gls{yolo} confidence scores.
+observed during the live testing with the mobile cart in Han Building R29. These
+overlays are shown as qualitative examples of the final \texttt{/button\_targets\_3d\_ocr}
+output rather than as the source of the controlled single-button replay comparison
+from Section~\ref{sec:adc_finetuning_results}. A fuller appendix example of the same
+type of final output, including the full \texttt{/button\_targets\_3d\_ocr}
+message, is provided in Appendix~\ref{app:ros2_pipeline_example}. Both overlays are
+derived from the same accepted \texttt{/button\_targets\_3d\_ocr} message set, but
+visualize different aspects of the final result. The first view emphasizes the
+segmentation masks, representative button centers, and estimated distance values,
+while the second view emphasizes bounding boxes, recognized labels, and the
+corresponding \gls{yolo} confidence scores.
 
 \begin{figure}[htbp]
     \centering
@@ -586,6 +614,14 @@ labels, and the corresponding \gls{yolo} confidence scores.
     \end{minipage}
     \caption{Representative end-to-end output of the final deployed \gls{ros} perception pipeline for an in-cabin elevator panel.}
     \label{fig:ros2_pipeline_output_examples}
+\end{figure}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.72\textwidth]{figures/results/reviewed_detection_confidence_vs_distance.png}
+    \caption{Reviewed \gls{yolo} detection confidence versus estimated distance on a realistic university elevator replay run. True and false detections were manually reviewed after replay.}
+    \label{fig:reviewed_detection_confidence_distance}
 \end{figure}
 
 This example makes the final system output more explicit than throughput tables

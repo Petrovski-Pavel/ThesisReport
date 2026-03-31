@@ -48,11 +48,7 @@ with dataset selection and preparation.
     \centering
     \includegraphics[width=0.98\textwidth]{figures/methodology/overall_carebots_architecture_v2.png}
     \caption{Overall workflow-and-architecture overview of the proposed
-    perception system. The figure links dataset preparation, semi-automatic
-    annotation, model training, deployment on the robot, and the feedback path
-    created by the \glsentryshort{adc}. The detailed training-side annotation
-    workflow is shown later in Figure~\ref{fig:annotation_workflow}, and the
-    deployed runtime pipeline is shown in Figure~\ref{fig:ros2_runtime_architecture}.}
+    perception system.}
     \label{fig:scalable_workflow}
 \end{figure}
 
@@ -230,7 +226,7 @@ trained from scratch, and their task-specific output heads were adapted to the
 project datasets. For transfer learning, \gls{yolo}v8-Seg was initialized from
 the official Ultralytics \texttt{yolov8s-seg.pt} checkpoint pretrained on
 \gls{coco} for instance segmentation, \gls{maskrcnn} from Torchvision's default
-\gls{coco}-pretrained \texttt{MaskRCNN\_ResNet50\_FPN} weights, and the\gls{ocr}
+\gls{coco}-pretrained \texttt{MaskRCNN\_ResNet50\_FPN} weights, and the \gls{ocr}
 recognizer from the official PaddleOCR \texttt{PP-OCRv5\_mobile\_rec}
 pretrained recognition checkpoint. Across the experiments, the train/validation
 split was used for model fitting and model selection, while the held-out test
@@ -249,9 +245,9 @@ Appendix~\ref{app:maskrcnn_checkpoints}, since only the role of
 
 The common training strategy was applied to the deployment-oriented \gls{yolo}v8s segmentation model using the Ultralytics framework \citep{ultralyticsdocs2026}. The initial baseline configuration was
 scheduled for up to 100 epochs with an input resolution of $640 \times 640$, dynamic batch sizing
-(\texttt{batch=-1}), seed 123, warmup over 5 epochs, and early stopping patience
+(\texttt{batch=-1}), warmup over 5 epochs, and early stopping patience
 of 10 epochs. The augmentation policy followed the standard Ultralytics recipe used
-throughout this study, including HSV perturbation, small geometric transformations,
+throughout this study, including small geometric transformations,
 horizontal flipping, and mosaic augmentation.
 
 Although this baseline produced strong results, its training settings were selected
@@ -270,8 +266,7 @@ stabilize optimization and use the available \gls{gpu} memory efficiently.
 
 The three stages of the hyperparameter tuning procedure are summarized in
 Table~\ref{tab:yolo_hparam_tuning}. The table is intended to provide a compact
-overview of the explored search spaces and stopping criteria, while the
-accompanying text explains the rationale behind each stage.
+overview of the explored search spaces and stopping criteria.
 
 \begin{table}[htbp]
     \centering
@@ -301,9 +296,7 @@ accompanying text explains the rationale behind each stage.
     \end{tabular}
 \end{table}
 
-Table~\ref{tab:yolo_hparam_tuning} summarizes the three-stage tuning
-procedure and the criteria used to progress from the baseline to Stage 3
-refinement. After this tuning process, two further experiments were performed:
+After this tuning process, two further experiments were performed:
 a comparison with YOLO26-small and a domain-adaptation fine-tuning run using
 the mixed dataset that included images collected in the target deployment
 environment.
@@ -347,9 +340,10 @@ relative contribution of each task during optimization.
 \subsection{OCR-based button interpretation}
 
 Following instance segmentation, detected button regions are passed to a
-semantic interpretation stage based on cropped-image \gls{ocr}. Because button
-localization is already solved upstream by the segmentation model, the recognizer
-does not need to detect text in the full image and instead operates on tightly
+semantic interpretation stage. Segemnted button instances are cropped and processed by
+an \gls{ocr}-based recognition module to extract character labels or symbols associated with each button. 
+Because button localization is already solved upstream by
+the segmentation model, the recognizer does not need to detect text in the full image and instead operates on tightly
 bounded button crops. This reduces computational cost and enables the robot to
 associate localized interaction points with their functional meaning during
 downstream decision-making.
@@ -357,8 +351,7 @@ downstream decision-making.
 
 \noindent\textbf{Recognition model architecture.}
 For cropped-button recognition, a lightweight \gls{ocr} recognizer based on
-\gls{paddleocr} \citep{paddleocrdocs2026} was selected. The deployed recognizer uses
-the \texttt{PP-OCRv5\_mobile\_rec} model. This model was preferred because it is
+\gls{paddleocr} \citep{paddleocrdocs2026} was selected. This model was preferred because it is
 designed for efficient deployment and already provides a compact recognition
 backbone suitable for embedded hardware. 
 Only the recognition component of the \gls{ocr} stack was used. The detection component
@@ -416,7 +409,7 @@ dataset was reserved for final reporting. The \gls{maskrcnn} annotation-support
 comparison is included only as supplementary material in
 Appendix~\ref{app:maskrcnn_checkpoints}.
 
-\subsection{YOLO segmentation metrics under the COCO protocol}
+\subsection{YOLO segmentation evaluation}
 
 The \gls{yolo} experiments report the standard Ultralytics/\gls{coco} validation
 and test metrics for both bounding boxes and segmentation masks. The main metric
@@ -447,7 +440,7 @@ to distinguish localization quality from mask quality. However, when ranking
 segmentation models in this report, mask \glsentryshort{map}@[0.50:0.95] remains
 the primary comparison criterion.
 
-\subsection{OCR accuracy and normalized edit distance}
+\subsection{OCR evaluation}
 
 The \gls{ocr} recognition models are evaluated using exact-match accuracy and
 normalized edit distance. Exact-match accuracy is the fraction of button crops for

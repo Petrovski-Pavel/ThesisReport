@@ -83,10 +83,14 @@ quality and dataset relevance were both important. The original curated dataset
 was sufficient to train a strong baseline, but the environment-specific
 fine-tuning experiment demonstrated that even a relatively small amount of
 deployment-collected data can substantially improve performance in the target
-domain, both in confidence and in practical recognition distance. This supports
-the decision to include an \gls{adc} in the full workflow and suggests that
-further fine-tuning on carefully collected deployment data is likely to remain a
-high-value improvement path.
+domain. In the controlled R29 single-button experiment, the adapted detector
+produced more frames with detections and longer typical valid-detection
+distances once the baseline model's manually reviewed long-range false positives
+were excluded from the valid-distance comparison. The reviewed deployment-style
+university run further showed that accepted detection confidence degrades as
+distance increases. This supports the decision to include an \gls{adc} in the
+full workflow and suggests that further fine-tuning on carefully collected
+deployment data is likely to remain a high-value improvement path.
 
 The fourth sub-question asked which optimization techniques support embedded
 inference. Here the answer is twofold. First, \gls{tensorrt} export was

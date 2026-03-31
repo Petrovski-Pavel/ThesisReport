@@ -88,3 +88,8 @@ Chapter 4.4.1 qualitive end-to-end should also point to the Appendix where we ha
 we should mention the mean target distance and confidence score and add it in the conclusion especially the distance, this is important!
 
 
+-------------------31.03.2026----------------------
+make W&B public
+expand the Mask R-CNN subchapter in the Methodology 3.5.3
+
+
