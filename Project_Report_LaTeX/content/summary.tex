@@ -1,33 +1,33 @@
-This report addresses the problem of autonomous service-robot interaction with
-elevator panels in hospital-like environments. For reliable multi-floor
-navigation, the robot must detect elevator buttons, interpret their labels, and
+This report investigates how a service robot can reliably perceive elevator
+panels in hospital-like environments. For autonomous multi-floor operation, the
+robot must detect individual elevator buttons, interpret their labels, and
 estimate their spatial position under varying lighting conditions, viewpoints,
-and hardware constraints.
+and embedded-hardware constraints.
 
-To address this problem, the project develops a modular perception pipeline that
-combines instance segmentation, optical character recognition, depth-based
-target localization, and deployment-oriented model optimization. The workflow
-also includes an Active Data Collector to support environment-specific data
-collection and later model improvement after deployment.
+To address this problem, the project develops a modular computer-vision
+workflow that combines instance segmentation for button localization, optical
+character recognition for semantic interpretation, and depth-based target
+estimation for downstream robot use. The workflow also includes
+deployment-time data collection and retraining support so that the perception
+system can be adapted to new environments after field use.
 
-The results show that the baseline YOLOv8s segmentation model remained the most
-reliable choice on the held-out original test set, reaching a mask
-$\mathrm{mAP}_{50\text{:}95}$ of 0.58295 at 640-pixel evaluation. In the target
-university deployment environment, however, the best segmentation result was
-obtained after fine-tuning the YOLO model with environment-specific data
-collected through the ADC node, which increased mask
-$\mathrm{mAP}_{50\text{:}95}$ on the HAN Building R29 test split from 0.12290 to
-0.50463. OCR fine-tuning also improved button-label recognition on cropped
-button images. After TensorRT optimization and ROS integration on the NVIDIA
-Jetson Orin Nano, the final runtime pipeline achieved about 13.1 frames per
-second, corresponding to approximately 76 milliseconds per frame. With the
-collector enabled, the system still operated at about 10 frames per second, or
-roughly 100 milliseconds per frame.
+The results show that the baseline YOLOv8s segmentation model remained the
+strongest general detector on the original held-out test set, achieving a mask
+mAP50:95 of 0.58295 at the selected 640-pixel deployment setting. In the
+target deployment environment, fine-tuning with environment-specific data from
+HAN Building R29 increased mask mAP50:95 from 0.12290 to 0.50463, showing that
+a small amount of deployment-specific data can substantially improve
+target-domain performance without degrading the original-domain result. The OCR
+tuning stage also improved button-label recognition quality on held-out button
+crops.
 
-Reviewed deployment-style testing showed that the final system was most
-reliable at short range, with accepted detections concentrated below
-approximately 1 meter and confidence decreasing at longer distances. These
-results show that practical embedded perception for elevator-button interaction
-is feasible with a modular computer-vision workflow. The project therefore
-provides a concrete basis for future full-system elevator interaction and for
-continued improvement through deployment-time data collection and retraining.
+After optimization and integration on the NVIDIA Jetson Orin Nano, the final
+perception pipeline operated at about 13.1 frames per second, while still
+maintaining about 10 frames per second when the data-collection component was
+active. Reviewed deployment results further indicate that the system was most
+reliable at distances up to approximately 1 m, with detection confidence
+decreasing as the distance to the target button increased. Overall, the project
+demonstrates that reliable embedded perception for elevator-button interaction
+is feasible with a modular workflow that combines detection, recognition,
+deployment-oriented optimization, and structured field-data collection for
+continued improvement.
