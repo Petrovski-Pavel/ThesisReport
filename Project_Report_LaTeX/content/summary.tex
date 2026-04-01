@@ -17,15 +17,17 @@ university deployment environment, however, the best segmentation result was
 obtained after fine-tuning the YOLO model with environment-specific data
 collected through the ADC node, which increased mask
 $\mathrm{mAP}_{50\text{:}95}$ on the HAN Building R29 test split from 0.12290 to
-0.50389. OCR fine-tuning also improved button-label recognition on cropped
+0.50463. OCR fine-tuning also improved button-label recognition on cropped
 button images. After TensorRT optimization and ROS integration on the NVIDIA
 Jetson Orin Nano, the final runtime pipeline achieved about 13.1 frames per
 second, corresponding to approximately 76 milliseconds per frame. With the
 collector enabled, the system still operated at about 10 frames per second, or
 roughly 100 milliseconds per frame.
 
-These results show that practical embedded perception for elevator-button
-interaction is feasible with a modular computer-vision workflow. The project
-therefore provides a concrete basis for future full-system elevator interaction
-and for continued improvement through deployment-time data collection and
-retraining.
+Reviewed deployment-style testing showed that the final system was most
+reliable at short range, with accepted detections concentrated below
+approximately 1 meter and confidence decreasing at longer distances. These
+results show that practical embedded perception for elevator-button interaction
+is feasible with a modular computer-vision workflow. The project therefore
+provides a concrete basis for future full-system elevator interaction and for
+continued improvement through deployment-time data collection and retraining.

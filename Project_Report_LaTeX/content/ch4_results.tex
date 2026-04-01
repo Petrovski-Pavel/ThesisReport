@@ -183,7 +183,7 @@ is included in Appendix~\ref{app:yolo_hparam_curves}.
 The final \gls{yolo} experiment addressed domain adaptation to the target
 university environment. The baseline checkpoint was fine-tuned on the original
 dataset augmented with 46 newly collected and annotated images from HAN
-University R29. These images were collected and annotated by the \gls{adc}
+Building R29. These images were collected and annotated by the \gls{adc}
 and were then manually reviewed and adjusted where needed before training.
 These images were split into 32 training images, 7 validation
 images, and 7 held-out environment-specific test images. Table~\ref{tab:adc_original_test}
@@ -218,7 +218,7 @@ The effect on the environment-specific test set is much stronger, as shown in
 Table~\ref{tab:adc_env_test}. Mask $\mathrm{mAP}_{50\text{:}95}$ increased from
 0.12290 to 0.50463 after fine-tuning, while precision and recall also improved
 substantially. The low starting value of 0.12290 is consistent with strong domain
-shift: before adaptation, the baseline model had never seen the HAN University R29
+shift: before adaptation, the baseline model had never seen the HAN Building R29
 environment, whose panel appearance, image framing, lighting conditions, and
 camera-to-panel distance differed from the original training distribution. Because
 this environment-specific test split contained only seven fully unseen images, even
@@ -590,7 +590,7 @@ this replay is listed in Appendix~\ref{app:rosbag_video_refs}.
 
 Figure~\ref{fig:ros2_pipeline_output_examples} then illustrates the final deployed
 output of the integrated perception pipeline for an in-cabin elevator panel
-observed during the live testing with the mobile cart in Han Building R29. These
+observed during the live testing with the mobile cart in HAN Building R29. These
 overlays are shown as qualitative examples of the final \texttt{/button\_targets\_3d\_ocr}
 output rather than as the source of the controlled single-button replay comparison
 from Section~\ref{sec:adc_finetuning_results}. A fuller appendix example of the same

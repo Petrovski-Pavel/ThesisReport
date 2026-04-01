@@ -74,7 +74,7 @@ were stored in \gls{coco}-style \gls{json} and then converted to the label forma
 required by \gls{yolo}-based segmentation training.
 
 In the later deployment-oriented adaptation stage, the dataset was extended with
-46 additional images collected in Han Building R29, the pilot
+46 additional images collected in HAN Building R29, the pilot
 environment for robot deployment testing. These images were added only after the
 baseline and hyperparameter tuning stages, so that the initial \gls{yolo}
 experiments remained directly comparable with the original benchmark setting.
@@ -347,7 +347,7 @@ relative contribution of each task during optimization.
 \subsection{OCR-based button interpretation}
 
 Following instance segmentation, detected button regions are passed to a
-semantic interpretation stage. Segemnted button instances are cropped and processed by
+semantic interpretation stage. Segmented button instances are cropped and processed by
 an \gls{ocr}-based recognition module to extract character labels or symbols associated with each button. 
 Because button localization is already solved upstream by
 the segmentation model, the recognizer does not need to detect text in the full image and instead operates on tightly
